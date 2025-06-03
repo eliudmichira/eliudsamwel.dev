@@ -1,0 +1,32 @@
+{
+  "name": "eliud-samwel---about-me",
+  "private": true,
+  "version": "0.0.0",
+  "type": "module",
+  "scripts": {
+    "dev": "vite",
+    "build": "vite build",
+    "preview": "vite preview",
+    "firebase-init": "firebase init",
+    "deploy": "npm run build && firebase deploy"
+  },
+  "dependencies": {
+    "@tailwindcss/typography": "^0.5.16",
+    "firebase": "^10.14.1",
+    "framer-motion": "^12.15.0",
+    "jspdf": "^3.0.1",
+    "react": "^19.1.0",
+    "react-dom": "^19.1.0",
+    "react-icons": "^5.5.0",
+    "react-intersection-observer": "^9.16.0",
+    "react-markdown": "^10.1.0"
+  },
+  "devDependencies": {
+    "@types/node": "^22.14.0",
+    "@types/react": "^19.1.6",
+    "@types/react-dom": "^19.1.5",
+    "firebase-tools": "^13.35.1",
+    "typescript": "~5.7.2",
+    "vite": "^6.2.0"
+  }
+}

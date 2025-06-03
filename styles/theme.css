@@ -1,0 +1,650 @@
+:root {
+  /* Color Scheme */
+  --color-scheme: light; /* Default to light theme */
+
+  /* == NEW Eye-Friendly Light Theme (Warm Off-White) == */
+  /* Backgrounds */
+  --color-bg-base: #FDFCFA;       /* Main Background - Replaces --primary-bg */
+  --color-bg-surface: #F9F7F4;   /* Section Backgrounds - Replaces --secondary-bg */
+  --color-bg-card: #FFFFFF;        /* Pure white for cards - Replaces --card-bg for general cards */
+  --color-bg-muted: #F5F3F0;      /* Muted background for alternate sections - Replaces --bg-tertiary */
+  --color-input-bg: #FFFFFF;     /* Inputs can be pure white for clarity on light bg - Replaces --input-bg */
+
+  /* Text */
+  --color-text: #2C2825;            /* Warm charcoal - Replaces --primary-text */
+  --color-text-secondary: #5C5550;  /* Warm gray for secondary - Replaces --secondary-text */
+  --color-text-muted: #8B8680;      /* Light gray for less important - Replaces --text-muted */
+  --color-text-on-accent: #FFFFFF;  /* For text on accent-gradient backgrounds */
+  
+  /* Borders & Dividers */
+  --color-border: #EDE9E3;          /* Replaces --card-border */
+  --color-border-light: #F5F3F0;
+  
+  /* Interactive States */
+  --color-hover-bg: #F0EBE5;        /* Replaces --hover-bg */
+  --color-focus-ring: #F97316;      /* Main Orange - Replaces --focus-ring */
+  
+  /* Shadows - Warmer tones */
+  --shadow-sm: 0 1px 3px rgba(92, 85, 80, 0.08);
+  --shadow-md: 0 4px 6px rgba(92, 85, 80, 0.1);
+  --card-shadow: var(--shadow-md); /* Consistent naming */
+
+  /* Accent Colors (Maintained Orange, adapted) */
+  --accent-primary: #F97316;     /* Main orange - Maps to old --primary-orange */
+  --accent-secondary: #F59E0B;   /* Secondary orange/amber - Maps to old --accent-color / --primary-amber */
+  --accent-light: #FED7AA;       /* Light orange for backgrounds/hovers */
+  --accent-hover: #EA580C;       /* Darker orange for interactions */
+  --accent-yellow: #FCD34D;      /* Kept from previous for compatibility if used directly */
+  --accent-color-red: #f57c00;   /* Kept from previous for compatibility */
+
+  /* Gradients - Adapt to new accents if necessary, or keep if general enough */
+  --accent-gradient: linear-gradient(135deg, var(--accent-secondary) 0%, var(--accent-primary) 100%);
+  --text-gradient: linear-gradient(135deg, var(--accent-secondary), var(--accent-primary));
+  --accent-gradient-multi: linear-gradient(135deg, var(--accent-primary) 0%, var(--accent-secondary) 50%, var(--accent-yellow) 100%);
+  --text-gradient-multi: linear-gradient(135deg, var(--accent-primary), var(--accent-secondary), var(--accent-yellow));
+
+  /* Glows - Adjusted for new light theme, using warmer accent tones */
+  --glow: 0 0 15px rgba(234, 88, 12, 0.15); /* Softer glow from --accent-hover */
+  --card-glow: 0 0 25px rgba(249, 115, 22, 0.1); /* Softer card glow from --accent-primary */
+  --dot-glow: 0 0 15px rgba(245, 158, 11, 0.3); /* from --accent-secondary */
+  --orange-glow: rgba(249, 115, 22, 0.1);
+
+  /* Glassmorphism (adjust for new light theme) */
+  --glass-card-bg: rgba(253, 251, 247, 0.75); /* Based on --color-bg-base with alpha */
+  --glass-card-border: rgba(237, 233, 227, 0.6); /* Based on --color-border with alpha */
+  
+  /* UI Elements - Kept */
+  --border-radius: 1rem;
+  --border-radius-lg: 1.5rem;
+  --transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+  --transition-fast: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+  --hover-scale: 1.03;
+  --hover-lift: -8px;
+  --blur-amount: 15px;
+
+  /* Apple-Inspired Typography System - CSS Variables */
+  --font-primary: 'Inter', -apple-system, BlinkMacSystemFont, "SF Pro Display", "SF Pro Text", "Helvetica Neue", "Helvetica", "Arial", sans-serif; /* Prioritize Inter */
+  --font-secondary: 'Georgia', serif; /* Example secondary/serif font if needed */
+  --font-mono: 'SF Mono', 'Menlo', 'monospace'; /* Example mono font if needed */
+  --font-ultralight: 100;
+  --font-thin: 200;
+  --font-light: 300;
+  --font-regular: 400;
+  --font-medium: 500;
+  --font-semibold: 600;
+  --font-bold: 700;
+  --font-heavy: 800;
+  --font-black: 900;
+  --letter-spacing-tighter: -0.05em;
+  --letter-spacing-tight: -0.025em;
+  --letter-spacing-normal: 0;
+  --letter-spacing-wide: 0.025em;
+  --letter-spacing-wider: 0.05em;
+  --line-height-dense: 1.2;
+  --line-height-tight: 1.375;
+  --line-height-normal: 1.5;
+  --line-height-relaxed: 1.625;
+  --line-height-loose: 1.75;
+  --text-xs: 0.75rem;    /* 12px */
+  --text-sm: 0.875rem;   /* 14px */
+  --text-base: 1rem;     /* 16px */
+  --text-lg: 1.125rem;   /* 18px */
+  --text-xl: 1.25rem;    /* 20px */
+  --text-2xl: 1.5rem;    /* 24px */
+  --text-3xl: 1.875rem;  /* 30px */
+  --text-4xl: 2.25rem;   /* 36px */
+  --text-5xl: 3rem;      /* 48px */
+  --text-6xl: 3.75rem;   /* 60px */
+  --text-7xl: 4.5rem;    /* 72px */
+  --text-8xl: 6rem;      /* 96px */
+
+  /* Old variable names remapped for compatibility during transition */
+  /* These can be phased out as components are updated to use new names */
+  --primary-bg: var(--color-bg-base);
+  --secondary-bg: var(--color-bg-surface);
+  --card-bg: var(--color-bg-card);
+  --input-bg: var(--color-input-bg);
+  --primary-text: var(--color-text);
+  --secondary-text: var(--color-text-secondary);
+  --text-muted: var(--color-text-muted);
+  --hover-bg: var(--color-hover-bg);
+  --focus-ring: var(--color-focus-ring);
+  --accent-color: var(--accent-secondary); 
+  --primary-orange: var(--accent-primary);
+  --primary-amber: var(--accent-secondary);
+
+  /* Navigation Specific */
+  --color-nav-active-start: var(--accent-secondary); /* Was #C026D3 Magenta 600 */
+  --color-nav-active-end: var(--accent-primary);   /* Was #7C3AED Violet 600 */
+  --nav-active-gradient: linear-gradient(to right, var(--color-nav-active-start), var(--color-nav-active-end));
+}
+
+/* Dark Theme (Largely unchanged from previous, ensure consistency) */
+html.dark {
+  --color-scheme: dark;
+
+  /* Using more generic dark theme names from your guide if applicable */
+  --color-bg-base: #0A0A0A;
+  --color-bg-surface: #101010;
+  --color-bg-card: #141414;
+  --color-bg-muted: #181818;
+  --color-input-bg: #1F1F1F;
+
+  --color-text: #EAEAEA;
+  --color-text-secondary: #B0B0B0;
+  --color-text-muted: #707070;
+  --color-text-on-accent: #FFFFFF; /* Text on accent gradients in dark mode */
+
+  --color-border: #2A2A2A;
+  --color-border-light: #3A3A3A;
+  
+  --color-hover-bg: #282828;
+  /* --color-focus-ring is inherited from :root (orange) */
+
+  --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.1);
+  --shadow-md: 0 4px 6px rgba(0, 0, 0, 0.15);
+  --card-shadow: var(--shadow-md);
+
+  /* Accents remain the same as light theme for consistency */
+  --accent-primary: #F97316;
+  --accent-secondary: #F59E0B;
+  --accent-light: #4A2E0F; /* Dark theme appropriate light orange for bg */
+  --accent-hover: #D34C0A;  /* Dark theme appropriate hover */
+  --accent-yellow: #FCD34D;
+  --accent-color-red: #f57c00;
+
+  /* Gradients - May need dark theme specific versions if contrast is an issue */
+  --accent-gradient: linear-gradient(135deg, var(--accent-secondary) 0%, var(--accent-primary) 100%);
+  --text-gradient: linear-gradient(135deg, var(--accent-secondary), var(--accent-primary)); /* Text gradient on dark bg needs light text */
+  --accent-gradient-multi: linear-gradient(135deg, var(--accent-primary) 0%, var(--accent-secondary) 50%, var(--accent-yellow) 100%);
+  --text-gradient-multi: linear-gradient(135deg, var(--accent-primary), var(--accent-secondary), var(--accent-yellow));
+
+  /* Glows for dark theme */
+  --glow: 0 0 30px rgba(245, 158, 11, 0.3);
+  --card-glow: 0 0 50px rgba(249, 115, 22, 0.15);
+  --dot-glow: 0 0 25px rgba(245, 158, 11, 0.6);
+  --orange-glow: rgba(249, 115, 22, 0.2);
+  
+  /* Glassmorphism for dark theme */
+  --glass-card-bg: rgba(30, 30, 30, 0.75); /* Darker glass */
+  --glass-card-border: rgba(50, 50, 50, 0.6);
+
+  /* Compatibility mappings for dark mode */
+  --primary-bg: var(--color-bg-base);
+  --secondary-bg: var(--color-bg-surface);
+  --card-bg: var(--color-bg-card);
+  --input-bg: var(--color-input-bg);
+  --primary-text: var(--color-text);
+  --secondary-text: var(--color-text-secondary);
+  --text-muted: var(--color-text-muted);
+  --hover-bg: var(--color-hover-bg);
+  --card-border: var(--color-border);
+  --accent-color: var(--accent-secondary); 
+  --primary-orange: var(--accent-primary);
+  --primary-amber: var(--accent-secondary);
+  --color-text-on-accent: #FFFFFF; /* Added for consistency */
+
+  /* Navigation Specific */
+  --color-nav-active-start: var(--accent-secondary); /* Was #C026D3 Magenta 600 */
+  --color-nav-active-end: var(--accent-primary);   /* Was #7C3AED Violet 600 */
+  --nav-active-gradient: linear-gradient(to right, var(--color-nav-active-start), var(--color-nav-active-end));
+}
+
+/* Fallback for systems that prefer dark mode but don't have html.dark class yet */
+@media (prefers-color-scheme: dark) {
+  :root:not(.light) { /* If no specific theme class is set, and OS prefers dark */
+    --color-scheme: dark;
+    /* Apply dark theme variables directly */
+    --color-bg-base: #0A0A0A; --primary-bg: var(--color-bg-base);
+    --color-bg-surface: #101010; --secondary-bg: var(--color-bg-surface);
+    --color-bg-card: #141414; --card-bg: var(--color-bg-card);
+    --color-bg-muted: #181818;
+    --color-input-bg: #1F1F1F; --input-bg: var(--color-input-bg);
+    --color-text: #EAEAEA; --primary-text: var(--color-text);
+    --color-text-secondary: #B0B0B0; --secondary-text: var(--color-text-secondary);
+    --color-text-muted: #707070; --text-muted: var(--color-text-muted);
+    --color-text-on-accent: #FFFFFF; /* Added for consistency */
+    --color-border: #2A2A2A; --card-border: var(--color-border);
+    --color-border-light: #3A3A3A;
+    --color-hover-bg: #282828; --hover-bg: var(--color-hover-bg);
+    --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.1);
+    --shadow-md: 0 4px 6px rgba(0, 0, 0, 0.15);
+    --card-shadow: var(--shadow-md);
+    --accent-primary: #F97316; --primary-orange: var(--accent-primary);
+    --accent-secondary: #F59E0B; --accent-color: var(--accent-secondary); --primary-amber: var(--accent-secondary);
+    --accent-light: #4A2E0F;
+    --accent-hover: #D34C0A;
+    --accent-yellow: #FCD34D;
+    --accent-color-red: #f57c00;
+    --glow: 0 0 30px rgba(245, 158, 11, 0.3);
+    --card-glow: 0 0 50px rgba(249, 115, 22, 0.15);
+    --dot-glow: 0 0 25px rgba(245, 158, 11, 0.6);
+    --orange-glow: rgba(249, 115, 22, 0.2);
+    --glass-card-bg: rgba(30, 30, 30, 0.75);
+    --glass-card-border: rgba(50, 50, 50, 0.6);
+    --color-text-on-accent: #FFFFFF; /* Added for consistency */
+
+    /* Navigation Specific */
+    --color-nav-active-start: var(--accent-secondary); /* Was #C026D3 Magenta 600 */
+    --color-nav-active-end: var(--accent-primary);   /* Was #7C3AED Violet 600 */
+    --nav-active-gradient: linear-gradient(to right, var(--color-nav-active-start), var(--color-nav-active-end));
+  }
+}
+
+/* Class to force dark theme on specific components (e.g., Constellation Journey) */
+.force-dark-theme {
+  --color-scheme: dark !important;
+  /* Override all relevant variables to their dark theme values */
+  --primary-bg: #0A0A0A !important; 
+  --secondary-bg: #101010 !important;
+  --card-bg: #141414 !important;
+  --input-bg: #1F1F1F !important;
+  --primary-text: #EAEAEA !important;
+  --secondary-text: #B0B0B0 !important;
+  --text-muted: #707070 !important;
+  --card-border: #2A2A2A !important;
+  --hover-bg: #282828 !important;
+  --color-text-on-accent: #FFFFFF !important; /* Added for consistency */
+
+  /* Navigation Specific */
+  --color-nav-active-start: var(--accent-secondary) !important; /* Was #C026D3 Magenta 600 */
+  --color-nav-active-end: var(--accent-primary) !important;   /* Was #7C3AED Violet 600 */
+  --nav-active-gradient: linear-gradient(to right, var(--color-nav-active-start), var(--color-nav-active-end)) !important;
+
+  /* Explicitly set specific background/text for the forced element if needed */
+  /* For example, if .constellation-journey-section needs its own direct background */
+  background-color: var(--primary-bg) !important; /* Ensures the component bg is dark */
+  color: var(--primary-text) !important; /* Ensures text within is light */
+
+  /* Re-apply dark specific glows, accents, etc. if they don't inherit correctly */
+  --accent-primary: #F97316 !important;
+  --accent-secondary: #F59E0B !important;
+  --accent-light: #4A2E0F !important;
+  --accent-hover: #D34C0A !important;
+  --glow: 0 0 30px rgba(245, 158, 11, 0.3) !important;
+  --card-glow: 0 0 50px rgba(249, 115, 22, 0.15) !important;
+  
+  /* And so on for any other variables that need to be dark */
+}
+
+/* Animation Keyframes */
+@keyframes float {
+  0% { transform: translateY(0px); }
+  50% { transform: translateY(-10px); }
+  100% { transform: translateY(0px); }
+}
+
+@keyframes fadeInUp {
+  from { 
+    opacity: 0; 
+    transform: translateY(20px); 
+  }
+  to { 
+    opacity: 1; 
+    transform: translateY(0); 
+  }
+}
+
+@keyframes blink {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0; }
+}
+
+/* Animation Classes */
+.animate-float {
+  animation: float 4s ease-in-out infinite;
+}
+
+.fade-in-up {
+  opacity: 0;
+  animation: fadeInUp 0.8s ease-out forwards;
+}
+
+.delay-100 { animation-delay: 0.1s; }
+.delay-200 { animation-delay: 0.2s; }
+.delay-300 { animation-delay: 0.3s; }
+.delay-400 { animation-delay: 0.4s; }
+.delay-500 { animation-delay: 0.5s; }
+
+/* Utility Classes */
+.gradient-text {
+  background: var(--text-gradient);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+  display: inline-block;
+  font-weight: 800;
+}
+
+.gradient-text-multi {
+  background: var(--text-gradient-multi);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+  display: inline-block;
+  font-weight: 800;
+}
+
+.accent-button {
+  background: var(--accent-gradient);
+  color: #000;
+  font-weight: 700;
+  transition: var(--transition);
+  border-radius: var(--border-radius);
+  position: relative;
+  overflow: hidden;
+  box-shadow: 0 10px 20px rgba(255, 202, 40, 0.3);
+}
+
+.accent-button:hover {
+  transform: translateY(-3px) scale(1.02);
+  box-shadow: 0 15px 30px rgba(255, 202, 40, 0.4);
+}
+
+/* Eclipse Theme Toggle - Fixed with enhanced visibility */
+.theme-toggle {
+  width: 60px !important;
+  height: 60px !important;
+  position: fixed !important;
+  top: 20px !important;
+  right: 20px !important;
+  z-index: 99999 !important; /* Highest z-index */
+  cursor: pointer !important;
+  display: block !important;
+  pointer-events: auto !important;
+  border: none !important;
+  outline: none !important;
+  background: transparent !important;
+  opacity: 1 !important;
+  visibility: visible !important;
+}
+
+.theme-toggle-inner {
+  width: 100% !important;
+  height: 100% !important;
+  border-radius: 50% !important;
+  position: relative !important;
+  overflow: hidden !important;
+  box-shadow: 0 0 15px rgba(0,0,0,0.3) !important;
+  transition: background 0.5s ease !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  pointer-events: auto !important;
+  opacity: 1 !important;
+  visibility: visible !important;
+}
+
+/* Sky background transitions */
+html.dark .theme-toggle-inner {
+  background: linear-gradient(135deg, #0f2027, #203a43, #2c5364) !important;
+}
+
+html.light .theme-toggle-inner {
+  background: linear-gradient(135deg, #89f7fe, #66a6ff) !important;
+}
+
+.theme-toggle-inner:hover {
+  transform: scale(1.05) !important;
+}
+
+.theme-toggle .sun {
+  position: absolute !important;
+  width: 32px !important;
+  height: 32px !important;
+  background: #FFD700 !important;
+  border-radius: 50% !important;
+  top: 14px !important;
+  left: 14px !important;
+  box-shadow: 0 0 15px rgba(255, 215, 0, 0.7) !important;
+  transition: all 0.5s ease !important;
+  z-index: 1 !important;
+  display: block !important;
+  opacity: 1 !important;
+  visibility: visible !important;
+  pointer-events: none !important; /* Allow clicks to pass through to parent */
+}
+
+.theme-toggle .moon {
+  position: absolute !important;
+  width: 32px !important;
+  height: 32px !important;
+  background: #121621 !important;
+  border-radius: 50% !important;
+  top: 14px !important;
+  right: -40px !important;
+  transition: all 0.5s cubic-bezier(0.68, -0.55, 0.27, 1.55) !important;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.7) !important;
+  z-index: 2 !important;
+  display: block !important;
+  opacity: 1 !important;
+  visibility: visible !important;
+  pointer-events: none !important; /* Allow clicks to pass through to parent */
+}
+
+/* Cloud styles */
+.cloud {
+  position: absolute !important;
+  background: rgba(255, 255, 255, 0.8) !important;
+  border-radius: 50px !important;
+  z-index: 3 !important;
+  transition: all 0.5s ease !important;
+  pointer-events: none !important;
+}
+
+/* Light theme (default state) */
+html.light .theme-toggle .moon {
+  right: -40px !important;
+}
+
+html.light .cloud {
+  opacity: 0.8 !important;
+  transform: translateX(0) scale(1) !important;
+}
+
+/* Dark theme (active state) */
+html.dark .theme-toggle .sun {
+  opacity: 0.5 !important;
+  box-shadow: none !important;
+}
+
+html.dark .theme-toggle .moon {
+  right: 14px !important; /* Position aligned with sun */
+}
+
+html.dark .cloud.cloud-1 {
+  transform: translateX(20px) scale(0.8) !important;
+  opacity: 0.3 !important;
+}
+
+html.dark .cloud.cloud-2 {
+  transform: translateX(40px) scale(0.8) !important;
+  opacity: 0.3 !important;
+}
+
+html.dark .cloud.cloud-3 {
+  transform: translateX(60px) scale(0.8) !important;
+  opacity: 0.3 !important;
+}
+
+/* Global Page Background Gradient - ENTIRE CLASS REMOVED */
+
+/* Base Typography Setup */
+html {
+  font-size: 16px;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  text-rendering: optimizeLegibility;
+}
+
+body {
+  font-family: var(--font-primary);
+  font-size: var(--text-base); /* Default to 16px or user preference */
+  font-weight: var(--font-regular);
+  line-height: 1.6; /* UPDATED */
+  letter-spacing: 0.01em; /* UPDATED */
+  color: var(--color-text);
+  background-color: var(--color-bg-base);
+  transition: var(--transition-fast);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  overflow-x: hidden; /* Prevent horizontal scroll from animations */
+}
+
+/* Display Typography (Marketing/Hero) */
+.display-1 {
+  font-size: var(--text-8xl);
+  font-weight: var(--font-bold);
+  line-height: var(--line-height-dense);
+  letter-spacing: var(--letter-spacing-tighter);
+}
+
+.display-2 {
+  font-size: var(--text-7xl);
+  font-weight: var(--font-semibold);
+  line-height: var(--line-height-dense);
+  letter-spacing: var(--letter-spacing-tighter);
+}
+
+/* Headings */
+h1, .h1 { /* Added .h1 class for flexibility */
+  font-family: var(--font-primary);
+  font-weight: var(--font-bold); /* 700 */
+  font-size: clamp(2.5rem, 6vw, 4.5rem); /* UPDATED */
+  line-height: 1.1; /* UPDATED */
+  letter-spacing: -0.02em; /* UPDATED */
+  color: var(--color-text);
+  margin-bottom: 1.5rem; /* Spacing after heading */
+  text-wrap: balance; /* Improve headline balance */
+}
+
+h2, .h2 {
+  font-family: var(--font-primary);
+  font-weight: var(--font-semibold); /* 600 */
+  font-size: 2rem; /* UPDATED */
+  line-height: 1.25; /* UPDATED */
+  letter-spacing: -0.01em; /* UPDATED */
+  color: var(--color-text);
+  margin-bottom: 1.25rem;
+  text-wrap: balance;
+}
+
+h3, .h3 {
+  font-family: var(--font-primary);
+  font-weight: var(--font-semibold); /* UPDATED from --font-medium (500) to 600 */
+  font-size: 1.5rem; /* UPDATED */
+  line-height: 1.3; /* UPDATED */
+  letter-spacing: var(--letter-spacing-normal); /* 0, UPDATED */
+  color: var(--color-text);
+  margin-bottom: 1rem;
+  text-wrap: balance;
+}
+
+h4, .h4 {
+  font-size: var(--text-2xl);
+  font-weight: var(--font-medium);
+  line-height: var(--line-height-normal);
+  margin-bottom: 0.5em;
+  color: var(--primary-text);
+}
+
+/* Body Text Styles */
+.body-large {
+  font-size: var(--text-lg);
+  line-height: var(--line-height-relaxed);
+  letter-spacing: var(--letter-spacing-normal);
+}
+
+.body-regular {
+  font-size: var(--text-base);
+  line-height: var(--line-height-normal);
+}
+
+.body-small {
+  font-size: var(--text-sm);
+  line-height: var(--line-height-normal);
+  letter-spacing: var(--letter-spacing-wide);
+}
+
+/* UI Typography */
+.ui-label {
+  font-size: var(--text-xs);
+  font-weight: var(--font-medium);
+  letter-spacing: var(--letter-spacing-wider);
+  text-transform: uppercase;
+}
+
+.ui-caption {
+  font-family: var(--font-primary);
+  font-size: var(--text-xs); /* 12px */
+  font-weight: var(--font-regular);
+  line-height: var(--line-height-normal); /* 1.5 */
+  letter-spacing: var(--letter-spacing-wide); /* 0.025em */
+  color: var(--color-text-muted);
+}
+
+/* Custom style for ThemeToggle in mobile header */
+.mobile-header-theme-toggle-wrapper .theme-toggle {
+  transform: scale(0.75);
+  transform-origin: center;
+}
+
+/* Responsive Typography */
+@media (max-width: 768px) {
+  :root {
+    --text-6xl: 3rem;     /* 48px */
+    --text-7xl: 3.75rem;  /* 60px */
+    --text-8xl: 4.5rem;   /* 72px */
+  }
+  
+h1, .h1 { font-size: var(--text-4xl); }
+  h2, .h2 { font-size: var(--text-3xl); }
+  h3, .h3 { font-size: var(--text-2xl); }
+}
+
+/* Accessibility Features for Typography */
+@media (prefers-contrast: high) {
+  body {
+    font-weight: var(--font-medium); /* Increase base weight */
+    letter-spacing: 0.02em; /* Slightly increase spacing */
+  }
+  /* Ensure links and interactive elements have clear focus and contrast */
+  a, button {
+    text-decoration: underline; /* Ensure links are underlined */
+  }
+}
+
+/* Dark Mode Adjustments (already handled by html.dark but this is for prefers-color-scheme specific font smoothing) */
+@media (prefers-color-scheme: dark) {
+  body:not(html.light body) { /* Apply only if not explicitly set to light */
+    -webkit-font-smoothing: subpixel-antialiased; /* Can sometimes look better on dark backgrounds */
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  * {
+    transition-duration: 0.01ms !important;
+    animation-duration: 0.01ms !important; /* Include animation */
+    animation-iteration-count: 1 !important; /* Limit animation loops */
+    scroll-behavior: auto !important; /* Disable smooth scrolling */
+  }
+}
+
+/* NEW UTILITY CLASSES */
+.name-bold {
+  font-weight: 700;
+  font-size: var(--text-lg); /* 1.125rem */
+  letter-spacing: -0.015em;
+  font-family: -apple-system, BlinkMacSystemFont, "Inter", sans-serif; /* SF Pro first, then Inter */
+}
+
+.button-label {
+  font-weight: 600;
+  font-size: var(--text-sm); /* 0.875rem */
+  letter-spacing: 0.02em;
+  text-transform: uppercase;
+  font-family: -apple-system, BlinkMacSystemFont, "Inter", sans-serif; /* SF Pro first, then Inter */
+}
+
+/* Specificity overrides if needed for certain contexts */
+ 

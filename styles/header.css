@@ -1,0 +1,24 @@
+@keyframes gradient-shift {
+  0% { filter: hue-rotate(0deg); }
+  100% { filter: hue-rotate(360deg); }
+}
+
+.animate-gradient-shift {
+  animation: gradient-shift 8s linear infinite;
+}
+
+@keyframes nav-item-appear {
+  from {
+    opacity: 0;
+    transform: translateY(-10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.animate-nav-item-appear {
+  animation: nav-item-appear 0.5s ease-out forwards;
+  opacity: 0; /* Initial state before animation starts */
+} 

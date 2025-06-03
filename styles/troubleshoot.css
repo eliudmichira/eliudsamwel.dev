@@ -1,0 +1,132 @@
+.chatbot-troubleshoot {
+  max-width: 800px;
+  margin: 0 auto;
+  padding: 20px;
+  color: var(--primary-text);
+}
+
+.troubleshoot-title {
+  margin-bottom: 24px;
+  font-size: 24px;
+  font-weight: 600;
+}
+
+.troubleshoot-section {
+  margin-bottom: 32px;
+  background: var(--secondary-bg);
+  border-radius: 8px;
+  padding: 20px;
+}
+
+.chatbot-troubleshoot h2 {
+  margin-top: 0;
+  margin-bottom: 16px;
+  font-size: 18px;
+}
+
+.config-info {
+  background: var(--card-bg);
+  border-radius: 6px;
+  padding: 16px;
+}
+
+.config-item {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 8px;
+  padding-bottom: 8px;
+  border-bottom: 1px solid var(--card-border);
+}
+
+.config-item:last-child {
+  border-bottom: none;
+  margin-bottom: 0;
+  padding-bottom: 0;
+}
+
+.chatbot-troubleshoot code {
+  background: var(--input-bg);
+  padding: 4px 6px;
+  border-radius: 4px;
+  font-family: monospace;
+}
+
+.test-button {
+  background: var(--accent-gradient);
+  color: #000;
+  border: none;
+  padding: 10px 16px;
+  border-radius: 6px;
+  font-weight: 600;
+  cursor: pointer;
+  margin-bottom: 16px;
+}
+
+.test-button:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+.test-result {
+  background: var(--card-bg);
+  border-radius: 6px;
+  padding: 16px;
+}
+
+.test-result h3 {
+  margin-top: 0;
+  font-size: 16px;
+}
+
+.test-result pre {
+  background: var(--input-bg);
+  padding: 10px;
+  border-radius: 4px;
+  overflow-x: auto;
+  font-size: 12px;
+  margin-bottom: 16px;
+}
+
+.test-result.error h3 {
+  color: #f44336;
+}
+
+.test-result.success h3 {
+  color: #4caf50;
+}
+
+.suggestions {
+  border-top: 1px solid var(--card-border);
+  padding-top: 12px;
+}
+
+.suggestions h4 {
+  margin-top: 0;
+  margin-bottom: 8px;
+}
+
+.suggestions ul {
+  padding-left: 20px;
+  margin: 0;
+}
+
+.suggestions li {
+  margin-bottom: 6px;
+}
+
+.issue {
+  background: var(--card-bg);
+  border-radius: 6px;
+  padding: 16px;
+  margin-bottom: 10px;
+}
+
+.issue h4 {
+  margin-top: 0;
+  margin-bottom: 8px;
+  color: var(--accent-color);
+}
+
+.issue p {
+  margin-bottom: 0;
+} 

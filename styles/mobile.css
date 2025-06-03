@@ -1,0 +1,111 @@
+/* Mobile and Android Specific Optimizations */
+
+/* Better tap targets for mobile devices */
+@media (max-width: 767px) {
+  button, 
+  a, 
+  [role="button"],
+  input[type="button"],
+  input[type="submit"] {
+    min-height: 44px;  /* Apple/Google recommended minimum touch target height */
+    min-width: 44px;   /* Apple/Google recommended minimum touch target width */
+  }
+  
+  /* Improve form inputs on mobile */
+  input, 
+  select, 
+  textarea {
+    font-size: 16px !important; /* Prevents zoom on focus in iOS/Android */
+    padding: 12px !important;
+  }
+
+  /* Fix for Android browser viewport issues */
+  html, body {
+    height: 100%;
+    max-height: 100%;
+    overflow-x: hidden;
+    width: 100%;
+    touch-action: manipulation; /* Disable double-tap to zoom on most browsers */
+    -webkit-tap-highlight-color: transparent; /* Remove tap highlight on Android */
+    -webkit-touch-callout: none; /* Disable callout on long-press */
+  }
+
+  /* Improve scrolling performance */
+  * {
+    -webkit-overflow-scrolling: touch; /* Smooth scrolling on iOS */
+  }
+
+  /* Fix for Android keyboard issues */
+  .input-focused {
+    position: relative !important;
+    top: 0 !important;
+  }
+  
+  /* Optimize for mobile screens */
+  .container {
+    padding-left: 16px !important;
+    padding-right: 16px !important;
+  }
+  
+  /* Reduce animations for better performance */
+  .animate-float {
+    animation-duration: 2s !important; /* Reduce animation cycle time */
+  }
+
+  /* Better spacing for mobile */
+  section {
+    margin-bottom: 3rem !important;
+    padding-top: 1.5rem !important;
+    padding-bottom: 1.5rem !important;
+  }
+
+  /* Custom scrollbars for Android WebView */
+  ::-webkit-scrollbar {
+    width: 4px !important;
+    height: 4px !important;
+  }
+  
+  ::-webkit-scrollbar-thumb {
+    background-color: rgba(255, 160, 0, 0.4) !important;
+    border-radius: 10px !important;
+  }
+
+  /* Android-specific optimizations */
+  @supports (-webkit-touch-callout: none) {
+    body {
+      line-height: 1.4; /* Better line height for Android */
+    }
+
+    /* Fix for specific Android WebView issues */
+    input, textarea {
+      -webkit-appearance: none;
+    }
+  }
+
+  /* Fix position:fixed issues on Android Chrome */
+  .fixed-android {
+    position: fixed !important;
+    -webkit-backface-visibility: hidden;
+    backface-visibility: hidden;
+    transform: translateZ(0);
+  }
+}
+
+/* Small phone screens - extreme cases */
+@media (max-width: 360px) {
+  html {
+    font-size: 14px; /* Smaller base font size */
+  }
+  
+  h1 { font-size: 1.8rem !important; }
+  h2 { font-size: 1.5rem !important; }
+  h3 { font-size: 1.3rem !important; }
+  
+  .xs-hidden {
+    display: none !important;
+  }
+  
+  .xs-stack {
+    flex-direction: column !important;
+  }
+} 

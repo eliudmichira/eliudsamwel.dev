@@ -1,0 +1,105 @@
+:root {
+  /* Light theme variables */
+  --bg-light: #f3f4f6;
+  --text-light: #111827;
+  --card-light: #ffffff;
+  --border-light: #e5e7eb;
+  
+  /* Dark theme variables */
+  --bg-dark: #111827;
+  --text-dark: #f9fafb;
+  --card-dark: #1f2937;
+  --border-dark: #374151;
+  
+  /* Accent colors for both themes */
+  --accent-amber: #f59e0b;
+  --accent-purple: #8b5cf6;
+
+  /* Default theme (light) */
+  --bg: var(--bg-light);
+  --text: var(--text-light);
+  --card: var(--card-light);
+  --border: var(--border-light);
+}
+
+[data-theme="dark"] {
+  --bg: var(--bg-dark);
+  --text: var(--text-dark);
+  --card: var(--card-dark);
+  --border: var(--border-dark);
+}
+
+/* Animation durations */
+:root {
+  --theme-transition: 0.3s ease;
+  --eclipse-duration: 0.6s;
+}
+
+/* Eclipse theme toggle component */
+.eclipse-toggle {
+  width: 60px;
+  height: 60px;
+  position: relative;
+  cursor: pointer;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: visible;
+  transition: transform 0.3s ease;
+}
+
+.eclipse-toggle:hover {
+  transform: scale(1.05);
+}
+
+.eclipse-toggle .sun {
+  width: 100%;
+  height: 100%;
+  background: radial-gradient(circle, #FFD700 30%, #FFA500 100%);
+  border-radius: 50%;
+  position: absolute;
+  box-shadow: 0 0 25px rgba(255, 215, 0, 0.7);
+  transition: all var(--theme-transition);
+}
+
+.eclipse-toggle .moon {
+  width: 60px;
+  height: 60px;
+  background-color: var(--bg-dark);
+  border-radius: 50%;
+  position: absolute;
+  transform: translateX(-85px);
+  transition: transform var(--eclipse-duration) cubic-bezier(0.33, 1, 0.68, 1);
+  z-index: 2;
+}
+
+/* Eclipse animation states */
+.eclipse-toggle .moon.animating {
+  animation: eclipse-flash 0.6s;
+}
+
+.eclipse-toggle .moon.active {
+  transform: translateX(0);
+}
+
+/* Animation for the flash effect during eclipse */
+@keyframes eclipse-flash {
+  0% { box-shadow: none; }
+  50% { 
+    box-shadow: 0 0 40px 10px rgba(255, 255, 255, 0.8);
+    transform: translateX(-30px); 
+  }
+  100% { box-shadow: none; }
+}
+
+/* Global theme transition */
+body {
+  transition: background-color var(--theme-transition), color var(--theme-transition);
+}
+
+/* Accessibility */
+.eclipse-toggle:focus-visible {
+  outline: 2px solid var(--accent-purple);
+  outline-offset: 2px;
+} 

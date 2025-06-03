@@ -1,0 +1,390 @@
+/* Theme Toggle Showcase Styles */
+
+.theme-toggle-showcase-container {
+  padding: 2rem;
+}
+
+.toggles-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+  gap: 2rem;
+  margin-top: 2rem;
+}
+
+.toggle-card {
+  background-color: var(--card-bg);
+  border-radius: 1rem;
+  padding: 1.5rem;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+  transition: all 0.3s ease;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.toggle-card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.12);
+}
+
+.toggle-placeholder {
+  position: relative;
+  width: 120px;
+  height: 60px;
+  background-color: var(--card-hover);
+  border-radius: 30px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  cursor: pointer;
+  margin: 1rem 0;
+  overflow: hidden;
+  box-shadow: inset 0 2px 10px rgba(0, 0, 0, 0.1);
+}
+
+/* Toggle 1: Day/Night Cycle */
+.toggle-1-actual {
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(to right, #87CEEB 50%, #1a1e3f 50%);
+  background-size: 200% 100%;
+  background-position: left;
+  transition: background-position 0.5s ease-in-out;
+  border-radius: 30px;
+  position: relative;
+}
+
+.toggle-1-actual.active {
+  background-position: right;
+}
+
+.toggle-1-actual .stars {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  opacity: 0;
+  transition: opacity 0.3s ease-in;
+}
+
+.toggle-1-actual.active .stars {
+  opacity: 1;
+}
+
+.toggle-1-actual .star {
+  position: absolute;
+  width: 3px;
+  height: 3px;
+  background-color: white;
+  border-radius: 50%;
+  animation: twinkle 1.5s infinite alternate;
+}
+
+@keyframes twinkle {
+  0% { opacity: 0.3; }
+  100% { opacity: 1; }
+}
+
+/* Toggle 2: Morphing Shape */
+.toggle-2-actual {
+  width: 40px;
+  height: 40px;
+  background: #FFD700;
+  border-radius: 50%;
+  transition: all 0.6s cubic-bezier(0.68, -0.55, 0.27, 1.55);
+  position: relative;
+}
+
+.toggle-2-actual::before {
+  content: "☀️";
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  font-size: 20px;
+}
+
+.toggle-2-actual.active {
+  background: #A9A9A9;
+  border-radius: 25%;
+}
+
+.toggle-2-actual.active::before {
+  content: "🌙";
+}
+
+/* Toggle 3: Sliding Sky */
+.toggle-3-actual {
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(to bottom, #3a7bd5, #87ceeb);
+  border-radius: 30px;
+  position: relative;
+  overflow: hidden;
+  transition: background 0.5s ease;
+}
+
+.toggle-3-actual.active {
+  background: linear-gradient(to bottom, #1a1e3f, #2c3e50);
+}
+
+.toggle-3-actual .cloud {
+  position: absolute;
+  background: #fff;
+  border-radius: 50px;
+  width: 25px;
+  height: 10px;
+  transition: transform 0.5s ease;
+}
+
+.toggle-3-actual .cloud1 {
+  top: 15px;
+  left: 20px;
+}
+
+.toggle-3-actual .cloud2 {
+  top: 20px;
+  left: 50px;
+  width: 35px;
+}
+
+.toggle-3-actual.active .cloud {
+  transform: translateX(-100px);
+  opacity: 0;
+}
+
+.toggle-3-actual .celestial {
+  position: absolute;
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  top: 15px;
+  right: 25px;
+  background: #FFD700;
+  box-shadow: 0 0 15px #FFD700;
+  transition: all 0.5s ease;
+}
+
+.toggle-3-actual.active .celestial {
+  background: #E6E6FA;
+  box-shadow: 0 0 10px #E6E6FA;
+}
+
+/* Toggle 4: Eclipse Effect */
+.toggle-4-actual {
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(135deg, #1a1e3f, #2c3e50);
+  border-radius: 30px;
+  position: relative;
+  overflow: hidden;
+}
+
+.toggle-4-actual .sun {
+  position: absolute;
+  width: 30px;
+  height: 30px;
+  background: #FFD700;
+  border-radius: 50%;
+  top: 15px;
+  left: 20px;
+  box-shadow: 0 0 15px rgba(255, 215, 0, 0.7);
+  transition: all 0.5s ease;
+}
+
+.toggle-4-actual .moon {
+  position: absolute;
+  width: 30px;
+  height: 30px;
+  background: #E6E6FA;
+  border-radius: 50%;
+  top: 15px;
+  right: -40px;
+  transition: all 0.5s ease;
+  box-shadow: 0 0 10px rgba(230, 230, 250, 0.7);
+}
+
+.toggle-4-actual.active .sun {
+  transform: translateX(-20px);
+  opacity: 0.7;
+  box-shadow: none;
+}
+
+.toggle-4-actual.active .moon {
+  transform: translateX(-60px);
+}
+
+/* Toggle 5: Liquid Morph */
+.toggle-5-actual {
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(to right, #87CEEB, #1E90FF);
+  border-radius: 30px;
+  position: relative;
+  transition: background 0.7s ease;
+}
+
+.toggle-5-actual.active {
+  background: linear-gradient(to right, #9400D3, #4B0082);
+}
+
+.toggle-5-actual .handle {
+  position: absolute;
+  width: 30px;
+  height: 30px;
+  background: #fff;
+  border-radius: 50%;
+  top: 15px;
+  left: 15px;
+  transition: all 0.7s cubic-bezier(0.68, -0.55, 0.27, 1.55);
+}
+
+.toggle-5-actual.active .handle {
+  transform: translateX(60px);
+  background: #E6E6FA;
+}
+
+/* Toggle 6: 3D Flip */
+.toggle-6-actual {
+  width: 100%;
+  height: 100%;
+  perspective: 1000px;
+}
+
+.toggle-6-inner {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  text-align: center;
+  transition: transform 0.8s;
+  transform-style: preserve-3d;
+}
+
+.toggle-6-actual.active .toggle-6-inner {
+  transform: rotateY(180deg);
+}
+
+.toggle-6-front, .toggle-6-back {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  backface-visibility: hidden;
+  border-radius: 30px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-size: 24px;
+}
+
+.toggle-6-front {
+  background: linear-gradient(135deg, #FFD700, #FFA500);
+}
+
+.toggle-6-back {
+  background: linear-gradient(135deg, #1a1e3f, #2c3e50);
+  transform: rotateY(180deg);
+}
+
+/* Toggle 7: Neon Glow */
+.toggle-7-actual {
+  width: 100%;
+  height: 100%;
+  background: #121212;
+  border-radius: 30px;
+  position: relative;
+  overflow: hidden;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.neon-text {
+  position: absolute;
+  font-size: 14px;
+  font-weight: bold;
+  transition: all 0.5s ease;
+}
+
+.day-text {
+  color: #FFD700;
+  text-shadow: 0 0 5px #FFD700, 0 0 10px #FFD700;
+  opacity: 1;
+}
+
+.night-text {
+  color: #FF00FF;
+  text-shadow: 0 0 5px #FF00FF, 0 0 10px #FF00FF, 0 0 15px #FF00FF;
+  opacity: 0;
+}
+
+.toggle-7-actual.active .day-text {
+  opacity: 0;
+}
+
+.toggle-7-actual.active .night-text {
+  opacity: 1;
+}
+
+/* Toggle 8: Particle Burst */
+.toggle-8-actual {
+  width: 100%;
+  height: 100%;
+  background: #333;
+  border-radius: 30px;
+  position: relative;
+}
+
+.toggle-8-actual .slider {
+  position: absolute;
+  width: 30px;
+  height: 30px;
+  background: #FFA500;
+  border-radius: 50%;
+  top: 15px;
+  left: 15px;
+  transition: all 0.3s ease;
+  box-shadow: 0 0 10px rgba(255, 165, 0, 0.7);
+}
+
+.toggle-8-actual.active .slider {
+  transform: translateX(60px);
+  background: #00FFFF;
+  box-shadow: 0 0 15px rgba(0, 255, 255, 0.7);
+}
+
+.particle {
+  position: absolute;
+  width: 4px;
+  height: 4px;
+  background: #FFA500;
+  border-radius: 50%;
+  animation: particleAnim 0.7s ease-out forwards;
+}
+
+.toggle-8-actual.active .particle {
+  background: #00FFFF;
+}
+
+@keyframes particleAnim {
+  0% {
+    transform: translate(0, 0);
+    opacity: 1;
+  }
+  100% {
+    transform: translate(var(--x), var(--y));
+    opacity: 0;
+  }
+}
+
+/* Responsive styles */
+@media (max-width: 768px) {
+  .toggles-grid {
+    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+    gap: 1.5rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .toggles-grid {
+    grid-template-columns: 1fr;
+  }
+} 

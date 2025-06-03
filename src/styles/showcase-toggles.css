@@ -1,0 +1,487 @@
+/* showcase-toggles.css */
+
+/* General styles for the showcase page, if different from main body */
+.theme-toggle-showcase-container {
+  /* Example: define specific background for this page if needed */
+  /* background-color: var(--primary-bg); */
+  /* color: var(--primary-text); */
+}
+
+/* Grid for toggle cards */
+.toggles-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); /* Adjusted minmax for responsiveness */
+  gap: 2rem;
+  margin-bottom: 2rem;
+}
+
+/* Styling for individual toggle cards in the showcase */
+.toggle-card.showcase-card {
+  background: var(--card-bg);
+  border-radius: var(--border-radius-lg);
+  padding: 1.5rem; /* Slightly reduced padding */
+  box-shadow: var(--card-shadow);
+  transition: all 0.3s ease;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1rem; /* Reduced gap */
+  border: 1px solid var(--card-border);
+}
+
+html.light .toggle-card.showcase-card {
+  background: var(--light-card-bg);
+  border-color: var(--light-card-border);
+  box-shadow: var(--light-card-shadow);
+}
+
+.toggle-card.showcase-card h3 {
+  font-size: 1.15rem; /* Adjusted font size */
+  font-weight: 600;
+  color: var(--primary-text);
+  text-align: center;
+}
+
+html.light .toggle-card.showcase-card h3 {
+  color: var(--light-primary-text);
+}
+
+.toggle-card.showcase-card p {
+  font-size: 0.875rem; /* Slightly smaller description text */
+  color: var(--secondary-text);
+  text-align: center;
+}
+
+html.light .toggle-card.showcase-card p {
+  color: var(--light-secondary-text);
+}
+
+/* Placeholder class for the toggle itself, to center it if needed */
+.toggle-placeholder {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 80px; /* Ensure a minimum height for visual consistency */
+}
+
+
+/* --- Styles for Individual Toggles --- */
+
+/* Toggle 1: Day/Night Cycle (using .toggle-1-actual for React component) */
+.toggle-1-actual {
+    width: 100px;
+    height: 50px;
+    background: linear-gradient(to right, #87CEEB 0%, #FFE4B5 50%, #191970 50%, #000428 100%);
+    border-radius: 25px;
+    position: relative;
+    cursor: pointer;
+    overflow: hidden;
+    transition: all 0.5s ease;
+    border: 1px solid rgba(255,255,255,0.1);
+}
+
+.toggle-1-actual::before {
+    content: '';
+    position: absolute;
+    width: 40px;
+    height: 40px;
+    background: #FFD700; /* Sun color */
+    border-radius: 50%;
+    top: 5px;
+    left: 5px;
+    transition: all 0.5s ease;
+    box-shadow: 0 0 10px rgba(255, 215, 0, 0.8);
+}
+
+.toggle-1-actual.active::before {
+    transform: translateX(50px);
+    background: #F0F0F0; /* Moon color */
+    box-shadow: 0 0 10px rgba(240, 240, 240, 0.8);
+}
+
+.toggle-1-actual .stars {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    opacity: 0;
+    transition: opacity 0.5s ease;
+}
+
+.toggle-1-actual.active .stars {
+    opacity: 1;
+}
+
+.star {
+    position: absolute;
+    width: 2px;
+    height: 2px;
+    background: white;
+    border-radius: 50%;
+    animation: showcase-twinkle 3s infinite;
+}
+
+@keyframes showcase-twinkle {
+    0%, 100% { opacity: 0; }
+    50% { opacity: 1; }
+}
+
+/* Toggle 2: Morphing Shape (using .toggle-2-actual) */
+.toggle-2-actual {
+    width: 80px;
+    height: 80px;
+    background: linear-gradient(135deg, #FFD700 0%, #FFA500 100%); /* Sun colors */
+    border-radius: 40%; /* Squarish */
+    position: relative;
+    cursor: pointer;
+    transition: all 0.6s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+    box-shadow: 0 5px 20px rgba(255, 215, 0, 0.4);
+}
+
+.toggle-2-actual:hover {
+    transform: scale(1.1);
+}
+
+.toggle-2-actual.active {
+    background: linear-gradient(135deg, #4B0082 0%, #8A2BE2 100%); /* Moon/Night colors */
+    border-radius: 50%; /* Circle */
+    animation: showcase-rotate 0.6s ease-in-out;
+    box-shadow: 0 5px 20px rgba(138, 43, 226, 0.4);
+}
+
+.toggle-2-actual::before {
+    content: '☀️';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    font-size: 2rem;
+    transition: all 0.3s ease;
+}
+
+.toggle-2-actual.active::before {
+    content: '🌙';
+    transform: translate(-50%, -50%) rotate(360deg);
+}
+
+@keyframes showcase-rotate {
+    from { transform: rotate(0deg); }
+    to { transform: rotate(360deg); }
+}
+
+/* Toggle 3: Sliding Sky (using .toggle-3-actual) */
+.toggle-3-actual {
+    width: 120px;
+    height: 60px;
+    background: linear-gradient(to bottom, #87CEEB 0%, #98D8E8 100%); /* Day sky */
+    border-radius: 30px;
+    position: relative;
+    cursor: pointer;
+    overflow: hidden;
+    transition: all 0.5s ease;
+    border: 1px solid rgba(0,0,0,0.1);
+}
+
+.toggle-3-actual.active {
+    background: linear-gradient(to bottom, #0F2027 0%, #203A43 50%, #2C5364 100%); /* Night sky */
+}
+
+.toggle-3-actual .cloud {
+    position: absolute;
+    background: white;
+    border-radius: 100px;
+    opacity: 0.8;
+    transition: all 0.5s ease;
+}
+
+.cloud1 {
+    width: 30px;
+    height: 10px;
+    top: 15px;
+    left: 10px;
+}
+
+.cloud2 {
+    width: 20px;
+    height: 8px;
+    top: 25px;
+    left: 40px;
+}
+
+.toggle-3-actual.active .cloud {
+    opacity: 0;
+    transform: translateY(-20px);
+}
+
+.toggle-3-actual .celestial {
+    position: absolute;
+    width: 50px;
+    height: 50px;
+    background: #FFD700; /* Sun */
+    border-radius: 50%;
+    top: 5px;
+    left: 5px;
+    transition: all 0.5s ease;
+    box-shadow: 0 0 20px rgba(255, 215, 0, 0.5);
+}
+
+.toggle-3-actual.active .celestial {
+    transform: translateX(60px);
+    background: #F0F0F0; /* Moon */
+    box-shadow: 0 0 20px rgba(240, 240, 240, 0.5);
+}
+
+/* Toggle 4: Eclipse (using .toggle-4-actual) */
+.toggle-4-actual {
+    width: 80px;
+    height: 80px;
+    position: relative;
+    cursor: pointer;
+}
+
+.toggle-4-actual .sun {
+    width: 100%;
+    height: 100%;
+    background: radial-gradient(circle, #FFD700 40%, #FFA500 100%); /* Sun */
+    border-radius: 50%;
+    position: absolute;
+    transition: all 0.3s ease;
+    box-shadow: 0 0 30px rgba(255, 215, 0, 0.6);
+}
+
+.toggle-4-actual .moon {
+    width: 80%;
+    height: 80%;
+    background: #1a1a2e; /* Moon */
+    border-radius: 50%;
+    position: absolute;
+    top: -60%;
+    left: -60%;
+    transition: all 0.6s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+    box-shadow: 0 0 20px rgba(26, 26, 46, 0.8);
+}
+
+.toggle-4-actual.active .moon {
+    top: 10%;
+    left: 10%;
+}
+
+/* Toggle 5: Liquid Morph (using .toggle-5-actual) */
+.toggle-5-actual {
+    width: 100px;
+    height: 50px;
+    background: #e0e0e0; /* Base for light */
+    border-radius: 25px;
+    position: relative;
+    cursor: pointer;
+    overflow: hidden;
+    border: 1px solid rgba(0,0,0,0.1);
+}
+
+.toggle-5-actual::before {
+    content: '';
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(45deg, #FFD700, #FFA500, #FF6347); /* Light theme gradient */
+    border-radius: 25px;
+    transform: translateX(-100%);
+    transition: transform 0.5s ease;
+}
+
+.toggle-5-actual.active::before {
+    transform: translateX(0);
+    background: linear-gradient(45deg, #4B0082, #8A2BE2, #9370DB); /* Dark theme gradient */
+}
+
+.toggle-5-actual .handle {
+    width: 40px;
+    height: 40px;
+    background: white;
+    border-radius: 50%;
+    position: absolute;
+    top: 5px;
+    left: 5px;
+    z-index: 1;
+    transition: all 0.5s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
+}
+
+.toggle-5-actual.active .handle {
+    transform: translateX(50px) rotate(360deg);
+}
+
+/* Toggle 6: 3D Flip (using .toggle-6-actual) */
+.toggle-6-actual {
+    width: 100px;
+    height: 50px;
+    position: relative;
+    cursor: pointer;
+    perspective: 200px;
+}
+
+.toggle-6-actual .toggle-6-inner {
+    width: 100%;
+    height: 100%;
+    position: relative;
+    transform-style: preserve-3d;
+    transition: transform 0.6s;
+}
+
+.toggle-6-actual.active .toggle-6-inner {
+    transform: rotateY(180deg);
+}
+
+.toggle-6-actual .toggle-6-front,
+.toggle-6-actual .toggle-6-back {
+    width: 100%;
+    height: 100%;
+    position: absolute;
+    backface-visibility: hidden;
+    border-radius: 25px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.5rem;
+    border: 1px solid rgba(0,0,0,0.1);
+}
+
+.toggle-6-actual .toggle-6-front {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); /* Light theme appearance */
+    color: white;
+}
+
+.toggle-6-actual .toggle-6-back {
+    background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%); /* Dark theme appearance */
+    transform: rotateY(180deg);
+    color: white;
+}
+
+/* Toggle 7: Neon Glow (using .toggle-7-actual) */
+.toggle-7-actual {
+    width: 100px;
+    height: 50px;
+    background: #ededed; /* Light mode background */
+    border-radius: 25px;
+    position: relative;
+    cursor: pointer;
+    box-shadow: inset 0 0 10px rgba(0, 0, 0, 0.1);
+    overflow: hidden;
+    border: 1px solid #ccc;
+}
+
+.toggle-7-actual.active {
+    background: #1a1a1a; /* Dark mode background */
+    box-shadow: inset 0 0 10px rgba(0,0,0,0.5);
+    border-color: #333;
+}
+
+.toggle-7-actual::before {
+    content: '';
+    position: absolute;
+    width: 40px;
+    height: 40px;
+    background: #ffc107; /* Sun color for light mode */
+    border-radius: 50%;
+    top: 5px;
+    left: 5px;
+    transition: all 0.3s ease;
+    box-shadow: 0 0 10px rgba(255, 193, 7, 0.5);
+}
+
+.toggle-7-actual.active::before {
+    transform: translateX(50px);
+    background: #fff; /* Moon/Glow color for dark mode */
+    box-shadow: 0 0 15px #ff00ff, 0 0 30px #ff00ff, 0 0 45px #ff00ff; /* Neon glow */
+}
+
+.toggle-7-actual .neon-text {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    font-size: 0.8rem;
+    font-weight: bold;
+    transition: all 0.3s ease;
+}
+
+.toggle-7-actual .day-text {
+    left: 50px; /* Positioned for when slider is to the left (day) */
+    color: #777; /* Day text color for light mode */
+}
+.toggle-7-actual.active .day-text {
+    color: #555; /* Day text color when dark mode is active (less visible) */
+}
+
+.toggle-7-actual .night-text {
+    right: 45px; /* Positioned for when slider is to the right (night) */
+    color: #aaa; /* Night text color for light mode (less visible) */
+    opacity: 0;
+}
+
+.toggle-7-actual.active .night-text {
+    color: #ff00ff;
+    text-shadow: 0 0 8px #ff00ff, 0 0 12px #ff00ff;
+    opacity: 1;
+}
+
+/* Toggle 8: Particle Burst (using .toggle-8-actual) */
+.toggle-8-actual {
+    width: 100px;
+    height: 50px;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); /* Default/Light mode gradient */
+    border-radius: 25px;
+    position: relative;
+    cursor: pointer;
+    overflow: hidden; /* To contain particles before they burst out */
+    border: 1px solid rgba(0,0,0,0.1);
+}
+.toggle-8-actual.active {
+    background: linear-gradient(135deg, #0F2027 0%, #2C5364 100%); /* Dark mode gradient */
+}
+
+.toggle-8-actual .slider {
+    width: 40px;
+    height: 40px;
+    background: white;
+    border-radius: 50%;
+    position: absolute;
+    top: 5px;
+    left: 5px;
+    transition: all 0.5s ease;
+    z-index: 2;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+}
+
+.toggle-8-actual.active .slider {
+    transform: translateX(50px);
+}
+
+.toggle-8-actual .particle {
+    position: absolute;
+    width: 4px;
+    height: 4px;
+    background: rgba(255, 255, 255, 0.9);
+    border-radius: 50%;
+    opacity: 0; /* Start invisible */
+    z-index: 1; /* Behind slider initially */
+    /* animation is set by JS */
+}
+
+/* Animation for particles, to be triggered by JS */
+.toggle-8-actual.animating .particle {
+    animation: showcase-particle-burst 0.7s ease-out forwards;
+}
+
+@keyframes showcase-particle-burst {
+    0% {
+        opacity: 1;
+        transform: translate(0, 0) scale(0.5);
+    }
+    50% {
+        opacity: 0.8;
+        transform: translate(var(--x), var(--y)) scale(1.2);
+    }
+    100% {
+        opacity: 0;
+        transform: translate(calc(var(--x) * 2), calc(var(--y) * 2)) scale(0.1);
+    }
+} 

@@ -1,0 +1,246 @@
+.animate-gradient-x {
+  animation: gradient-x 10s ease infinite;
+  background-size: 200% 200%;
+}
+
+@keyframes gradient-x {
+  0%, 100% { background-position: 0% 50%; }
+  50% { background-position: 100% 50%; }
+}
+
+/* Card glow effect */
+:root {
+  --card-glow: 0 0 25px rgba(245, 158, 11, 0.4);
+}
+
+/* Project card glow effect */
+.card-glow {
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.card-glow:hover,
+.group:hover .card-glow {
+  box-shadow: 0 0 30px rgba(245, 158, 11, 0.4);
+  box-shadow: var(--card-glow);
+}
+
+.sort-icon {
+  transition: transform 0.2s ease-in-out;
+}
+
+.sort-icon.asc {
+  transform: rotate(180deg);
+}
+
+/* Background pattern */
+.bg-grid-pattern {
+  background-image: 
+    linear-gradient(to right, var(--color-border) 1px, transparent 1px),
+    linear-gradient(to bottom, var(--color-border) 1px, transparent 1px);
+  background-size: 24px 24px;
+}
+
+/* Blog Card Enhancements */
+.blog-card {
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.blog-card:hover {
+  transform: translateY(-6px);
+  box-shadow: var(--card-glow);
+}
+
+/* Blog Detail Styles */
+.blog-content-wrapper {
+  margin: 0 auto;
+  max-width: 760px;
+  line-height: 1.7;
+}
+
+.blog-hero-gradient {
+  background: linear-gradient(to bottom, transparent, rgba(0,0,0,0.75) 90%);
+}
+
+.blog-title-large {
+  font-size: clamp(2rem, 5vw, 3.5rem);
+  font-weight: 800;
+  line-height: 1.2;
+  letter-spacing: -0.02em;
+}
+
+/* Typography Enhancements */
+.prose h1, .prose h2, .prose h3 {
+  scroll-margin-top: 100px;
+  position: relative;
+}
+
+.prose h2 {
+  font-size: 1.75rem;
+  margin-top: 2.5rem;
+  margin-bottom: 1.25rem;
+  padding-bottom: 0.5rem;
+  border-bottom: 1px solid var(--color-border);
+}
+
+.prose h3 {
+  font-size: 1.35rem;
+  margin-top: 2rem;
+  margin-bottom: 1rem;
+}
+
+.prose p {
+  margin-bottom: 1.5rem;
+}
+
+.prose img {
+  border-radius: 0.5rem;
+  margin: 2rem auto;
+  box-shadow: var(--shadow-sm);
+}
+
+.prose blockquote {
+  font-size: 1.1rem;
+  margin: 2rem 0;
+  padding: 1.5rem 2rem;
+  border-radius: 0.5rem;
+  background-color: var(--color-bg-muted);
+  border-left: 4px solid var(--accent-primary);
+  font-style: italic;
+}
+
+.prose pre {
+  margin: 1.5rem 0;
+  padding: 1.25rem;
+  border-radius: 0.5rem;
+  background-color: var(--color-bg-muted);
+  overflow-x: auto;
+}
+
+/* Code block styling */
+.prose code {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.9rem;
+}
+
+/* Table styling */
+.prose table {
+  border-collapse: collapse;
+  width: 100%;
+  margin: 2rem 0;
+  font-size: 0.95rem;
+}
+
+.prose th {
+  background-color: var(--color-bg-muted);
+  padding: 0.75rem 1rem;
+  text-align: left;
+}
+
+.prose td {
+  padding: 0.75rem 1rem;
+  border-bottom: 1px solid var(--color-border-light);
+}
+
+/* Lists */
+.prose ul, .prose ol {
+  margin-bottom: 1.5rem;
+  padding-left: 1.5rem;
+}
+
+.prose li {
+  margin-bottom: 0.5rem;
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+  .blog-content-wrapper {
+    padding: 0 1rem;
+  }
+  
+  .prose h2 {
+    font-size: 1.5rem;
+  }
+  
+  .prose h3 {
+    font-size: 1.25rem;
+  }
+  
+  .prose blockquote {
+    padding: 1rem 1.5rem;
+  }
+}
+
+/* Reading progress */
+.reading-progress-bar {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 3px;
+  background: var(--accent-gradient);
+  z-index: 100;
+  transform-origin: left;
+}
+
+/* Floating table of contents */
+.table-of-contents {
+  position: sticky;
+  top: 100px;
+  max-height: calc(100vh - 150px);
+  overflow-y: auto;
+  padding-right: 1rem;
+  font-size: 0.9rem;
+}
+
+.table-of-contents ul {
+  list-style: none;
+  padding-left: 1rem;
+}
+
+.table-of-contents li {
+  margin-bottom: 0.5rem;
+}
+
+.table-of-contents a {
+  color: var(--color-text-secondary);
+  text-decoration: none;
+  transition: color 0.2s ease;
+}
+
+.table-of-contents a:hover,
+.table-of-contents a.active {
+  color: var(--accent-primary);
+}
+
+/* Author card */
+.author-card {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  padding: 1.5rem;
+  background-color: var(--color-bg-surface);
+  border-radius: 0.75rem;
+  margin: 2rem 0;
+  border: 1px solid var(--color-border);
+}
+
+.author-avatar {
+  width: 60px;
+  height: 60px;
+  border-radius: 50%;
+  object-fit: cover;
+}
+
+.author-info {
+  flex: 1;
+}
+
+.author-name {
+  font-weight: 600;
+  margin-bottom: 0.25rem;
+}
+
+.author-bio {
+  font-size: 0.9rem;
+  color: var(--color-text-secondary);
+} 

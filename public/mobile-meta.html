@@ -1,0 +1,56 @@
+<!-- Android/Mobile Optimization Meta Tags -->
+<meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="theme-color" content="#0a0a0a">
+
+<!-- Browser compatibility fix -->
+<script src="/scripts/browser-compatibility.js"></script>
+
+<link rel="stylesheet" href="/styles/mobile.css">
+<script src="/scripts/mobile-optimizations.js" defer></script>
+
+<!-- Preconnect to important domains -->
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+
+<!-- Custom CSS variables for mobile devices -->
+<style>
+  :root {
+    --app-height: 100%;
+  }
+  @supports (height: 100dvh) {
+    :root {
+      --app-height: 100dvh;
+    }
+  }
+  
+  /* Android specific styles */
+  .android-device {
+    height: calc(var(--vh, 1vh) * 100);
+    overflow-x: hidden;
+  }
+  
+  /* Reduce motion for better performance */
+  .reduced-motion * {
+    animation-duration: 0.001s !important;
+    transition-duration: 0.001s !important;
+  }
+
+  /* Better tap areas on small screens */
+  @media (max-width: 480px) {
+    .blog-card {
+      margin-bottom: 1.5rem;
+    }
+    
+    .card-grid {
+      gap: 1rem !important;
+    }
+    
+    /* Fix for Android bottom nav bar overlap */
+    .main-content {
+      padding-bottom: env(safe-area-inset-bottom, 1rem);
+    }
+  }
+</style> 

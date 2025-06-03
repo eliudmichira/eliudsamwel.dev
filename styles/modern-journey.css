@@ -1,0 +1,858 @@
+/* Modern Design System */
+:root {
+    /* Firebase-inspired Color Palette */
+    --primary-amber: #FFA000;
+    --primary-orange: #FF6D00;
+    --accent-yellow: #FFD54F;
+    --accent-light: #FFCA28;
+    --accent-dark: #F57C00;
+    
+    /* Dark Theme Base */
+    --bg-primary: #0a0a0a;
+    --bg-secondary: #141414;
+    --bg-tertiary: #1f1f1f;
+    
+    /* Glassmorphism - Adjusted for floating elements */
+    --floating-panel-bg: rgba(0, 0, 0, 0.3); /* For constellation cards */
+    --floating-button-bg: rgba(255, 255, 255, 0.05);
+    --floating-button-border: rgba(255, 255, 255, 0.1);
+    --floating-blur: 4px; /* For panels */
+    --floating-button-blur: 6px;
+
+    /* Text Colors */
+    --text-primary: #ffffff;
+    --text-secondary: rgba(255, 255, 255, 0.8); /* Increased opacity slightly for better contrast on transparent bg */
+    --text-tertiary: rgba(255, 255, 255, 0.6); /* Increased opacity slightly */
+    
+    /* Effects */
+    --glow-amber: 0 0 25px rgba(255, 160, 0, 0.5); /* Adjusted for subtlety */
+    --glow-intense: 0 0 40px rgba(255, 160, 0, 0.7);
+    --shadow-elevation: none; /* Removed default elevation shadow */
+    
+    /* Gradients */
+    --gradient-primary: linear-gradient(135deg, var(--primary-amber), var(--primary-orange));
+    --gradient-accent: linear-gradient(135deg, var(--accent-yellow), var(--accent-light));
+    /* --gradient-dark: linear-gradient(180deg, var(--bg-primary) 0%, var(--bg-secondary) 100%); Removed as sections will be transparent */
+}
+
+/* Journey Page Wrapper - Remove previous debug styles */
+.journey-page {
+    /* border: 5px solid red !important; */
+    /* min-height: 100vh; */
+    /* padding-top: 60px; */ /* Handled globally or by App.tsx */
+    /* overflow: visible !important; */
+}
+
+/* Modern Timeline Section */
+.timeline-section {
+    position: relative;
+    padding: 120px 0;
+    background: transparent; /* Changed from var(--gradient-dark) */
+    overflow: hidden; 
+    min-height: 50vh; 
+}
+
+/* Animated Background Pattern - Hide if it interferes with global background */
+.timeline-bg-pattern {
+    opacity: 0; /* Hidden to allow page background to show */
+    /*
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-image: 
+        radial-gradient(circle at 20% 50%, var(--primary-amber) 0%, transparent 50%),
+        radial-gradient(circle at 80% 80%, var(--primary-orange) 0%, transparent 50%),
+        radial-gradient(circle at 40% 20%, var(--accent-yellow) 0%, transparent 50%);
+    filter: blur(100px);
+    animation: bg-shift 20s ease-in-out infinite;
+    */
+}
+
+/* Section Header - Remains styled as content */
+.section-header {
+    text-align: center;
+    margin-bottom: 80px;
+    position: relative;
+    z-index: 2;
+}
+
+.section-title {
+    font-size: clamp(2.5rem, 5vw, 4rem);
+    font-weight: 900;
+    margin-bottom: 20px;
+    letter-spacing: -0.02em;
+    line-height: 1.2;
+    color: var(--text-primary); /* Ensure title is visible */
+}
+
+.gradient-text { /* This class is used for "My Journey" and "Constellation" in titles */
+    background: var(--gradient-primary);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    text-fill-color: transparent; /* Standard property */
+    position: relative;
+}
+
+.section-subtitle {
+    font-size: 1.25rem;
+    color: var(--text-secondary);
+    max-width: 600px;
+    margin: 0 auto;
+}
+
+/* Scroll Indicator - Style for visibility */
+.scroll-indicator {
+    margin-top: 40px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.scroll-indicator:hover {
+    transform: translateY(5px);
+}
+
+.scroll-indicator-text {
+    font-size: 0.875rem;
+    color: var(--text-tertiary);
+    margin-bottom: 12px;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+}
+
+.scroll-indicator-icon {
+    width: 40px;
+    height: 40px;
+    margin: 0 auto;
+    border: 1px solid var(--floating-button-border); /* Subtle border */
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: var(--floating-button-bg); /* Subtle background */
+    backdrop-filter: blur(var(--floating-button-blur));
+    position: relative;
+    overflow: hidden;
+}
+
+.scroll-indicator-icon::before {
+    content: '';
+    position: absolute;
+    top: -50%;
+    left: -50%;
+    width: 200%;
+    height: 200%;
+    background: var(--gradient-primary);
+    opacity: 0;
+    transition: opacity 0.3s ease;
+}
+
+.scroll-indicator:hover .scroll-indicator-icon::before {
+    opacity: 0.1;
+}
+
+.scroll-arrow {
+    width: 0;
+    height: 0;
+    border-left: 6px solid transparent;
+    border-right: 6px solid transparent;
+    border-top: 8px solid var(--primary-amber);
+    animation: bounce 2s infinite;
+}
+
+/* Modern Progress Bar */
+.progress-container {
+    position: sticky;
+    top: 0; /* Consider if this overlaps with fixed header, adjust if needed */
+    z-index: 100;
+    padding: 20px 0;
+    background: transparent; /* Changed */
+}
+
+.progress-bar-wrapper {
+    max-width: 800px;
+    margin: 0 auto;
+    padding: 0 40px;
+}
+
+.progress-bar {
+    height: 4px;
+    background: rgba(255, 255, 255, 0.1); /* Subtle track */
+    border-radius: 2px;
+    position: relative;
+    overflow: hidden;
+}
+
+.progress-fill {
+    height: 100%;
+    background: var(--gradient-primary); /* Keep gradient for fill */
+    border-radius: 2px;
+    transition: width 0.3s ease;
+    position: relative;
+    box-shadow: var(--glow-amber);
+}
+
+.progress-fill::after { /* Shimmer effect - keep */
+    content: '';
+    position: absolute;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    width: 100px;
+    background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.4), transparent);
+    animation: shimmer 2s infinite;
+}
+
+/* Timeline Container */
+.timeline-container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 40px;
+    position: relative;
+}
+
+/* Central Timeline Line */
+.timeline-line {
+    position: absolute;
+    left: 50%;
+    top: 0;
+    bottom: 0;
+    width: 2px;
+    background: var(--primary-amber);
+    transform: translateX(-50%);
+    box-shadow: 0 0 8px var(--primary-amber);
+}
+
+.timeline-line::before { /* Top cap of the line */
+    content: '';
+    position: absolute;
+    top: -10px; /* Adjusted */
+    left: 50%;
+    width: 10px; /* Adjusted */
+    height: 10px; /* Adjusted */
+    background: rgba(255, 255, 255, 0.3); /* Adjusted */
+    border-radius: 50%;
+    transform: translateX(-50%);
+    box-shadow: 0 0 10px rgba(255,160,0,0.4); /* Amber glow for cap */
+}
+
+/* Timeline Items - visibility handled by JS */
+.timeline-item {
+    position: relative;
+    padding: 60px 0;
+    opacity: 0;
+    transform: translateY(30px);
+    transition: all 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.timeline-item.visible {
+    opacity: 1;
+    transform: translateY(0);
+}
+
+/* Modern Timeline Card - Made Transparent */
+.timeline-card {
+    width: calc(50% - 60px);
+    position: relative;
+    background: transparent !important;
+    backdrop-filter: none !important; 
+    border: none !important;
+    outline: none !important;
+    border-radius: 20px;
+    padding: 32px;
+    transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+    box-shadow: 0 0 15px rgba(255, 160, 0, 0.3); 
+}
+
+.timeline-item:nth-child(odd) .timeline-card {
+    margin-left: auto;
+    margin-right: 60px;
+}
+
+.timeline-item:nth-child(even) .timeline-card {
+    margin-left: 60px;
+}
+
+.timeline-card:hover { /* Hover effect is mostly for text now */
+    transform: translateY(-8px); /* Keep slight lift */
+    box-shadow: 0 0 25px rgba(255, 160, 0, 0.5); 
+}
+
+/* Card Header */
+.card-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 20px;
+}
+
+.card-category {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.card-icon { /* Emoji is text, background made transparent */
+    width: 40px;
+    height: 40px;
+    background: transparent; 
+    border-radius: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--primary-amber); /* Icon color */
+    font-size: 24px; /* Slightly larger for visibility */
+    transition: all 0.3s ease;
+}
+
+.timeline-card:hover .card-icon { /* Keep rotation */
+    transform: rotate(360deg) scale(1.1);
+}
+
+.category-label {
+    font-size: 0.875rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    color: var(--primary-amber);
+}
+
+.card-date {
+    font-size: 0.875rem;
+    color: var(--text-tertiary);
+    font-weight: 500;
+}
+
+/* Card Content */
+.card-title {
+    font-size: 1.5rem;
+    font-weight: 700;
+    margin-bottom: 12px;
+    color: var(--text-primary);
+    transition: color 0.3s ease;
+}
+
+.timeline-card:hover .card-title {
+    color: var(--primary-amber);
+}
+
+.card-location {
+    font-size: 0.875rem;
+    color: var(--text-secondary);
+    margin-bottom: 16px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.location-icon {
+    width: 16px;
+    height: 16px;
+    color: var(--primary-amber); /* Ensure icon is visible */
+}
+
+.card-description {
+    color: var(--text-secondary);
+    line-height: 1.6;
+    margin-bottom: 20px;
+}
+
+/* Achievement Badge - Made Transparent */
+.achievement-badge {
+    background: transparent;
+    border: none; /* Removed border: 1px solid var(--primary-amber); */
+    border-radius: 12px;
+    padding: 16px 0; /* Adjusted padding */
+    position: relative;
+    overflow: visible; /* Allow potential text glow */
+}
+
+.achievement-badge::before { /* Scanline effect removed */
+    content: none;
+}
+
+.achievement-content {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.achievement-icon {
+    width: 24px;
+    height: 24px;
+    color: var(--primary-amber); /* Ensure visibility */
+    flex-shrink: 0;
+}
+
+.achievement-text {
+    font-size: 0.875rem;
+    color: var(--text-secondary);
+}
+
+.achievement-title {
+    color: var(--primary-amber);
+    font-weight: 600;
+}
+
+/* Timeline Dot */
+.timeline-dot {
+    position: absolute;
+    left: 50%;
+    top: 80px; 
+    width: 18px; /* Slightly smaller if border is removed */
+    height: 18px;
+    background: var(--primary-amber); /* Dot is amber */
+    border: none; /* Removed border: 3px solid var(--primary-amber); */
+    border-radius: 50%;
+    transform: translateX(-50%);
+    z-index: 2;
+    transition: all 0.3s ease;
+    box-shadow: var(--glow-amber); /* Add glow to dot itself */
+}
+
+.timeline-dot::before { /* Outer glow ring */
+    content: '';
+    position: absolute;
+    inset: -6px; /* Adjusted for new dot size */
+    border-radius: 50%;
+    background: radial-gradient(circle, 
+        var(--primary-amber), 
+        transparent 70% /* Make gradient sharper */
+    );
+    opacity: 0;
+    transition: opacity 0.3s ease;
+}
+
+.timeline-item:hover .timeline-dot::before {
+    opacity: 0.4; /* Subtle glow */
+}
+
+.timeline-dot::after { /* Inner pulse - keep */
+    content: '';
+    position: absolute;
+    inset: 3px; /* Adjusted */
+    border-radius: 50%;
+    background: var(--accent-light); /* Brighter inner pulse */
+    opacity: 0;
+    transform: scale(0);
+    transition: all 0.3s ease;
+}
+
+.timeline-item:hover .timeline-dot::after {
+    opacity: 1;
+    transform: scale(1);
+}
+
+/* Connector Line */
+.timeline-connector {
+    position: absolute;
+    top: 88px; /* Adjusted to align with new dot size */
+    width: 60px;
+    height: 1px; /* Thinner */
+    background: rgba(255, 255, 255, 0.2); /* Subtle white */
+    opacity: 0.5; /* Adjusted opacity */
+}
+
+.timeline-item:nth-child(odd) .timeline-connector {
+    right: 50%;
+    transform-origin: right center;
+}
+
+.timeline-item:nth-child(even) .timeline-connector {
+    left: 50%;
+    transform-origin: left center;
+}
+
+/* Constellation Journey Section */
+.constellation-section {
+    position: relative;
+    padding: 100px 0;
+    background-color: transparent; /* Changed from var(--bg-primary) */
+    overflow: hidden; 
+    min-height: 50vh; 
+}
+
+/* Starfield Background - this is the canvas */
+.starfield {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    overflow: hidden;
+    z-index: 0; /* Ensure it's behind content */
+}
+
+.star { /* Existing star animation */
+    position: absolute;
+    width: 2px;
+    height: 2px;
+    background: white;
+    border-radius: 50%;
+    animation: twinkle 3s infinite;
+    /* Add a subtle glow to stars */
+    box-shadow: 0 0 5px rgba(255, 255, 255, 0.5), 0 0 10px rgba(255, 255, 255, 0.3);
+}
+
+/* Constellation Container - Content layer */
+.constellation-container {
+    max-width: 1400px;
+    margin: 0 auto;
+    padding: 0 40px;
+    position: relative;
+    z-index: 1; /* Above starfield */
+}
+
+/* Constellation Switcher */
+.constellation-switcher {
+    display: flex;
+    justify-content: center;
+    gap: 20px;
+    margin-bottom: 60px;
+}
+
+.constellation-btn {
+    padding: 12px 32px;
+    background: var(--floating-button-bg);
+    backdrop-filter: blur(var(--floating-button-blur));
+    border: 1px solid var(--floating-button-border);
+    border-radius: 50px;
+    color: var(--text-primary); /* Changed to #fff as per prompt */
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    position: relative;
+    overflow: hidden;
+    box-shadow: none; /* Explicitly remove any inherited shadow */
+}
+
+.constellation-btn::before { /* Hover/active effect - subtle opacity layer */
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: var(--primary-amber); /* Use amber for highlight */
+    opacity: 0;
+    transition: opacity 0.3s ease;
+}
+
+.constellation-btn:hover {
+    transform: translateY(-2px);
+    color: var(--primary-amber); /* Amber text on hover */
+    border-color: var(--floating-button-border); /* Keep border subtle */
+}
+
+.constellation-btn:hover::before {
+    opacity: 0.1; /* Slight amber sheen */
+}
+
+.constellation-btn.active {
+    background: rgba(255, 160, 0, 0.15); /* Subtle amber background for active */
+    color: var(--primary-amber);
+    border-color: rgba(255, 160, 0, 0.3); /* Slightly more prominent amber border */
+    box-shadow: none;
+}
+
+.constellation-btn.active::before {
+    opacity: 0; /* Remove sheen if active has its own background */
+}
+
+
+/* Constellation Canvas - The area where SVG is drawn, make transparent */
+.constellation-canvas {
+    width: 100%;
+    max-width: 900px;
+    margin: 0 auto;
+    aspect-ratio: 4/3;
+    background: transparent; /* Removed var(--glass-bg) */
+    backdrop-filter: none; /* Removed blur */
+    border: none; /* Removed border */
+    box-shadow: none; /* Removed shadow */
+    border-radius: 20px; 
+    position: relative;
+    overflow: hidden;
+}
+
+/* Nebula Effects - Keep for background depth, ensure they don't form hard edges */
+.nebula {
+    position: absolute;
+    width: 300px;
+    height: 300px;
+    border-radius: 50%;
+    filter: blur(80px); /* Increased blur for softer edges */
+    opacity: 0.15; /* Adjusted opacity */
+    animation: nebula-drift 25s ease-in-out infinite alternate; /* Alternate animation */
+    z-index: 0; /* Ensure behind SVG content */
+}
+
+/* Constellation SVG - ensure it's on top of nebulas if they are inside .constellation-canvas */
+.constellation-svg {
+    width: 100%;
+    height: 100%;
+    position: relative; /* To ensure z-index works if nebulas are sibling */
+    z-index: 1;
+}
+
+/* Constellation Star in SVG */
+.constellation-star {
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.star-circle { /* SVG star representation */
+    fill: rgba(0,0,0,0.3); /* Dark semi-transparent fill */
+    stroke: var(--primary-amber);
+    stroke-width: 1.5px; /* Slightly thinner */
+    transition: all 0.3s ease;
+}
+
+.constellation-star:hover .star-circle {
+    r: 12;
+    fill: var(--primary-amber);
+    stroke-width: 2px;
+    filter: drop-shadow(0 0 15px var(--primary-amber)) drop-shadow(0 0 5px var(--accent-yellow)); /* Enhanced glow */
+}
+
+.star-label {
+    fill: var(--text-secondary); /* Adjusted for better contrast */
+    font-size: 12px;
+    font-weight: 600;
+    text-anchor: middle;
+    pointer-events: none;
+    paint-order: stroke; /* Make stroke appear behind fill */
+    stroke: var(--bg-primary); /* Or a very dark color from page bg */
+    stroke-width: 3px; /* Adjust for desired halo effect */
+    stroke-linecap: round;
+    stroke-linejoin: round;
+}
+
+/* Constellation Lines in SVG */
+.constellation-line {
+    stroke: var(--primary-amber);
+    stroke-width: 1.5px; /* Thinner */
+    opacity: 0.4; /* Slightly more visible */
+    stroke-dasharray: 4 4; /* Adjusted dash */
+    animation: dash 30s linear infinite; /* Slower animation */
+}
+
+/* Info Panel - For active constellation */
+.constellation-info {
+    position: absolute;
+    bottom: 20px; /* Adjusted position */
+    left: 50%;
+    transform: translateX(-50%);
+    width: calc(100% - 40px);
+    max-width: 600px; /* Limit width */
+    background: var(--floating-panel-bg);
+    backdrop-filter: blur(var(--floating-blur));
+    border: none; /* Removed border */
+    box-shadow: none; /* Removed shadow */
+    border-radius: 16px;
+    padding: 20px; /* Adjusted padding */
+    opacity: 0; /* Handled by JS */
+    transition: all 0.3s ease;
+    z-index: 2; /* Above canvas elements if overlapping */
+}
+
+.constellation-info.visible {
+    transform: translateX(-50%) translateY(0); /* Correct transform for centering */
+    opacity: 1;
+}
+
+.constellation-name {
+    font-size: 1.25rem;
+    font-weight: 700;
+    color: var(--primary-amber);
+    margin-bottom: 8px;
+}
+
+.constellation-description {
+    color: var(--text-secondary);
+    line-height: 1.6;
+}
+
+/* Star Info Card - For hovered star */
+.star-info-card {
+    position: absolute;
+    background: var(--floating-panel-bg);
+    backdrop-filter: blur(var(--floating-blur));
+    border: none; /* Removed border */
+    box-shadow: none; /* Removed shadow */
+    border-radius: 12px;
+    padding: 20px;
+    min-width: 280px;
+    transform: translate(-50%, -120%); /* JS handles position */
+    opacity: 0;
+    visibility: hidden;
+    transition: all 0.3s ease;
+    z-index: 10; /* High z-index */
+}
+
+.star-info-card.visible {
+    opacity: 1;
+    visibility: visible;
+}
+
+.star-info-year {
+    font-size: 0.875rem;
+    color: var(--primary-amber);
+    font-weight: 600;
+    margin-bottom: 8px;
+}
+
+.star-info-title {
+    font-size: 1.125rem;
+    font-weight: 700;
+    color: var(--text-primary); /* Ensure title visibility */
+    margin-bottom: 12px;
+}
+
+.star-info-description {
+    color: var(--text-secondary);
+    font-size: 0.875rem;
+    line-height: 1.5;
+}
+
+/* Timeline Legend - Style for floating appearance */
+.timeline-legend {
+    position: absolute; /* This may need review based on overall page flow */
+    right: 40px;
+    top: 50%;
+    transform: translateY(-50%);
+    background: transparent; /* Changed */
+    backdrop-filter: none; /* Removed */
+    border: none; /* Changed */
+    box-shadow: none; /* Changed */
+    border-radius: 16px;
+    padding: 24px;
+    max-width: 300px;
+    z-index: 2; /* Ensure above timeline if overlapping */
+}
+
+.legend-title {
+    font-size: 1rem;
+    font-weight: 700;
+    color: var(--primary-amber);
+    margin-bottom: 16px;
+}
+
+.legend-item {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 12px;
+    font-size: 0.875rem;
+    color: var(--text-secondary);
+}
+
+.legend-year {
+    font-weight: 600;
+    color: var(--primary-amber);
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+    .timeline-section, .constellation-section {
+        padding: 80px 0; /* Reduced padding */
+    }
+    .timeline-line {
+        left: 20px; /* Consistent with original mobile style */
+    }
+    .timeline-line::before {
+        left: 50%; /* Relative to the line itself */
+    }
+
+    .timeline-card {
+        width: calc(100% - 40px); /* Adjusted for new line position */
+        margin-left: 40px !important; /* Adjusted */
+        padding: 24px; /* Slightly reduced padding */
+    }
+
+    .timeline-dot {
+        left: 20px; /* Consistent */
+        top: 60px; /* Align with potentially reduced card padding */
+        width: 16px;
+        height: 16px;
+    }
+    .timeline-dot::before {
+      inset: -5px;
+    }
+    .timeline-dot::after {
+      inset: 2.5px;
+    }
+
+
+    .timeline-connector { /* Already display: none in prompt, keep if intended */
+        display: none; 
+    }
+
+    .constellation-canvas {
+        aspect-ratio: 1; /* Keep square for mobile */
+        max-width: 100%; /* Allow full width */
+    }
+    .constellation-svg { /* Ensure SVG scales within canvas */
+        max-width: 100%;
+        max-height: 100%;
+    }
+
+
+    .timeline-legend {
+        position: relative; /* Changed to relative for mobile */
+        transform: none;
+        margin-top: 40px;
+        max-width: calc(100% - 40px); /* Full width with padding */
+        margin-left: auto;
+        margin-right: auto;
+        padding: 20px;
+         /* Add a subtle bg if it gets lost on mobile, otherwise keep transparent */
+        background: rgba(0,0,0,0.1);
+        border: 1px solid var(--floating-button-border);
+    }
+    
+    .section-header {
+        margin-bottom: 60px; /* Reduced margin */
+    }
+    .section-title {
+        font-size: clamp(2rem, 6vw, 3rem); /* Slightly smaller title */
+    }
+    .section-subtitle {
+        font-size: 1rem; /* Slightly smaller subtitle */
+    }
+
+    .progress-bar-wrapper, .timeline-container, .constellation-container {
+        padding: 0 20px; /* Reduced horizontal padding for containers */
+    }
+
+    .constellation-switcher {
+        flex-wrap: wrap;
+        gap: 10px; /* Reduced gap */
+        margin-bottom: 40px;
+    }
+
+    .constellation-btn {
+        padding: 10px 20px; /* Reduced padding */
+        font-size: 0.8rem; /* Slightly smaller text */
+    }
+    .constellation-info {
+        bottom: 10px;
+        left: 10px;
+        right: 10px;
+        width: auto;
+        transform: none; /* Remove translateX for mobile if it causes issues */
+        padding: 15px;
+    }
+     .star-label {
+        font-size: 10px; /* Smaller labels on mobile */
+        stroke-width: 2px;
+    }
+}
+
+/* Animation keyframes (fadeInUp, bounce, shimmer, dash, nebula-drift, twinkle) remain unchanged unless specified */
+/* Ensure fadeInUp animation is applied to relevant elements if they were previously hidden */
+.fade-in-up {
+    animation: fadeInUp 0.6s ease-out forwards;
+} 
