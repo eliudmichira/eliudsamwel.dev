@@ -1,0 +1,169 @@
+/* Chatbot Analytics Styles */
+
+.chatbot-analytics {
+  background: linear-gradient(145deg, 
+    rgba(10, 10, 10, 0.95) 0%, 
+    rgba(26, 26, 26, 0.95) 100%);
+  border: 1px solid rgba(0, 212, 255, 0.2);
+  border-radius: 16px;
+  padding: 20px;
+  margin-bottom: 16px;
+  backdrop-filter: blur(10px);
+  max-height: 400px;
+  overflow-y: auto;
+}
+
+.analytics-section {
+  margin-bottom: 24px;
+}
+
+.analytics-section h3 {
+  color: #00d4ff;
+  font-size: 16px;
+  margin-bottom: 16px;
+  font-weight: 600;
+  background: linear-gradient(135deg, #00d4ff 0%, #7c3aed 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+.metrics-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+  gap: 12px;
+}
+
+.metric-card {
+  background: rgba(26, 26, 26, 0.8);
+  border: 1px solid rgba(0, 212, 255, 0.2);
+  border-radius: 12px;
+  padding: 16px;
+  transition: all 0.3s ease;
+  position: relative;
+  overflow: hidden;
+}
+
+.metric-card:hover {
+  border-color: rgba(0, 212, 255, 0.4);
+  box-shadow: 0 8px 20px rgba(0, 212, 255, 0.1);
+}
+
+.metric-header {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 8px;
+}
+
+.metric-icon {
+  font-size: 14px;
+}
+
+.metric-title {
+  color: #cccccc;
+  font-size: 12px;
+  font-weight: 500;
+}
+
+.metric-value {
+  color: var(--ai-text-primary, #ffffff);
+  font-size: 20px;
+  font-weight: 700;
+  display: flex;
+  align-items: baseline;
+  gap: 4px;
+}
+
+.metric-unit {
+  color: #888888;
+  font-size: 12px;
+  font-weight: 400;
+}
+
+.metric-trend {
+  position: absolute;
+  top: 12px;
+  right: 12px;
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  font-size: 10px;
+  padding: 2px 6px;
+  border-radius: 12px;
+  font-weight: 600;
+}
+
+.metric-trend.positive {
+  color: #00ff88;
+  background: rgba(0, 255, 136, 0.1);
+}
+
+.metric-trend.negative {
+  color: #ff0055;
+  background: rgba(255, 0, 85, 0.1);
+}
+
+.performance-grid {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.performance-item {
+  background: rgba(26, 26, 26, 0.6);
+  border: 1px solid rgba(124, 58, 237, 0.2);
+  border-radius: 10px;
+  padding: 14px;
+}
+
+.performance-header {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  color: #7c3aed;
+  font-size: 13px;
+  font-weight: 500;
+}
+
+.performance-value {
+  margin-left: auto;
+  color: #ffffff;
+  font-weight: 600;
+}
+
+/* Scrollbar Styling */
+.chatbot-analytics::-webkit-scrollbar {
+  width: 6px;
+}
+
+.chatbot-analytics::-webkit-scrollbar-track {
+  background: rgba(0, 212, 255, 0.1);
+  border-radius: 3px;
+}
+
+.chatbot-analytics::-webkit-scrollbar-thumb {
+  background: #00d4ff;
+  border-radius: 3px;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+  .metrics-grid {
+    grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+    gap: 8px;
+  }
+  
+  .metric-card {
+    padding: 12px;
+  }
+  
+  .metric-value {
+    font-size: 16px;
+  }
+  
+  .chatbot-analytics {
+    padding: 16px;
+    max-height: 300px;
+  }
+} 

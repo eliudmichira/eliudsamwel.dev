@@ -1,0 +1,129 @@
+{
+  "name": "Portfolio Contact Form Handler",
+  "nodes": [
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "contact-form",
+        "responseMode": "responseNode",
+        "options": {}
+      },
+      "id": "webhook-trigger",
+      "name": "Webhook",
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 1,
+      "position": [240, 300],
+      "webhookId": "contact-form"
+    },
+    {
+      "parameters": {
+        "jsCode": "// Data validation and processing\nconst requiredFields = ['name', 'email', 'message'];\nconst missingFields = requiredFields.filter(field => !$json[field]);\n\nif (missingFields.length > 0) {\n  throw new Error(`Missing required fields: ${missingFields.join(', ')}`);\n}\n\n// Basic spam filtering\nconst spamKeywords = ['viagra', 'casino', 'lottery', 'crypto', 'bitcoin', 'make money fast'];\nconst message = $json.message.toLowerCase();\nconst isSpam = spamKeywords.some(keyword => message.includes(keyword));\n\n// Add metadata\nconst processedData = {\n  ...$json,\n  isSpam,\n  processedAt: new Date().toISOString(),\n  ipAddress: $json.userAgent ? 'Unknown' : 'Unknown',\n  source: $json.source || 'Portfolio Website'\n};\n\nreturn [{ json: processedData }];"
+      },
+      "id": "validate-data",
+      "name": "Validate & Process Data",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [460, 300]
+    },
+    {
+      "parameters": {
+        "operation": "send",
+        "to": "eliudmichira7@gmail.com",
+        "subject": "🚨 New Portfolio Contact: {{$json.name}}",
+        "emailType": "html",
+        "message": "<!DOCTYPE html>\n<html>\n<head>\n    <meta charset=\"UTF-8\">\n    <style>\n        body { font-family: Arial, sans-serif; line-height: 1.6; color: #333; }\n        .header { background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; padding: 20px; border-radius: 8px 8px 0 0; }\n        .content { padding: 20px; background: #f9f9f9; }\n        .field { margin-bottom: 15px; }\n        .label { font-weight: bold; color: #555; }\n        .value { color: #333; }\n        .spam-warning { background: #ffebee; border-left: 4px solid #f44336; padding: 10px; margin: 10px 0; }\n        .footer { background: #f5f5f5; padding: 15px; border-radius: 0 0 8px 8px; font-size: 12px; color: #666; }\n        .cta { background: #4CAF50; color: white; padding: 10px 20px; text-decoration: none; border-radius: 5px; display: inline-block; margin-top: 15px; }\n    </style>\n</head>\n<body>\n    <div class=\"header\">\n        <h2>🎯 New Portfolio Contact Form Submission</h2>\n    </div>\n    \n    <div class=\"content\">\n        {{#if $json.isSpam}}\n        <div class=\"spam-warning\">\n            ⚠️ <strong>Potential Spam Detected!</strong> Please review carefully.\n        </div>\n        {{/if}}\n        \n        <div class=\"field\">\n            <div class=\"label\">👤 Name:</div>\n            <div class=\"value\">{{$json.name}}</div>\n        </div>\n        \n        <div class=\"field\">\n            <div class=\"label\">📧 Email:</div>\n            <div class=\"value\"><a href=\"mailto:{{$json.email}}\">{{$json.email}}</a></div>\n        </div>\n        \n        {{#if $json.company}}\n        <div class=\"field\">\n            <div class=\"label\">🏢 Company:</div>\n            <div class=\"value\">{{$json.company}}</div>\n        </div>\n        {{/if}}\n        \n        {{#if $json.budget}}\n        <div class=\"field\">\n            <div class=\"label\">💰 Budget:</div>\n            <div class=\"value\">{{$json.budget}}</div>\n        </div>\n        {{/if}}\n        \n        {{#if $json.services}}\n        <div class=\"field\">\n            <div class=\"label\">🛠️ Services:</div>\n            <div class=\"value\">{{$json.services}}</div>\n        </div>\n        {{/if}}\n        \n        {{#if $json.timeline}}\n        <div class=\"field\">\n            <div class=\"label\">⏰ Timeline:</div>\n            <div class=\"value\">{{$json.timeline}}</div>\n        </div>\n        {{/if}}\n        \n        <div class=\"field\">\n            <div class=\"label\">💬 Message:</div>\n            <div class=\"value\">{{$json.message}}</div>\n        </div>\n        \n        <hr style=\"margin: 20px 0;\">\n        \n        <div class=\"field\">\n            <div class=\"label\">📅 Submitted:</div>\n            <div class=\"value\">{{$json.timestamp}}</div>\n        </div>\n        \n        <div class=\"field\">\n            <div class=\"label\">🌐 Source:</div>\n            <div class=\"value\">{{$json.source}}</div>\n        </div>\n        \n        {{#if $json.referrer}}\n        <div class=\"field\">\n            <div class=\"label\">🔗 Referrer:</div>\n            <div class=\"value\">{{$json.referrer}}</div>\n        </div>\n        {{/if}}\n        \n        <div style=\"margin-top: 25px;\">\n            <a href=\"mailto:{{$json.email}}?subject=Re: Your Portfolio Inquiry&body=Hi {{$json.name}},%0D%0A%0D%0AThank you for reaching out! I've received your project inquiry and I'm excited to discuss it with you.%0D%0A%0D%0AI'll review your requirements and get back to you with a detailed proposal within 2-4 hours.%0D%0A%0D%0ABest regards,%0D%0AEliud Michira\" class=\"cta\">\n                ✉️ Reply to {{$json.name}}\n            </a>\n        </div>\n    </div>\n    \n    <div class=\"footer\">\n        <p>This message was automatically generated by your portfolio contact form.</p>\n        <p>Processed at: {{$json.processedAt}}</p>\n    </div>\n</body>\n</html>"
+      },
+      "id": "send-email-to-me",
+      "name": "Send Email to Me",
+      "type": "n8n-nodes-base.gmail",
+      "typeVersion": 2,
+      "position": [680, 200]
+    },
+    {
+      "parameters": {
+        "operation": "send",
+        "to": "{{$json.email}}",
+        "subject": "Thank you for contacting Eliud Michira! 🚀",
+        "emailType": "html",
+        "message": "<!DOCTYPE html>\n<html>\n<head>\n    <meta charset=\"UTF-8\">\n    <style>\n        body { font-family: Arial, sans-serif; line-height: 1.6; color: #333; max-width: 600px; margin: 0 auto; }\n        .header { background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; padding: 30px; text-align: center; border-radius: 8px 8px 0 0; }\n        .content { padding: 30px; background: #f9f9f9; }\n        .next-steps { background: #e3f2fd; border-left: 4px solid #2196F3; padding: 20px; margin: 20px 0; border-radius: 4px; }\n        .footer { background: #f5f5f5; padding: 20px; border-radius: 0 0 8px 8px; text-align: center; }\n        .contact-info { background: #f0f8ff; padding: 15px; border-radius: 5px; margin: 20px 0; }\n        .highlight { color: #667eea; font-weight: bold; }\n        .emoji { font-size: 1.2em; }\n    </style>\n</head>\n<body>\n    <div class=\"header\">\n        <h1>🎉 Thank You!</h1>\n        <p>Your message has been received successfully</p>\n    </div>\n    \n    <div class=\"content\">\n        <h2>Hi {{$json.name}},</h2>\n        \n        <p>Thank you for reaching out! I've received your project inquiry and I'm excited to discuss it with you.</p>\n        \n        <div class=\"next-steps\">\n            <h3>📋 What's Next?</h3>\n            <ul>\n                <li><strong>Review:</strong> I'll carefully review your project requirements</li>\n                <li><strong>Proposal:</strong> Prepare a detailed proposal with timeline and pricing</li>\n                <li><strong>Discussion:</strong> Schedule a call to discuss your project in detail</li>\n                <li><strong>Start:</strong> Begin working on your project once we agree on terms</li>\n            </ul>\n        </div>\n        \n        <p><span class=\"highlight\">⏰ Response Time:</span> I typically respond within <strong>2-4 hours</strong> during business hours.</p>\n        \n        <div class=\"contact-info\">\n            <h3>📞 Quick Contact</h3>\n            <p><strong>Email:</strong> <a href=\"mailto:eliudmichira7@gmail.com\">eliudmichira7@gmail.com</a></p>\n            <p><strong>Phone:</strong> <a href=\"tel:+254705893137\">+254 705 893 137</a></p>\n            <p><strong>LinkedIn:</strong> <a href=\"https://www.linkedin.com/in/eliud-samwel-72b8622b3\">Eliud Samwel</a></p>\n        </div>\n        \n        <p>I'm looking forward to working with you on your project!</p>\n        \n        <p>Best regards,<br>\n        <strong>Eliud Michira</strong><br>\n        <em>Full-Stack Developer & Blockchain Specialist</em></p>\n    </div>\n    \n    <div class=\"footer\">\n        <p>📍 Based in Nairobi, Kenya | 🕒 EAT (UTC+3)</p>\n        <p><small>This is an automated response. I'll send you a personalized reply shortly.</small></p>\n    </div>\n</body>\n</html>"
+      },
+      "id": "send-auto-reply",
+      "name": "Send Auto-Reply",
+      "type": "n8n-nodes-base.gmail",
+      "typeVersion": 2,
+      "position": [680, 400]
+    },
+    {
+      "parameters": {
+        "chatId": "YOUR_TELEGRAM_CHAT_ID",
+        "text": "🚨 **New Portfolio Contact!**\n\n👤 **Name:** {{$json.name}}\n📧 **Email:** {{$json.email}}\n{{#if $json.company}}🏢 **Company:** {{$json.company}}{{/if}}\n{{#if $json.budget}}💰 **Budget:** {{$json.budget}}{{/if}}\n{{#if $json.services}}🛠️ **Services:** {{$json.services}}{{/if}}\n{{#if $json.timeline}}⏰ **Timeline:** {{$json.timeline}}{{/if}}\n\n💬 **Message:**\n{{$json.message}}\n\n📅 **Submitted:** {{$json.timestamp}}\n🌐 **Source:** {{$json.source}}\n\n{{#if $json.isSpam}}⚠️ **Potential Spam Detected!**{{/if}}\n\n[📧 Reply via Email](mailto:{{$json.email}}?subject=Re: Your Portfolio Inquiry)",
+        "additionalFields": {
+          "parse_mode": "Markdown"
+        }
+      },
+      "id": "telegram-notification",
+      "name": "Telegram Notification",
+      "type": "n8n-nodes-base.telegram",
+      "typeVersion": 1,
+      "position": [680, 600]
+    },
+    {
+      "parameters": {
+        "operation": "append",
+        "documentId": "YOUR_GOOGLE_SHEET_ID",
+        "range": "A:I",
+        "options": {
+          "valueInputOption": "USER_ENTERED"
+        },
+        "valueInputMode": "USER_ENTERED",
+        "values": "={{ [\n  $json.timestamp,\n  $json.name,\n  $json.email,\n  $json.company || '',\n  $json.budget || '',\n  $json.services || '',\n  $json.timeline || '',\n  $json.message,\n  $json.isSpam ? 'Yes' : 'No'\n] }}"
+      },
+      "id": "log-to-sheets",
+      "name": "Log to Google Sheets",
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4,
+      "position": [900, 300]
+    },
+    {
+      "parameters": {
+        "respondWith": "json",
+        "responseBody": "={\n  \"success\": true,\n  \"message\": \"Thank you for your message! I'll get back to you within 2-4 hours.\",\n  \"timestamp\": new Date().toISOString(),\n  \"submissionId\": $json.processedAt\n}",
+        "options": {}
+      },
+      "id": "webhook-response",
+      "name": "Webhook Response",
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1,
+      "position": [1120, 300]
+    }
+  ],
+  "connections": {
+    "Webhook": {
+      "main": [["Validate & Process Data"]]
+    },
+    "Validate & Process Data": {
+      "main": [["Send Email to Me", "Send Auto-Reply", "Telegram Notification"]]
+    },
+    "Send Email to Me": {
+      "main": [["Log to Google Sheets"]]
+    },
+    "Send Auto-Reply": {
+      "main": [["Log to Google Sheets"]]
+    },
+    "Telegram Notification": {
+      "main": [["Log to Google Sheets"]]
+    },
+    "Log to Google Sheets": {
+      "main": [["Webhook Response"]]
+    }
+  },
+  "pinData": {},
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "staticData": null,
+  "tags": ["portfolio", "contact-form", "automation"],
+  "triggerCount": 1,
+  "updatedAt": "2024-01-15T10:00:00.000Z",
+  "versionId": "1"
+} 

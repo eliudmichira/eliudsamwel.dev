@@ -1,72 +1,68 @@
 // Custom context information for the chatbot
 
 export const customContext = {
-  // Website information
   website: {
-    name: "Eliud Samwel Portfolio Website",
-    description: "A modern portfolio website showcasing Eliud's work, projects, and professional skills. Features include a custom theme toggle with animated sky transition, interactive UI elements, an AI-powered chatbot assistant, and a unique constellation journey visualization representing career milestones.",
+    name: "Eliud Michira Samwel — Portfolio",
+    description: "Portfolio for Eliud Michira Samwel, an AI Automation Engineer and founder operations specialist: workflow automation (n8n, Zapier, Make), Google Workspace, inbox & calendar systems, CRM ops, and full-stack delivery for US/EU remote clients.",
     mainFeatures: [
       "Responsive design that works across all devices",
       "Interactive theme toggle with animated sky transitions",
       "Advanced Gemini AI chatbot for visitor assistance",
       "Constellation Journey map visualizing career milestones",
       "Project showcase with detailed information and case studies",
-      "Skills and experience sections with visual representations"
+      "Resume with operations, automation, and engineering experience",
     ],
     technologies: [
-      "React", "TypeScript", "Tailwind CSS", "Framer Motion", "Google Gemini API"
+      "React", "TypeScript", "Tailwind CSS", "Framer Motion", "Google Gemini API",
+      "n8n", "Zapier", "Make", "Firebase",
     ],
     pages: [
-      "Home - Introduction and profile overview", 
-      "Projects - Showcase of work including SoundsWapp, Blockchain Voting System, and this Portfolio website",
+      "Home - Introduction and profile overview",
+      "Projects - SoundsWapp, FlickCollection, Sanarix, and more",
       "Journey - Interactive constellation map of career milestones",
-      "Skills - Technical abilities and expertise",
-      "Contact - Ways to reach Eliud"
+      "Skills - Technical and automation capabilities",
+      "Contact - Ways to reach Eliud",
     ],
     recentUpdates: [
-      "Added responsive mobile optimizations",
-      "Implemented enhanced profile image with dynamic glow effect",
-      "Updated Gemini AI chatbot integration to version 1.5",
-      "Fixed positioning issues in the Constellation Journey component",
-      "Added detailed project information for SoundsWapp (cross-platform playlist converter)"
-    ]
+      "Resume aligned to AI automation & founder operations positioning",
+      "Hero highlights US/EU remote hours and automation stack",
+    ],
   },
-  
-  // Personal information
+
   owner: {
-    name: "Eliud Samwel Michira",
-    profession: "Software Developer & Tech Innovator",
-    bio: "A passionate software developer focused on creating impactful digital solutions at the intersection of web, mobile, and blockchain technology. With expertise in React, TypeScript, and modern technologies, I build responsive applications that deliver excellent user experiences and solve real-world problems.",
+    name: "Eliud Michira Samwel",
+    profession: "AI Automation Engineer · Founder Operations & Workflow Builder",
+    bio: "AI Automation Engineer and Operations Specialist with 3+ years building digital operations for US/EU founders and startups. Expert in n8n, Zapier, Make, Microsoft Power Automate, and Google Workspace. Daily user of ChatGPT, Notion AI, Otter.ai, and Fireflies for routing and summarization. Software Engineer at Neverest Ltd (TAWA INNOVATE) from May 2024. Former Generative AI Specialist at Innodata (Aug 2025–Jan 2026). Independent automation & full-stack developer for US/EU clients since 2021. Bachelor of Business Computing, JKUAT (2025).",
     skills: [
-      "Frontend Development (React, TypeScript, JavaScript)",
-      "Blockchain Development (Solidity, Web3.js, Ethereum)",
-      "UI/UX Design and Implementation",
-      "Full-Stack Development (Node.js, Express)",
-      "Mobile-Responsive Web Design",
-      "API Integration and Development",
-      "AI Tool Implementation"
+      "Workflow automation — n8n, Zapier, Make, Power Automate",
+      "Google Workspace, OAuth2, REST APIs, webhooks",
+      "Founder & executive ops — inbox, calendar, CRM, async remote",
+      "AI tool routing, prompt QA, LLM workflows",
+      "Engineering — React, TypeScript, Node.js, Firebase, payments (M-Pesa/Daraja, IntaSend)",
+      "QA & structured reporting (Testlio, Innodata and similar)",
     ],
     projects: [
-      "SoundsWapp - Cross-platform music playlist converter",
-      "Decentralized Voting System - Blockchain-based voting platform",
-      "Personal Portfolio Website - Interactive web portfolio with AI features"
+      "SoundSwapp — Spotify/YouTube migration, quota-aware API orchestration",
+      "FlickCollection — AI-powered discovery, caching & fallbacks",
+      "Sanarix — operations platform, Google Auth, real-time messaging",
+      "Personal portfolio — eliudsamwel.dev",
     ],
     experience: [
-      "Internship at Neverest/TAWA (2021) - Contributed to TinyPesa (mobile payments) & UzaKitu (e-commerce)",
-      "Building Software Foundations (2020) - Developed strong foundation in software development"
+      "Generative AI Specialist, Innodata — Aug 2025–Jan 2026, remote — multimodal AI routing, QA precision, high-volume async batches",
+      "Software Engineer, Neverest Ltd (TAWA INNOVATE) — May 2024–Present, Nairobi hybrid — TinyPesa, UzaKitu, Pickup Mtaani, agile systems",
+      "Independent Automation & Full-Stack Developer — Jan 2021–Present, US/EU clients — 100% retention, inbox/calendar/CRM, integrations, payments",
+      "Freelance QA & Operations — 2021–Present — Testlio, Innodata & platforms — structured testing, async collaboration",
     ],
-    education: "Computer Science background with emphasis on software engineering",
+    education: "Bachelor of Business Computing, JKUAT, Nairobi (2025). Coursework: Software Engineering, Distributed Systems, Database Optimization, Business Analysis, Data Visualization.",
     interests: [
-      "Web Development",
-      "Blockchain Technology", 
-      "Artificial Intelligence",
-      "UI/UX Design",
-      "Open Source Development"
-    ]
-  }
+      "Founder operations & automation",
+      "AI tooling for productivity",
+      "Remote async collaboration",
+      "Full-stack integrations",
+    ],
+  },
 };
 
-// Formatted context for sending to the AI
 export const getFormattedContext = () => {
   return `
 # IMPORTANT CONTEXT
@@ -114,4 +110,16 @@ ${customContext.owner.interests.map(interest => `- ${interest}`).join('\n')}
 
 ## End of Context
 `;
-}; 
+};
+
+/** Full system prompt for Gemini — context + how ARIA should answer. */
+export const getAssistantSystemInstruction = () =>
+  `${getFormattedContext().trim()}
+
+## Response guidelines
+- You are **ARIA**, the site’s assistant—not Eliud himself. Speak on behalf of his public portfolio only.
+- Use Markdown when it helps (**bold**, short bullet lists, \`code\` for tools or APIs). Stay scannable.
+- Default to concise answers; go deeper only if the visitor asks.
+- Never invent employers, dates, metrics, or claims not present in the context above. If something isn’t there, say you don’t have that detail and suggest the relevant site page or Contact.
+- Never reveal API keys, secrets, or private information.
+`;

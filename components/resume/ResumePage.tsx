@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { motion } from 'framer-motion';
+import { motion } from 'motion/react';
 import { resumeData } from '../../data/resumeContent';
 import { ResumeSection } from './ResumeSection';
 import { ResumeSkillBadge } from './ResumeSkillBadge';
@@ -25,20 +25,20 @@ const ResumeTabs: React.FC<ResumeTabProps> = ({ activeTab, setActiveTab }) => {
   ];
   
   return (
-    <div className="flex flex-wrap justify-center gap-2 mb-8 border-b border-[var(--card-border)] pb-2">
+    <div className="flex flex-wrap justify-center gap-1 sm:gap-2 mb-6 sm:mb-8 border-b border-[var(--card-border)] pb-2">
       {tabs.map(tab => (
         <button
           key={tab.id}
-          className={`px-5 py-2 rounded-t-lg font-medium transition-all duration-300 flex items-center gap-2 ${
+          className={`px-3 sm:px-5 py-2 sm:py-3 rounded-t-lg font-medium transition-all duration-300 flex items-center gap-1 sm:gap-2 text-sm sm:text-base min-h-[44px] min-w-[44px] ${
             activeTab === tab.id 
-              ? 'bg-[var(--accent-gradient)] text-black' 
+              ? 'bg-gradient-to-r from-yellow-400 via-amber-500 to-orange-600 text-white dark:!text-white shadow-lg' 
               : 'bg-[var(--secondary-bg)] text-[var(--secondary-text)] hover:bg-opacity-70 hover:text-[var(--primary-text)]'
           }`}
           onClick={() => setActiveTab(tab.id)}
           aria-current={activeTab === tab.id ? 'page' : undefined}
         >
           <span className="hidden sm:inline" aria-hidden="true">{tab.icon}</span>
-          {tab.label}
+          <span className="truncate">{tab.label}</span>
         </button>
       ))}
     </div>
@@ -88,7 +88,7 @@ export const ResumePage: React.FC = () => {
 
   return (
     <motion.div 
-      className="max-w-5xl mx-auto px-4 py-8"
+      className="max-w-5xl mx-auto px-3 sm:px-4 py-6 sm:py-8 mt-20 sm:mt-24 w-full"
       initial="hidden"
       animate={isVisible ? "visible" : "hidden"}
       variants={containerVariants}
@@ -99,32 +99,33 @@ export const ResumePage: React.FC = () => {
       </a>
       
       {/* Resume Header Section */}
-      <motion.div className="text-center mb-12" variants={itemVariants}>
-        <h1 className="text-3xl sm:text-4xl lg:text-5xl font-extrabold mb-4">
+      <motion.div className="text-center mb-8 sm:mb-12" variants={itemVariants}>
+        <h1 className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-extrabold mb-3 sm:mb-4 leading-tight break-words overflow-wrap-anywhere hyphens-auto whitespace-normal">
           {fullName}{' '}
           <span className="bg-gradient-to-r from-yellow-400 via-amber-500 to-orange-600 bg-clip-text text-transparent">
             {accentName}
           </span>
         </h1>
-        <p className="text-base sm:text-xl text-[var(--secondary-text)] mb-6 max-w-2xl mx-auto">{jobTitle}</p>
+        <p className="text-sm sm:text-base md:text-xl text-[var(--secondary-text)] mb-4 sm:mb-6 max-w-2xl mx-auto px-2 break-words overflow-wrap-anywhere hyphens-auto whitespace-normal">{jobTitle}</p>
         
-        <div className="flex items-center justify-center gap-2 text-[var(--secondary-text)] mb-6">
-          <location.icon className="w-5 h-5 fill-current text-yellow-500" aria-hidden="true" />
-          <span>{location.text}</span>
+        <div className="flex items-center justify-center gap-2 text-[var(--secondary-text)] mb-4 sm:mb-6">
+          <location.icon className="w-4 h-4 sm:w-5 sm:h-5 fill-current text-yellow-500" aria-hidden="true" />
+          <span className="text-sm sm:text-base">{location.text}</span>
         </div>
         
-        <div className="flex flex-col sm:flex-row justify-center items-center gap-x-6 gap-y-3 flex-wrap mb-8">
+        <div className="flex flex-col sm:flex-row justify-center items-center gap-x-4 sm:gap-x-6 gap-y-2 sm:gap-y-3 flex-wrap mb-6 sm:mb-8 px-2">
           {contactInfo.map((item, index) => (
             <ResumeContactLink key={index} {...item} />
           ))}
         </div>
         
-        <div className="flex flex-col sm:flex-row justify-center items-center gap-4">
+        <div className="flex flex-col sm:flex-row justify-center items-center gap-3 sm:gap-4 px-2">
           <motion.div 
             whileHover={{ scale: 1.05 }}
             whileTap={{ scale: 0.95 }}
+            className="w-full sm:w-auto"
           >
-          <DownloadResumeButton />
+          <DownloadResumeButton className="w-full sm:w-auto" />
           </motion.div>
           
           <motion.a
@@ -134,15 +135,15 @@ export const ResumePage: React.FC = () => {
               // Store the blog post ID in localStorage to open it when the blog page loads
               localStorage.setItem('openBlogPost', 'ats-resume-guide');
             }}
-            className="flex items-center gap-2 px-4 py-2 rounded-lg bg-[var(--secondary-bg)] text-[var(--primary-text)] border border-[var(--card-border)] font-medium transition-all duration-300 hover:-translate-y-1 hover:shadow-md"
+            className="flex items-center justify-center gap-2 px-4 py-2 rounded-lg bg-[var(--secondary-bg)] text-[var(--primary-text)] border border-[var(--card-border)] font-medium transition-all duration-300 hover:-translate-y-1 hover:shadow-md w-full sm:w-auto min-h-[44px]"
             whileHover={{ scale: 1.05 }}
             whileTap={{ scale: 0.95 }}
             aria-label="View ATS Resume Guide"
           >
-            <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 text-[var(--primary-amber)]" viewBox="0 0 20 20" fill="currentColor">
+            <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4 sm:h-5 sm:w-5 text-[var(--primary-amber)]" viewBox="0 0 20 20" fill="currentColor">
               <path d="M9 4.804A7.968 7.968 0 005.5 4c-1.255 0-2.443.29-3.5.804v10A7.969 7.969 0 015.5 14c1.669 0 3.218.51 4.5 1.385A7.962 7.962 0 0114.5 14c1.255 0 2.443.29 3.5.804v-10A7.968 7.968 0 0014.5 4c-1.255 0-2.443.29-3.5.804V12a1 1 0 11-2 0V4.804z" />
             </svg>
-            ATS Resume Guide
+            <span className="text-sm sm:text-base">ATS Resume Guide</span>
           </motion.a>
         </div>
       </motion.div>
@@ -195,7 +196,7 @@ export const ResumePage: React.FC = () => {
               </div>
             </ResumeSection>
             
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 sm:gap-8">
               <ResumeSection title="Recent Experience" defaultExpanded={true}>
                 <div className="space-y-6">
                   {experience.slice(0, 2).map((item, index) => (

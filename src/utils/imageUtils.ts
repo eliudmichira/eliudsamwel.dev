@@ -22,7 +22,7 @@ export const getOptimalImageSources = (originalSrc: string): OptimalImageSources
   const webpSrc = originalSrc.replace(/\.(jpg|jpeg|png|gif)$/i, '.webp');
 
   return {
-    webp: webpSrc,
-    fallback: originalSrc,
+    webp: `${webpSrc} 1x`,
+    fallback: `${originalSrc} 1x`,
   };
 }; 

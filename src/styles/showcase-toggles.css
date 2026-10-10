@@ -347,13 +347,13 @@ html.light .toggle-card.showcase-card p {
 
 .toggle-6-actual .toggle-6-front {
     background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); /* Light theme appearance */
-    color: white;
+    color: var(--color-text-on-accent, #ffffff);
 }
 
 .toggle-6-actual .toggle-6-back {
     background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%); /* Dark theme appearance */
     transform: rotateY(180deg);
-    color: white;
+    color: var(--color-text-on-accent, #ffffff);
 }
 
 /* Toggle 7: Neon Glow (using .toggle-7-actual) */

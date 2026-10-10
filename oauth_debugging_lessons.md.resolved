@@ -1,0 +1,281 @@
+# Debugging OAuth in Capacitor Hybrid Apps: Two Hard-Won Lessons
+
+![OAuth Debugging Hero Image](C:/Users/User/.gemini/antigravity/brain/2ac8f501-c44e-46b1-87d4-95889669f7d1/oauth_blog_minimal_1767538199615.png)
+
+*A technical deep-dive into solving authentication issues that plague hybrid mobile apps*
+
+---
+
+## Introduction
+
+Building a hybrid mobile app with Capacitor, React, and Firebase sounds straightforward—until you hit OAuth authentication on native devices. This post documents two particularly tricky bugs we encountered in **SoundSwapp**, a music platform app, and the solutions that finally made them work.
+
+Both issues shared a common theme: **what works in the browser doesn't always work on native Android**.
+
+---
+
+## Issue #1: Google Sign-In Works, But Profile Photos Don't Sync
+
+### The Symptoms
+
+- ✅ Google Sign-In worked perfectly
+- ✅ User was authenticated and could access the app
+- ✅ Email/password sign-in correctly saved profile photos to Firestore
+- ❌ Google Sign-In never saved `photoURL` or `displayName` to Firestore
+- ❌ No `[firebase.ts]` or `[AuthContext]` logs appeared during Google Sign-In
+
+### The Debugging Journey
+
+We initially focused on the wrong places:
+1. Checked if `photoURL` was coming from Google → It was
+2. Verified Firestore rules → They were correct
+3. Added extensive logging to [signInWithGoogle()](file:///c:/Users/User/Desktop/SS/SoundSwapp-GitHub/src/lib/firebase.ts#464-559) → **Logs never appeared**
+
+That last point was the breakthrough. If our JavaScript code wasn't executing, where was the sign-in happening?
+
+### Root Cause #1: Native Plugin Bypass
+
+The Capacitor Firebase Authentication plugin (`@capacitor-firebase/authentication`) handles Google Sign-In **entirely in native code**. It never calls our JavaScript [signInWithGoogle()](file:///c:/Users/User/Desktop/SS/SoundSwapp-GitHub/src/lib/firebase.ts#464-559) function.
+
+```
+Expected Flow:
+User taps → JS signInWithGoogle() → Native plugin → Google → JS saves profile
+
+Actual Flow:
+User taps → Native plugin → Google → Native plugin signs in → ??? (no JS)
+```
+
+The native plugin signs the user in directly to Firebase Auth, but our JavaScript code that saves profiles to Firestore never runs.
+
+### Root Cause #2: The Silent Killer - capacitor.config.ts
+
+Even after fixing the code, nothing worked. We discovered this in [capacitor.config.ts](file:///c:/Users/User/Desktop/SS/SoundSwapp-GitHub/capacitor.config.ts):
+
+```typescript
+server: {
+  androidScheme: 'https',
+  iosScheme: 'https',
+  hostname: 'soundsswapp.com'  // ← THE PROBLEM
+}
+```
+
+This `hostname` setting told Capacitor to load the **production website** instead of local assets. Every code change we made was irrelevant—the app was running old production code!
+
+### The Solution
+
+**Part 1: Move profile saving to `onAuthStateChanged`**
+
+Instead of saving profiles in specific sign-in methods, we centralized it in the auth state listener:
+
+```typescript
+// AuthContext.tsx
+useEffect(() => {
+  const unsubscribe = onAuthStateChanged(auth, async (user) => {
+    if (user) {
+      // Save/update profile for ANY sign-in method
+      const userRef = doc(db, 'users', user.uid);
+      const userSnap = await getDoc(userRef);
+      
+      if (!userSnap.exists()) {
+        await setDoc(userRef, {
+          email: user.email,
+          displayName: user.displayName,
+          photoURL: user.photoURL,  // ✅ Always captured
+          createdAt: serverTimestamp(),
+        });
+      } else if (!userSnap.data().photoURL && user.photoURL) {
+        // Backfill missing photo
+        await updateDoc(userRef, { photoURL: user.photoURL });
+      }
+    }
+  });
+  return () => unsubscribe();
+}, []);
+```
+
+**Part 2: Bridge native auth to JS SDK**
+
+To ensure `onAuthStateChanged` fires, we manually sync the native credential:
+
+```typescript
+// firebase.ts - signInWithGoogle()
+if (result?.credential?.idToken) {
+  const credential = GoogleAuthProvider.credential(
+    result.credential.idToken,
+    result.credential.accessToken
+  );
+  // This triggers onAuthStateChanged!
+  await signInWithCredential(auth, credential);
+}
+```
+
+**Part 3: Fix capacitor.config.ts**
+
+```typescript
+server: {
+  androidScheme: 'https',
+  iosScheme: 'https',
+  // hostname: 'soundsswapp.com'  // ← COMMENTED OUT
+}
+```
+
+### Key Takeaways
+
+1. **Native plugins bypass your JavaScript code** - Design for this from the start
+2. **`onAuthStateChanged` is your friend** - It catches ALL auth events
+3. **Always verify you're running local code** - Check Capacitor config when debugging
+4. **Missing logs = code not running** - Don't assume your code path is executing
+
+---
+
+## Issue #2: SoundCloud OAuth Redirect Fails with "Failed to Fetch"
+
+### The Symptoms
+
+- ✅ Spotify OAuth worked perfectly with custom scheme `soundswapp://spotify-callback`
+- ✅ SoundCloud auth page loaded fine
+- ✅ User could authorize the app
+- ❌ Redirect back to app showed "Failed to fetch" error
+- ❌ The error appeared on the `soundsswapp.com` website, not in the app
+
+### The Debugging Journey
+
+The logs showed:
+```
+PlatformAuthPlugin: Opening SoundCloud auth URL: 
+  https://soundcloud.com/connect?...&redirect_uri=https%3A%2F%2Fsoundsswapp.com%2Fsoundcloud-callback
+```
+
+Unlike Spotify (`soundswapp://`), SoundCloud was using an HTTPS redirect URI. This requires **Android App Links** to intercept the URL.
+
+### Root Cause: Broken `assetlinks.json`
+
+For App Links to work, you need a valid `assetlinks.json` at `https://yourdomain.com/.well-known/assetlinks.json`. Ours had two fatal errors:
+
+```json
+{
+  "relation": ["delegate_permission/common.handle_all_urls"],
+  "target": {
+    "namespace": "android_app",
+    "package_name": "com.SoundSSwapp.app",  // ❌ WRONG CASE
+    "sha256_cert_fingerprints": ["YOUR_SHA256_FINGERPRINT_HERE"]  // ❌ PLACEHOLDER
+  }
+}
+```
+
+**Issues:**
+1. Package name `com.SoundSSwapp.app` didn't match `com.soundswapp.app` (case-sensitive!)
+2. SHA-256 fingerprint was never filled in
+
+Without valid App Links, Android opened the URL in Chrome instead of the app. The web page tried to call a local API endpoint (`/api/soundcloud/exchange`) that didn't exist, causing "Failed to fetch".
+
+### The Solution
+
+Rather than fix App Links (which requires coordinating server-side changes), we adopted the same approach as Spotify: **custom URL schemes**.
+
+**Step 1: Change redirect URI in native plugin**
+
+```java
+// PlatformAuthPlugin.java
+private static final String SOUNDCLOUD_REDIRECT_URI = "soundswapp://soundcloud-callback";
+// Was: "https://soundsswapp.com/soundcloud-callback"
+```
+
+**Step 2: Add native token exchange**
+
+Instead of passing the code to Firebase Functions (which had billing/deployment issues), we exchanged tokens directly in native code:
+
+```java
+private static void exchangeSoundCloudCode(String code) {
+    FormBody formBody = new FormBody.Builder()
+            .add("client_id", SOUNDCLOUD_CLIENT_ID)
+            .add("client_secret", SOUNDCLOUD_CLIENT_SECRET)
+            .add("grant_type", "authorization_code")
+            .add("redirect_uri", SOUNDCLOUD_REDIRECT_URI)
+            .add("code", code)
+            .build();
+
+    Request request = new Request.Builder()
+            .url("https://api.soundcloud.com/oauth2/token")
+            .post(formBody)
+            .build();
+
+    httpClient.newCall(request).enqueue(new Callback() {
+        @Override
+        public void onResponse(Call call, Response response) {
+            // Parse tokens and return to JS
+            JSONObject json = new JSONObject(body);
+            String accessToken = json.getString("access_token");
+            // ... save and return
+        }
+    });
+}
+```
+
+**Step 3: Update SoundCloud dashboard**
+
+Added `soundswapp://soundcloud-callback` to the registered redirect URIs.
+
+**Step 4: Update JS to receive tokens directly**
+
+```typescript
+// nativeAuth.ts
+interface PlatformAuthPlugin {
+  connectSoundCloud(): Promise<{
+    accessToken: string;      // ← Now returns tokens directly
+    refreshToken: string;
+    expiresIn: number;
+    platform: string;
+  }>;
+}
+```
+
+### Architecture Comparison
+
+| Before | After |
+|--------|-------|
+| Native → returns code → JS → Firebase Functions → SoundCloud API | Native → OkHttp → SoundCloud API → returns tokens |
+| 4 network hops | 1 network hop |
+| Required Firebase deployment | No server dependency |
+| CORS issues possible | Native HTTP (no CORS) |
+| App Links dependency | Custom scheme (simpler) |
+
+### Key Takeaways
+
+1. **Custom schemes are more reliable than App Links** for OAuth callbacks
+2. **App Links require exact config match** - Case-sensitive package names and valid fingerprints
+3. **Native token exchange eliminates CORS** - Consider doing OAuth token exchange in native code
+4. **Match your architecture** - If one OAuth provider uses custom schemes, others probably should too
+
+---
+
+## General Lessons for Capacitor OAuth
+
+### DO ✅
+
+- Use custom URL schemes (`myapp://callback`) for OAuth redirects
+- Handle authentication state changes in a central listener
+- Exchange tokens in native code when possible (avoids CORS)
+- Verify your local code is actually running (check [capacitor.config.ts](file:///c:/Users/User/Desktop/SS/SoundSwapp-GitHub/capacitor.config.ts))
+- Add extensive logging at every step
+- Test on actual devices, not just emulators/browser
+
+### DON'T ❌
+
+- Assume JavaScript code runs for native plugin operations
+- Use HTTPS redirect URIs unless you've properly configured App Links
+- Trust App Links without testing—they're fragile
+- Forget that case matters in Android package names
+- Rely on Firebase Functions for native-critical auth flows
+
+---
+
+## Conclusion
+
+OAuth in hybrid apps is surprisingly complex. The browser abstracts away many details that become critical on native platforms. Both issues we solved shared a pattern: **the native layer operates differently than you expect**.
+
+By understanding the native/JS boundary and designing for it—rather than fighting it—you can build authentication flows that work reliably across all platforms.
+
+---
+
+*These fixes were implemented in SoundSwapp, a music discovery app built with React, Capacitor, and Firebase. The full code changes are documented in the project's walkthrough artifacts.*

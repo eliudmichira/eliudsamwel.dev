@@ -1,6 +1,5 @@
 import React, { useState, useEffect, useCallback, useRef, Suspense, lazy } from 'react';
 import { Header } from './components/Header';
-import { ThemeToggle } from './components/ThemeToggle';
 import PageHeaderSection from './components/PageHeaderSection';
 import { StatsSection } from './components/StatsSection';
 import { Footer } from './components/Footer';
@@ -9,12 +8,16 @@ import { useThemeManager } from './hooks/useThemeManager';
 import { NavLinkItem } from './types';
 import { ResumePage } from './components/resume/ResumePage';
 import { ContactPage } from './components/contact/ContactPage';
+import { ContactAdminDashboard } from './components/contact/ContactAdminDashboard';
 import { ProjectsPage } from './components/projects/ProjectsPage';
 import { BlogPage } from './components/blog/BlogPage';
 import { CompleteUIShowcase } from './src/components/showcase/CompleteUIShowcase';
 import JourneyPage from './src/components/Journey/JourneyPage';
+import CustomCursor from './src/components/CustomCursor';
+// import LoginLayoutsShowcase from './src/components/showcase/LoginLayoutsShowcase'; // Removed import, will be used in CompleteUIShowcase
 import './styles/theme.css';
 import './styles/animations.css';
+import './styles/gallery.css';
 import { constellations, TimelineItem as JourneyTimelineItem } from './data/journeyData';
 import { HashRouter as Router } from 'react-router-dom';
 
@@ -28,115 +31,112 @@ const initialNavLinksData: Omit<NavLinkItem, 'current'>[] = [
     { name: 'Blog', pageId: 'Blog', href: '#blog' },
     { name: 'Contact', pageId: 'Contact', href: '#contact' },
     { name: 'UI Showcase', pageId: 'UIShowcase', href: '#ui-showcase' },
+    // { name: 'Login Layouts', pageId: 'LoginLayouts', href: '#login-layouts' }, // Removed nav link
 ];
 
-// Consolidate timelineEventsData with JourneyTimelineItem structure
+// Journey timeline — aligned with annotation, evaluation & engineering narrative
 const consolidatedTimelineData: JourneyTimelineItem[] = [
-    {
-        id: 'bio',
-        year: 'Ongoing',
-        category: 'Experience',
-        icon: '👤',
-        title: 'About Me',
-        location: 'Kenya',
-        description: "I'm a passionate software developer from Kenya, focused on building efficient, scalable, and user-friendly applications. My experience spans web development, mobile platforms, and decentralized systems, with a strong emphasis on solving real-world problems using innovative tech solutions.",
-        achievement: {
-            title: '🌟 Core Values',
-            text: 'Innovation through simplicity, clean and maintainable code, data-driven decision-making, ethical and user-focused development.',
-        },
+  {
+    id: 'bio',
+    year: 'Ongoing',
+    category: 'Experience',
+    icon: '👤',
+    title: 'Today — Data annotation & AI content evaluation',
+    location: 'Nairobi, Kenya · Fully remote',
+    description:
+      'Data annotator and AI content evaluator: labeling and scoring AI outputs across business, finance, healthcare, legal, and STEM domains. Promoted into auditing at Innodata after a perfect 35/35 on the Content Understanding Video Master eval. Full-stack developer background sharpens the eye for inconsistency in datasets and systems.',
+    achievement: {
+      title: '🎯 Focus',
+      text: 'Accurate, well-documented annotation — edge cases flagged, ambiguities resolved, rubrics improved.',
     },
-    {
-        id: 'experience',
-        year: '2021',
-        category: 'Experience',
-        icon: '💼',
-        title: 'Professional Experience',
-        location: 'Neverest Ltd',
-        description: "I interned at Neverest Ltd under TAWA INNOVATE LIMITED, where I contributed to the development of digital platforms like TinyPesa (a mobile payment solution) and UzaKitu (an e-commerce system for small businesses). My work improved usability, system performance, and analytics-driven decision-making.",
-        achievement: {
-            title: '🚀 Key Contributions',
-            text: 'Enhanced user interfaces, integrated real-time updates, and built analytics dashboards for better business intelligence.',
-        },
+  },
+  {
+    id: 'innodata-2025',
+    year: 'Aug 2025 – May 2026',
+    category: 'Experience',
+    icon: '🤖',
+    title: 'AI Content & Data Annotator / Evaluator · Innodata Inc.',
+    location: 'Remote · Global time zones',
+    description:
+      'Annotated and scored AI-generated text, image, and video outputs against client rubrics. Scored 35/35 (perfect) on the Content Understanding Video Master evaluation — the project\'s strictest calibration test. Promoted into auditing: checked other annotators\' labels against guidelines and flagged inconsistent judgments. Documented edge cases that fed rubric refinement.',
+    achievement: {
+      title: '📈 Impact',
+      text: '35/35 perfect score on Video Master Eval → promoted to auditor. High-volume async delivery across every batch.',
     },
-    {
-        id: 'projects',
-        year: '2023',
-        category: 'Project',
-        icon: '🛠️',
-        title: 'Notable Projects',
-        location: 'Remote',
-        description: "I'm the developer of a Decentralized Voting Management System, designed to promote trust and transparency in digital elections using blockchain technology. The system features voter authentication with JWT, eligibility checks via smart contract, real-time vote counting, and WebSocket integration for instant updates.",
-        achievement: {
-            title: '🏆 Project Impact',
-            text: 'Created secure, transparent voting solutions that enhance trust in digital democratic processes.',
-        },
+  },
+  {
+    id: 'neverest-2024',
+    year: 'May 2024 – Aug 2025',
+    category: 'Experience',
+    icon: '💼',
+    title: 'Software Engineer Intern · Neverest Ltd (TAWA INNOVATE)',
+    location: 'Nairobi, Kenya · Hybrid',
+    description:
+      'Fintech and e-commerce: TinyPesa transaction workflows and UzaKitu\'s reseller dashboard — direct familiarity with structured data, edge cases, and system logic in live products. UzaKitu dashboards with WebSockets and D3.js; Pickup Mtaani logistics with CRM-style order state.',
+    achievement: {
+      title: '⚙️ Outcome',
+      text: 'Hands-on system logic experience that now sharpens annotation accuracy for technical and structured-data tasks.',
     },
-    {
-        id: 'skills',
-        year: 'Ongoing',
-        category: 'Experience',
-        icon: '💻',
-        title: 'Tech Stack & Skills',
-        location: 'Self-taught & Project-based',
-        description: "My technical toolkit includes: Languages (JavaScript, Solidity, Python, SQL), Frontend (HTML, CSS, React.js), Backend (Node.js, Express.js, Flask), Blockchain (Ethereum, Truffle, Web3.js), Database (PostgreSQL, MongoDB), and various development tools.",
-        achievement: {
-            title: '📚 Continuous Learning',
-            text: 'Constantly expanding my skills through self-directed learning and practical application in diverse projects.',
-        },
+  },
+  {
+    id: 'independent-2021',
+    year: '2021 – Present',
+    category: 'Experience',
+    icon: '🌐',
+    title: 'Full-Stack Developer · Independent / Freelance',
+    location: 'Remote — async',
+    description:
+      'Built and shipped SoundsSwapp, FlickCollection, and other products end to end. 100% client retention and 4.9/5 average project rating. Workflow automations across Spotify, YouTube, Google APIs, and Firebase. M-Pesa/Daraja and IntaSend payment flows with resilient orchestration.',
+    achievement: {
+      title: '✅ Track record',
+      text: '100% client retention; full-stack background that contextualises datasets and system outputs during evaluation work.',
     },
-    {
-        id: 'future',
-        year: 'Present & Beyond',
-        category: 'Experience',
-        icon: '🔮',
-        title: 'Looking Forward',
-        location: 'Global',
-        description: "I'm passionate about building solutions that make a real difference. I'm particularly interested in the intersection of blockchain and traditional web technologies, and I'm always open to new collaborations and learning opportunities.",
-        achievement: {
-            title: '🌱 Growth Mindset',
-            text: 'Committed to continuous improvement and staying at the forefront of emerging technologies.',
-        },
+  },
+  {
+    id: 'education-2025',
+    year: '2025',
+    category: 'Education',
+    icon: '🎓',
+    title: 'BSc, Business Computing · JKUAT',
+    location: 'Nairobi, Kenya',
+    description:
+      'Software engineering, distributed systems, database optimization, business analysis, and data visualization — bridging engineering depth with practical understanding of how systems and datasets are structured.',
+    achievement: {
+      title: '📚 Credentials',
+      text: 'Innodata 35/35 Video Master Eval (2026), Critical Thinking 100th percentile, English C2 94th percentile, Versant Passed, Testlio Conduct 100% (July 2025).',
     },
-      {
-        id: 'timeline-1',
-        year: '2020',
-        title: 'Building Software Foundations',
-        category: 'Experience',
-        icon: '💼',
-        location: 'Remote',
-        description: 'Developed a strong foundation in software development, focusing on efficient, scalable, and user-friendly applications across web and mobile platforms.',
-        achievement: {
-          title: 'Key Achievement:',
-          text: 'Built foundation for scalable applications'
-        }
-      },
-      {
-        id: 'timeline-2',
-        year: '2021',
-        title: 'Internship: Neverest/TAWA',
-        category: 'Education',
-        icon: '🎓',
-        location: 'Neverest Ltd',
-        description: 'Contributed to TinyPesa (mobile payments) & UzaKitu (e-commerce) at Neverest Ltd via TAWA INNOVATE. Enhanced UIs, integrated real-time updates, built analytics dashboards.',
-        achievement: {
-          title: 'Impact:',
-          text: 'Enhanced UI/UX for 10K+ users'
-        }
-      },
-      {
-        id: 'timeline-3',
-        year: '2023',
-        title: 'Decentralized Voting System',
-        category: 'Project',
-        icon: '🚀',
-        location: 'Blockchain Innovation',
-        description: 'Developer of a Decentralized Voting Management System using blockchain (Ethereum, Solidity) to promote trust and transparency in digital elections.',
-        achievement: {
-          title: 'Innovation:',
-          text: 'Pioneered blockchain voting solution'
-        }
-      }
+  },
+  {
+    id: 'projects-flagship',
+    year: '2023 – Present',
+    category: 'Project',
+    icon: '🚀',
+    title: 'Flagship builds · voting, fintech & discovery',
+    location: 'Remote',
+    description:
+      'Blockchain Electoral Management System; SoundSwapp (quota-aware Spotify↔YouTube orchestration); FlickCollection (AI discovery with caching and fallbacks); Sanarix (ops dashboards, Google Auth, real-time messaging).',
+    achievement: {
+      title: '🏗️ Pattern',
+      text: 'Engineering practice that builds intuition for structured data, edge cases, and system-level inconsistencies.',
+    },
+  },
+  {
+    id: 'future',
+    year: 'Present & beyond',
+    category: 'Experience',
+    icon: '🔮',
+    title: "What's next",
+    location: 'Global · Async-first',
+    description:
+      'Continuing to grow in AI content evaluation, data annotation, and RLHF-adjacent work — while staying hands-on in engineering when projects call for it.',
+    achievement: {
+      title: '🌱 Invitation',
+      text: 'Open to annotation, evaluation, and QA roles where attention to detail, domain breadth, and calm async execution matter.',
+    },
+  },
 ];
+
+
 
 // New particles.js configuration from contact.html
 const particlesConfig = {
@@ -168,14 +168,20 @@ const FuturisticAIAssistant = lazy(() => import('./src/components/AI/FuturisticA
 const App: React.FC = () => {
   const [theme, toggleThemeInternal] = useThemeManager();
   const getPageIdFromHash = (hash: string) => {
-    const pageId = hash.replace('#', '');
-    const navLink = initialNavLinksData.find(link => link.href === hash || link.pageId.toLowerCase() === pageId.toLowerCase());
+    const pageId = hash.replace('#', '').toLowerCase();
+    
+    // Handle admin routes
+    if (pageId === 'admin' || pageId === 'contact-admin') {
+      return 'Admin';
+    }
+    
+    const navLink = initialNavLinksData.find(link => 
+      link.href === hash || link.pageId.toLowerCase() === pageId
+    );
     return navLink ? navLink.pageId : 'About';
   };
   const [activePage, setActivePage] = useState<string>(() => getPageIdFromHash(window.location.hash)); 
   const [loading, setLoading] = useState(true);
-  const cursorDotRef = useRef<HTMLDivElement>(null);
-  const cursorOutlineRef = useRef<HTMLDivElement>(null);
 
   const updateParticlesTheme = useCallback((currentTheme: 'light' | 'dark') => {
     if (typeof pJSDom !== 'undefined' && pJSDom[0]?.pJS) {
@@ -200,15 +206,15 @@ const App: React.FC = () => {
   };
 
   useEffect(() => { // Preloader
-    const preloader = document.getElementById('preloader');
-    if (preloader) {
-      setTimeout(() => {
+    const timer = setTimeout(() => {
+      const preloader = document.getElementById('preloader');
+      if (preloader) {
         preloader.classList.add('loaded');
-        setLoading(false);
-      }, 1500); 
-    } else {
-        setLoading(false);
-    }
+      }
+      setLoading(false);
+    }, 1500);
+    
+    return () => clearTimeout(timer);
   }, []);
 
   useEffect(() => { // Particles.js
@@ -218,34 +224,7 @@ const App: React.FC = () => {
     }
   }, [loading, theme, updateParticlesTheme]);
   
-  useEffect(() => { // Custom Cursor
-    const dot = cursorDotRef.current || document.getElementById('cursor-dot') as HTMLDivElement;
-    const outline = cursorOutlineRef.current || document.getElementById('cursor-outline') as HTMLDivElement;
-    if (!dot || !outline) return;
-    document.body.classList.add('cursor-ready');
-    const moveCursor = (e: MouseEvent) => {
-      const posX = e.clientX;
-      const posY = e.clientY;
-      dot.style.transform = `translate(${posX}px, ${posY}px)`;
-      outline.style.transform = `translate(${posX - outline.offsetWidth / 2 + dot.offsetWidth / 2}px, ${posY - outline.offsetHeight / 2 + dot.offsetHeight / 2}px)`;
-    };
-    const interactiveElements = document.querySelectorAll('a, button, input, select, textarea, [role="button"], .magnetic');
-    const addHoverClass = () => outline.classList.add('hover');
-    const removeHoverClass = () => outline.classList.remove('hover');
-    interactiveElements.forEach(el => {
-        el.addEventListener('mouseenter', addHoverClass);
-        el.addEventListener('mouseleave', removeHoverClass);
-    });
-    window.addEventListener('mousemove', moveCursor);
-    return () => {
-      window.removeEventListener('mousemove', moveCursor);
-      interactiveElements.forEach(el => {
-          el.removeEventListener('mouseenter', addHoverClass);
-          el.removeEventListener('mouseleave', removeHoverClass);
-      });
-      document.body.classList.remove('cursor-ready');
-    };
-  }, [loading]); 
+  // Custom cursor is now handled by the CustomCursor component
   
   useEffect(() => { // Scroll Progress Bar
     const scrollProgressBar = document.getElementById('scroll-progress-bar');
@@ -303,9 +282,48 @@ const App: React.FC = () => {
     current: link.pageId === activePage,
   }));
   
+  const renderPage = () => {
+    switch (activePage) {
+      case 'About':
+        return (
+          <div className="page-content fade-in">
+            <div id="particles-js" style={{ position: 'absolute', width: '100%', height: '100%', zIndex: 0 }}></div>
+            <PageHeaderSection onNavigate={handleNavLinkClick} />
+            <JourneyPage timelineItems={consolidatedTimelineData} constellations={constellations} />
+            <StatsSection />
+          </div>
+        );
+      case 'Resume':
+        return <ResumePage />;
+      case 'Projects':
+        return <ProjectsPage />;
+      case 'Blog':
+        return <BlogPage />;
+      case 'Contact':
+        return <ContactPage />;
+      case 'Admin':
+      case 'ContactAdmin':
+        return <ContactAdminDashboard />;
+      case 'UIShowcase':
+        return <CompleteUIShowcase />;
+      // case 'LoginLayouts': // Removed case for LoginLayouts
+      //   return <LoginLayoutsShowcase />;
+      default:
+        return (
+          <div className="page-content fade-in">
+            <div id="particles-js" style={{ position: 'absolute', width: '100%', height: '100%', zIndex: 0 }}></div>
+            <PageHeaderSection onNavigate={handleNavLinkClick} />
+            <JourneyPage timelineItems={consolidatedTimelineData} constellations={constellations} />
+            <StatsSection />
+          </div>
+        );
+    }
+  };
+
   return (
     <Router>
       <div className="App font-sans antialiased text-[var(--primary-text)] bg-[var(--primary-bg)] min-h-screen flex flex-col">
+        <CustomCursor />
         <Suspense fallback={<div className="fixed inset-0 bg-black flex items-center justify-center text-white">Loading ARIA...</div>}>
           <FuturisticAIAssistant />
         </Suspense>
@@ -313,21 +331,13 @@ const App: React.FC = () => {
         <Header navLinks={navLinks} onNavLinkClick={handleNavLinkClick} theme={theme} toggleTheme={toggleTheme} />
         
         <main className="container mx-auto px-4 sm:px-6 lg:px-8 pt-28 pb-10 flex-1 max-w-7xl relative z-[5]">
-          {activePage === 'About' && (
-            <>
-              <PageHeaderSection onNavigate={handleNavLinkClick} />
-              <StatsSection />
-              <JourneyPage timelineItems={consolidatedTimelineData} constellations={constellations} />
-            </>
-          )}
-          {activePage === 'Resume' && <ResumePage />}
-          {activePage === 'Projects' && <ProjectsPage />}
-          {activePage === 'Blog' && <BlogPage />}
-          {activePage === 'Contact' && <ContactPage />}
-          {activePage === 'UIShowcase' && <CompleteUIShowcase />}
+          {renderPage()}
         </main>
         
-        <Footer onNavLinkClick={handleNavLinkClick} />
+        {/* Only show footer on pages that need it */}
+        {(['About', 'Contact', 'Blog'].includes(activePage)) && (
+          <Footer onNavLinkClick={handleNavLinkClick} />
+        )}
         <FloatingActionButton 
           onNavigate={handleNavLinkClick} 
           theme={theme}

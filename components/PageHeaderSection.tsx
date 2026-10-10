@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 // Use the profile image from the public directory instead
 // import profileImage from '../profile.jpg';
 import { FaGithub, FaLinkedin, FaTwitter, FaCode, FaRocket, FaBrain, FaArrowDown } from 'react-icons/fa';
-import { motion } from 'framer-motion';
+import { motion } from 'motion/react';
 
 interface PageHeaderSectionProps {
   onNavigate: (pageId: string) => void;
@@ -59,7 +59,7 @@ export const PageHeaderSection: React.FC<PageHeaderSectionProps> = ({ onNavigate
       y: 0,
       opacity: 1,
       transition: {
-        type: "spring",
+        type: "spring" as const,
         damping: 12,
         stiffness: 100
       }
@@ -157,13 +157,18 @@ export const PageHeaderSection: React.FC<PageHeaderSectionProps> = ({ onNavigate
       {floatingIcons.map((item, index) => (
         <motion.div
           key={index}
-          className={`absolute ${item.color} opacity-10 z-[-1]`} /* Kept opacity low and z-index low */
+          className={`absolute ${item.color} opacity-10 z-[-1]`}
           style={item.position}
           animate={{ y: [0, -20, 0], rotate: [0, 10, 0] }}
           transition={{ duration: 5 + index, repeat: Infinity, ease: "easeInOut" }}
         >
-          {/* Responsive icon size: base 40px, sm 50px, lg 60px */}
-          <item.Icon className="w-10 h-10 sm:w-12 sm:h-12 lg:w-16 lg:h-16" /> 
+          <motion.div
+            whileHover={{ scale: 1.2, rotate: 10 }}
+            whileTap={{ scale: 0.9, rotate: -10 }}
+            transition={{ type: 'spring', stiffness: 300 }}
+          >
+            <item.Icon className="w-10 h-10 sm:w-12 sm:h-12 lg:w-16 lg:h-16" />
+          </motion.div>
         </motion.div>
       ))}
 
@@ -171,9 +176,9 @@ export const PageHeaderSection: React.FC<PageHeaderSectionProps> = ({ onNavigate
       {/* <div className="absolute inset-0 bg-[url('/grid.svg')] bg-center opacity-5 z-[-1]" /> */}
 
       {/* Main content container */}
-      <div className="container mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
+      <div className="container mx-auto px-3 sm:px-4 md:px-6 lg:px-8 relative z-10 mt-20 sm:mt-24 w-full">
         <motion.div 
-          className="flex flex-col lg:flex-row items-center gap-12 lg:gap-16"
+          className="flex flex-col lg:flex-row items-center gap-8 sm:gap-12 lg:gap-16"
           variants={containerVariants}
           initial="hidden"
           animate="visible"
@@ -183,13 +188,13 @@ export const PageHeaderSection: React.FC<PageHeaderSectionProps> = ({ onNavigate
             style={{ y: yText, opacity: opacityValue }}
           >
             <motion.div variants={itemVariants}>
-              <span className="inline-block px-4 py-2 mb-6 text-sm font-semibold text-[var(--accent-secondary)] dark:text-[var(--accent-secondary)] bg-[var(--accent-light)] dark:bg-color-mix(in srgb, var(--accent-secondary) 10%, transparent) rounded-full border border-[var(--accent-secondary)]/50 dark:border-color-mix(in srgb, var(--accent-secondary) 20%, transparent)">
-                ✨ Available for new projects
+              <span className="inline-block px-3 sm:px-4 py-2 mb-4 sm:mb-6 text-xs sm:text-sm font-semibold text-[var(--accent-secondary)] dark:text-[var(--accent-secondary)] bg-[var(--accent-light)] dark:bg-color-mix(in srgb, var(--accent-secondary) 10%, transparent) rounded-full border border-[var(--accent-secondary)]/50 dark:border-color-mix(in srgb, var(--accent-secondary) 20%, transparent)">
+                ✨ Nairobi, Kenya · Fully remote · AI Content Evaluation
               </span>
             </motion.div>
 
             <motion.h1 
-              className="text-5xl sm:text-6xl lg:text-7xl font-extrabold mb-6"
+              className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl xl:text-7xl font-extrabold mb-4 sm:mb-6 break-words overflow-wrap-anywhere hyphens-auto whitespace-normal"
               variants={itemVariants}
             >
               <span className="block text-[var(--color-text)] dark:text-[var(--primary-text)] mb-2">Hi, I'm</span>
@@ -205,28 +210,27 @@ export const PageHeaderSection: React.FC<PageHeaderSectionProps> = ({ onNavigate
             </motion.h1>
 
             <motion.h2 
-              className="text-2xl sm:text-3xl font-semibold mb-6 text-[var(--color-text-secondary)] dark:text-[var(--secondary-text)]"
+              className="text-lg sm:text-xl md:text-2xl lg:text-3xl font-semibold mb-4 sm:mb-6 text-[var(--color-text-secondary)] dark:text-[var(--secondary-text)] break-words overflow-wrap-anywhere hyphens-auto whitespace-normal leading-snug"
               variants={itemVariants}
             >
-              Software Developer & Tech Innovator
+              {'Generalist · Data Annotation & AI Content Evaluator'}
             </motion.h2>
 
             <motion.p 
-              className="text-base sm:text-lg text-[var(--color-text-secondary)] dark:text-[var(--secondary-text)] opacity-80 mb-8 max-w-2xl mx-auto lg:mx-0 leading-relaxed"
+              className="text-sm sm:text-base md:text-lg text-[var(--color-text-secondary)] dark:text-[var(--secondary-text)] opacity-80 mb-6 sm:mb-8 max-w-2xl mx-auto lg:mx-0 leading-relaxed px-2 break-words overflow-wrap-anywhere hyphens-auto whitespace-normal"
               variants={itemVariants}
             >
-              Building impactful digital solutions at the intersection of web, mobile, and blockchain technology. 
-              Passionate about creating experiences that make a difference.
+              {'Data annotator and AI content evaluator with a perfect 35/35 on Innodata\'s Content Understanding Video Master eval — promoted into auditing after consistently top scores. Multi-domain labeling across business, finance, healthcare, legal, and STEM. Full-stack developer background that sharpens my eye for inconsistency in data and systems.'}
             </motion.p>
 
             {/* Social links */}
             <motion.div 
-              className="flex gap-4 mb-10 justify-center lg:justify-start"
+              className="flex gap-3 sm:gap-4 mb-8 sm:mb-10 justify-center lg:justify-start"
               variants={itemVariants}
             >
               {[
                 { href: "https://github.com/eliudmichira", Icon: FaGithub, label: "GitHub", hoverColor: "var(--accent-secondary)" },
-                { href: "https://linkedin.com/in/eliudsamwel", Icon: FaLinkedin, label: "LinkedIn", hoverColor: "var(--accent-primary)" },
+                { href: "https://www.linkedin.com/in/eliud-samwel-72b8622b3", Icon: FaLinkedin, label: "LinkedIn", hoverColor: "var(--accent-primary)" },
                 { href: "https://x.com/mich_michira", Icon: FaTwitter, label: "Twitter", hoverColor: "var(--accent-yellow)" }
               ].map((social) => (
                 <motion.a
@@ -235,12 +239,18 @@ export const PageHeaderSection: React.FC<PageHeaderSectionProps> = ({ onNavigate
                   target="_blank"
                   rel="noopener noreferrer"
                   aria-label={`Visit Eliud's ${social.label} profile`}
-                  className="group relative p-3 rounded-xl bg-[var(--glass-card-bg)] backdrop-blur-sm border border-[var(--glass-card-border)] hover:border-[var(--hoverColorVariable)] transition-all duration-300"
+                  className="group relative p-2 sm:p-3 rounded-xl bg-[var(--glass-card-bg)] backdrop-blur-sm border border-[var(--glass-card-border)] hover:border-[var(--hoverColorVariable)] transition-all duration-300 min-h-[44px] min-w-[44px] flex items-center justify-center"
                   style={{ '--hoverColorVariable': social.hoverColor } as React.CSSProperties}
                   whileHover={{ scale: 1.05, y: -2 }}
                   whileTap={{ scale: 0.95 }}
                 >
-                  <social.Icon className="w-6 h-6 text-[var(--color-text-muted)] dark:text-[var(--secondary-text)] group-hover:text-[var(--hoverColorVariable)] transition-colors" />
+                  <motion.div
+                    whileHover={{ scale: 1.2, rotate: 10 }}
+                    whileTap={{ scale: 0.9, rotate: -10 }}
+                    transition={{ type: 'spring', stiffness: 300 }}
+                  >
+                    <social.Icon className="w-6 h-6 text-[var(--color-text-muted)] dark:text-[var(--secondary-text)] group-hover:text-[var(--hoverColorVariable)] transition-colors" />
+                  </motion.div>
                   <div className="absolute inset-0 bg-gradient-to-br from-color-mix(in srgb, var(--hoverColorVariable) 20%, transparent) to-color-mix(in srgb, var(--hoverColorVariable) 20%, transparent) rounded-xl opacity-0 group-hover:opacity-100 transition-opacity" />
                 </motion.a>
               ))}
@@ -248,12 +258,12 @@ export const PageHeaderSection: React.FC<PageHeaderSectionProps> = ({ onNavigate
 
             {/* CTA Buttons */}
             <motion.div 
-              className="flex flex-col sm:flex-row gap-4 justify-center lg:justify-start"
+              className="flex flex-col sm:flex-row gap-3 sm:gap-4 justify-center lg:justify-start"
               variants={itemVariants}
             >
               <motion.button
                 onClick={() => onNavigate('Projects')}
-                className="group relative px-8 py-4 rounded-xl font-semibold overflow-hidden text-[var(--color-text-on-accent)]"
+                className="group relative px-6 sm:px-8 py-3 sm:py-4 rounded-xl font-semibold overflow-hidden text-[var(--color-text-on-accent)] min-h-[44px] text-sm sm:text-base"
                 whileHover={{ scale: 1.02 }}
                 whileTap={{ scale: 0.98 }}
               >
@@ -271,7 +281,7 @@ export const PageHeaderSection: React.FC<PageHeaderSectionProps> = ({ onNavigate
 
               <motion.button
                 onClick={() => onNavigate('Contact')}
-                className="group relative px-8 py-4 rounded-xl font-semibold overflow-hidden text-[var(--color-text)] dark:text-[var(--primary-text)] bg-transparent hover:bg-[var(--color-hover-bg)] dark:hover:bg-color-mix(in srgb, var(--primary-text) 5%, transparent) border-2 border-[var(--color-text)] dark:border-[var(--primary-text)] transition-colors duration-300"
+                className="group relative px-6 sm:px-8 py-3 sm:py-4 rounded-xl font-semibold overflow-hidden text-[var(--color-text)] dark:text-[var(--primary-text)] bg-transparent hover:bg-[var(--color-hover-bg)] dark:hover:bg-color-mix(in srgb, var(--primary-text) 5%, transparent) border-2 border-[var(--color-text)] dark:border-[var(--primary-text)] transition-colors duration-300 min-h-[44px] text-sm sm:text-base"
                 whileHover={{ scale: 1.02 }}
                 whileTap={{ scale: 0.98 }}
               >
@@ -307,7 +317,7 @@ export const PageHeaderSection: React.FC<PageHeaderSectionProps> = ({ onNavigate
               <motion.div
                 className="relative w-72 h-72 sm:w-80 sm:h-80 lg:w-96 lg:h-96 floating-profile-img-container"
                 whileHover={{ scale: 1.05 }}
-                transition={{ type: "spring", stiffness: 300 }}
+                transition={{ type: "spring" as const, stiffness: 300 }}
               >
                 {/* Glow effect behind profile image - Radial spotlight */}
                 <div className="absolute inset-0 rounded-full z-0 pointer-events-none">
@@ -318,8 +328,8 @@ export const PageHeaderSection: React.FC<PageHeaderSectionProps> = ({ onNavigate
                 
                 {/* Profile image - simplified to just use the public image directly */}
                 <img 
-                  src="/images/profile.jpg"
-                  alt="Eliud Samwel Michira - Software Developer" 
+                  src="/profile.png"
+                  alt="Eliud Michira Samwel — AI Automation Engineer" 
                   className="absolute inset-0 w-full h-full object-cover rounded-full z-10 floating-profile-img"
                   loading="lazy"
                 />
@@ -331,7 +341,7 @@ export const PageHeaderSection: React.FC<PageHeaderSectionProps> = ({ onNavigate
                          bg-[var(--glass-card-bg)] backdrop-blur-sm rounded-full border border-green-500/50"
                 initial={{ scale: 0 }}
                 animate={{ scale: 1 }}
-                transition={{ delay: 1, type: "spring" }}
+                transition={{ delay: 1, type: "spring" as const }}
               >
                 <div className="w-2 h-2 bg-green-500 rounded-full animate-pulse" />
                 <span className="text-xs text-[var(--secondary-text)]">Available</span>

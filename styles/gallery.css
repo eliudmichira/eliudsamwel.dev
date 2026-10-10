@@ -1,0 +1,517 @@
+/* Professional Gallery Enhancement Styles */
+
+.gallery-masonry {
+  position: relative;
+}
+
+/* Loading shimmer animation */
+@keyframes shimmer {
+  0% {
+    transform: translateX(-100%) skewX(-12deg);
+  }
+  100% {
+    transform: translateX(200%) skewX(-12deg);
+  }
+}
+
+.animate-shimmer {
+  animation: shimmer 2s infinite;
+}
+
+/* Gallery grid enhancements */
+.gallery-masonry .grid {
+  gap: 1.5rem;
+}
+
+/* Desktop masonry enhancements */
+@media (min-width: 1024px) {
+  .gallery-masonry .grid {
+    gap: 2rem;
+  }
+  
+  .gallery-masonry .grid > div {
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  }
+  
+  .gallery-masonry .grid > div:hover {
+    transform: translateY(-8px) scale(1.02);
+    z-index: 10;
+  }
+}
+
+/* Tablet optimizations */
+@media (min-width: 768px) and (max-width: 1023px) {
+  .gallery-masonry .grid {
+    gap: 1rem;
+  }
+}
+
+/* Mobile optimizations */
+@media (max-width: 767px) {
+  .gallery-masonry .space-y-4 > * + * {
+    margin-top: 1rem;
+  }
+}
+
+/* Enhanced image loading states */
+.gallery-image {
+  position: relative;
+  overflow: hidden;
+  background: linear-gradient(
+    135deg,
+    var(--color-bg-surface) 0%,
+    var(--secondary-bg) 100%
+  );
+}
+
+.gallery-image::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: linear-gradient(
+    90deg,
+    transparent,
+    rgba(255, 255, 255, 0.1),
+    transparent
+  );
+  transform: translateX(-100%);
+  transition: transform 0.6s;
+}
+
+.gallery-image.loading::before {
+  animation: shimmer 1.5s infinite;
+}
+
+/* Enhanced hover effects */
+.gallery-item {
+  position: relative;
+  border-radius: 12px;
+  overflow: hidden;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  transform-style: preserve-3d;
+}
+
+.gallery-item:hover {
+  box-shadow: 
+    0 20px 25px -5px rgba(0, 0, 0, 0.1),
+    0 10px 10px -5px rgba(0, 0, 0, 0.04),
+    0 0 0 1px rgba(var(--primary-amber-rgb), 0.2);
+}
+
+/* Caption animations */
+.gallery-caption {
+  transform: translateY(100%);
+  transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  background: linear-gradient(
+    to top,
+    rgba(0, 0, 0, 0.8) 0%,
+    rgba(0, 0, 0, 0.4) 50%,
+    transparent 100%
+  );
+}
+
+.gallery-item:hover .gallery-caption {
+  transform: translateY(0);
+}
+
+/* Filter button styles */
+.gallery-filter {
+  backdrop-filter: blur(8px);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.gallery-filter:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+
+.gallery-filter.active {
+  background: linear-gradient(
+    135deg,
+    var(--primary-amber) 0%,
+    var(--primary-orange) 100%
+  );
+  color: var(--color-text-on-accent, #000);
+  border-color: transparent;
+}
+
+/* Lightbox enhancements */
+.gallery-lightbox {
+  backdrop-filter: blur(12px);
+}
+
+.gallery-lightbox-header {
+  background: linear-gradient(
+    to bottom,
+    rgba(0, 0, 0, 0.8) 0%,
+    rgba(0, 0, 0, 0.4) 50%,
+    transparent 100%
+  );
+}
+
+.gallery-lightbox-footer {
+  background: linear-gradient(
+    to top,
+    rgba(0, 0, 0, 0.8) 0%,
+    rgba(0, 0, 0, 0.4) 50%,
+    transparent 100%
+  );
+}
+
+/* Thumbnail navigation */
+.gallery-thumbnails {
+  backdrop-filter: blur(8px);
+  background: rgba(0, 0, 0, 0.3);
+  border-radius: 12px;
+  padding: 8px;
+  max-width: 80%;
+}
+
+.gallery-thumbnail {
+  border-radius: 6px;
+  overflow: hidden;
+  transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+  flex-shrink: 0;
+}
+
+.gallery-thumbnail:hover {
+  opacity: 1 !important;
+  transform: scale(1.1);
+}
+
+.gallery-thumbnail.active {
+  border-color: var(--primary-amber);
+  box-shadow: 0 0 0 2px rgba(var(--primary-amber-rgb), 0.3);
+}
+
+/* Empty state animations */
+.gallery-empty {
+  background: linear-gradient(
+    135deg,
+    var(--color-bg-surface) 0%,
+    rgba(var(--primary-amber-rgb), 0.05) 100%
+  );
+  border: 2px dashed var(--color-border);
+  position: relative;
+}
+
+.gallery-empty::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  padding: 2px;
+  background: linear-gradient(
+    45deg,
+    transparent,
+    rgba(var(--primary-amber-rgb), 0.1),
+    transparent
+  );
+  mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+  mask-composite: exclude;
+  opacity: 0;
+  animation: borderGlow 3s ease-in-out infinite;
+}
+
+@keyframes borderGlow {
+  0%, 100% { opacity: 0; }
+  50% { opacity: 1; }
+}
+
+/* Responsive grid improvements */
+.gallery-grid-desktop {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  grid-auto-rows: 200px;
+  gap: 1.5rem;
+}
+
+.gallery-grid-tablet {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  grid-auto-rows: 180px;
+  gap: 1rem;
+}
+
+.gallery-grid-mobile {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+/* Performance optimizations */
+.gallery-image img {
+  will-change: transform;
+  backface-visibility: hidden;
+  transform: translateZ(0);
+}
+
+/* Accessibility improvements */
+@media (prefers-reduced-motion: reduce) {
+  .gallery-item,
+  .gallery-caption,
+  .gallery-filter,
+  .gallery-thumbnail {
+    transition: none;
+    animation: none;
+  }
+  
+  .gallery-empty::before {
+    animation: none;
+  }
+}
+
+/* Focus states for keyboard navigation */
+.gallery-item:focus-visible,
+.gallery-filter:focus-visible,
+.gallery-thumbnail:focus-visible {
+  outline: 2px solid var(--primary-amber);
+  outline-offset: 2px;
+}
+
+/* Print styles */
+@media print {
+  .gallery-lightbox,
+  .gallery-filter {
+    display: none;
+  }
+}
+
+/* High DPI displays */
+@media (-webkit-min-device-pixel-ratio: 2), (min-resolution: 192dpi) {
+  .gallery-item {
+    image-rendering: -webkit-optimize-contrast;
+    image-rendering: crisp-edges;
+  }
+}
+
+/* Project Detail Modal Mobile Optimizations */
+.modal-content {
+  width: 100%;
+  max-width: 100%;
+  min-width: 0;
+  overflow: hidden;
+}
+
+/* Mobile modal container fixes */
+@media (max-width: 640px) {
+  .modal-content {
+    margin: 0.5rem;
+    border-radius: 0.75rem;
+  }
+  
+  .modal-content .sticky {
+    padding: 0.75rem;
+  }
+  
+  .modal-content h1 {
+    font-size: 1.125rem;
+    line-height: 1.2;
+    word-wrap: break-word;
+    overflow-wrap: break-word;
+    hyphens: auto;
+    -webkit-hyphens: auto;
+    -ms-hyphens: auto;
+    white-space: normal;
+    max-width: 100%;
+    overflow: visible;
+  }
+  
+  .modal-content p {
+    font-size: 0.75rem;
+    line-height: 1.3;
+    word-wrap: break-word;
+    overflow-wrap: break-word;
+    hyphens: auto;
+    -webkit-hyphens: auto;
+    -ms-hyphens: auto;
+    white-space: normal;
+    max-width: 100%;
+    overflow: visible;
+  }
+  
+  .modal-content .prose {
+    width: 100%;
+    max-width: 100%;
+    min-width: 0;
+    overflow: hidden;
+  }
+  
+  .modal-content .prose * {
+    word-wrap: break-word;
+    overflow-wrap: break-word;
+    hyphens: auto;
+    -webkit-hyphens: auto;
+    -ms-hyphens: auto;
+    max-width: 100%;
+    box-sizing: border-box;
+  }
+  
+  .modal-content .prose h1, 
+  .modal-content .prose h2, 
+  .modal-content .prose h3, 
+  .modal-content .prose h4, 
+  .modal-content .prose h5, 
+  .modal-content .prose h6 {
+    word-wrap: break-word;
+    overflow-wrap: break-word;
+    hyphens: auto;
+    -webkit-hyphens: auto;
+    -ms-hyphens: auto;
+    white-space: normal;
+    max-width: 100%;
+    overflow: visible;
+  }
+  
+  .modal-content .prose p {
+    word-wrap: break-word;
+    overflow-wrap: break-word;
+    hyphens: auto;
+    -webkit-hyphens: auto;
+    -ms-hyphens: auto;
+    white-space: normal;
+    max-width: 100%;
+    overflow: visible;
+    line-height: 1.5;
+  }
+  
+  .modal-content .prose li {
+    word-wrap: break-word;
+    overflow-wrap: break-word;
+    hyphens: auto;
+    -webkit-hyphens: auto;
+    -ms-hyphens: auto;
+    white-space: normal;
+    max-width: 100%;
+    overflow: visible;
+  }
+  
+  .modal-content .prose blockquote {
+    word-wrap: break-word;
+    overflow-wrap: break-word;
+    white-space: normal;
+    max-width: 100%;
+    overflow: visible;
+    padding: 0.75rem 1rem;
+  }
+  
+  .modal-content .prose pre {
+    overflow-x: auto;
+    word-wrap: break-word;
+    white-space: pre-wrap;
+    max-width: 100%;
+    font-size: 0.75rem;
+    padding: 0.75rem;
+  }
+  
+  .modal-content .prose code {
+    word-wrap: break-word;
+    overflow-wrap: break-word;
+    white-space: normal;
+    max-width: 100%;
+    font-size: 0.75rem;
+  }
+  
+  .modal-content .grid {
+    gap: 1rem;
+  }
+  
+  .modal-content .space-y-8 > * + * {
+    margin-top: 1.5rem;
+  }
+  
+  .modal-content .space-y-12 > * + * {
+    margin-top: 2rem;
+  }
+}
+
+/* Extra aggressive mobile fixes for very small screens */
+@media (max-width: 480px) {
+  .modal-content {
+    margin: 0.25rem;
+    border-radius: 0.5rem;
+  }
+  
+  .modal-content .sticky {
+    padding: 0.5rem;
+  }
+  
+  .modal-content h1 {
+    font-size: 1rem;
+    line-height: 1.1;
+  }
+  
+  .modal-content p {
+    font-size: 0.7rem;
+    line-height: 1.2;
+  }
+  
+  .modal-content .prose {
+    font-size: 0.875rem;
+  }
+  
+  .modal-content .prose h1 {
+    font-size: 1.25rem;
+    line-height: 1.1;
+  }
+  
+  .modal-content .prose h2 {
+    font-size: 1.125rem;
+    line-height: 1.1;
+  }
+  
+  .modal-content .prose h3 {
+    font-size: 1rem;
+    line-height: 1.1;
+  }
+  
+  .modal-content .prose p {
+    font-size: 0.875rem;
+    line-height: 1.4;
+    word-break: break-word;
+    overflow-wrap: anywhere;
+  }
+  
+  .modal-content .prose li {
+    font-size: 0.875rem;
+    line-height: 1.3;
+    word-break: break-word;
+    overflow-wrap: anywhere;
+  }
+  
+  .modal-content .prose blockquote {
+    font-size: 0.875rem;
+    padding: 0.5rem 0.75rem;
+    word-break: break-word;
+    overflow-wrap: anywhere;
+  }
+  
+  .modal-content .prose pre {
+    font-size: 0.7rem;
+    padding: 0.5rem;
+    word-break: break-word;
+    overflow-wrap: anywhere;
+  }
+  
+  .modal-content .prose code {
+    font-size: 0.7rem;
+    word-break: break-word;
+    overflow-wrap: anywhere;
+  }
+  
+  .modal-content .grid {
+    gap: 0.75rem;
+  }
+  
+  .modal-content .space-y-8 > * + * {
+    margin-top: 1rem;
+  }
+  
+  .modal-content .space-y-12 > * + * {
+    margin-top: 1.5rem;
+  }
+} 

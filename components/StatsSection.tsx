@@ -3,10 +3,10 @@ import { StatsCard } from './StatsCard';
 import { StatItemProps } from '../types';
 
 const statsData: StatItemProps[] = [
-  { icon: '💻', targetCount: 8, label: 'Programming Languages' },
-  { icon: '🚀', targetCount: 12, label: 'Technologies Mastered' },
-  { icon: '✅', targetCount: 15, label: 'Projects Completed' },
-  { icon: '🔗', targetCount: 3, label: 'Blockchain Projects' },
+  { icon: '🎯', targetCount: 35, label: 'Out of 35 — Video Master Eval (perfect score)' },
+  { icon: '🌐', targetCount: 5, label: 'Domains — business, finance, health, legal, STEM' },
+  { icon: '✅', targetCount: 100, label: '% client retention — freelance & annotation work' },
+  { icon: '💼', targetCount: 5, label: 'Years of remote async experience' },
 ];
 
 export const StatsSection: React.FC = () => {
@@ -17,7 +17,7 @@ export const StatsSection: React.FC = () => {
               Key <span className="gradient-text-multi">Metrics</span>
           </h2>
           <p className="text-lg text-[var(--secondary-text)] max-w-xl mx-auto">
-              A quick glance at my journey and accomplishments.
+              Operations, automation platforms, shipped work, and flagship builds—at a glance.
           </p>
       </div>
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 sm:gap-8 max-w-6xl mx-auto px-4">

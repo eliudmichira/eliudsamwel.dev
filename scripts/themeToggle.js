@@ -5,20 +5,20 @@
  */
 
 if (typeof window !== 'undefined' && typeof window.SkyThemeToggle === 'undefined') {
-class SkyThemeToggle {
-  constructor(options = {}) {
-    // Configuration
-    this.config = {
-      storageKey: 'theme-preference',
-      toggleId: 'sky-theme-toggle',
-      position: { top: '20px', right: '20px' },
+  class SkyThemeToggle {
+    constructor(options = {}) {
+      // Configuration
+      this.config = {
+        storageKey: 'theme-preference',
+        toggleId: 'sky-theme-toggle',
+        position: { top: '20px', right: '20px' },
         originalSize: 60, // Default original size
         mobileSize: 48,   // Default mobile size
-      animationDuration: 800,
-      zIndex: 999999,
+        animationDuration: 800,
+        zIndex: 999999,
         isStandalone: true,
-      ...options
-    };
+        ...options
+      };
 
       // Initialize current size based on screen width
       if (typeof window !== 'undefined') {
@@ -27,165 +27,165 @@ class SkyThemeToggle {
         this.config.size = this.config.originalSize; // Fallback for non-browser environments
       }
 
-    // State
-    this.state = {
-      theme: null,
-      isAnimating: false,
-      mounted: false
-    };
+      // State
+      this.state = {
+        theme: null,
+        isAnimating: false,
+        mounted: false
+      };
 
-    // Cloud positions (fixed values to prevent drift)
-    this.cloudPositions = {
-      light: [
-        { width: 25, height: 12, top: 15, left: 10 },
-        { width: 20, height: 10, top: 35, left: 35 },
-        { width: 30, height: 14, top: 25, left: 50 }
-      ],
-      dark: [
+      // Cloud positions (fixed values to prevent drift)
+      this.cloudPositions = {
+        light: [
           { width: 25, height: 12, top: 15, left: 10 },
           { width: 20, height: 10, top: 35, left: 35 },
           { width: 30, height: 14, top: 25, left: 50 }
-      ]
-    };
+        ],
+        dark: [
+          { width: 25, height: 12, top: 15, left: 10 },
+          { width: 20, height: 10, top: 35, left: 35 },
+          { width: 30, height: 14, top: 25, left: 50 }
+        ]
+      };
 
-    // Initialize
-    this.init();
-  }
-
-  init() {
-    // Initialize theme
-    this.initializeTheme();
-    
-    // Mount when DOM is ready
-    if (document.readyState === 'loading') {
-      document.addEventListener('DOMContentLoaded', () => this.mount());
-    } else {
-      this.mount();
+      // Initialize
+      this.init();
     }
 
-    // Listen for system theme changes
-    this.setupSystemThemeListener();
-  }
+    init() {
+      // Initialize theme
+      this.initializeTheme();
 
-  initializeTheme() {
-    try {
-      // Check saved preference
-      const savedTheme = localStorage.getItem(this.config.storageKey);
-      
-      if (savedTheme && ['light', 'dark'].includes(savedTheme)) {
-        this.state.theme = savedTheme;
+      // Mount when DOM is ready
+      if (document.readyState === 'loading') {
+        document.addEventListener('DOMContentLoaded', () => this.mount());
       } else {
-        // Use system preference
-        const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
-        this.state.theme = prefersDark ? 'dark' : 'light';
+        this.mount();
       }
 
-      this.applyTheme(this.state.theme, false);
-    } catch (error) {
-      console.error('Theme initialization error:', error);
-      this.state.theme = 'light';
-      this.applyTheme('light', false);
-    }
-  }
-
-  applyTheme(theme, animate = true) {
-    const root = document.documentElement;
-    
-    // Remove old classes
-    root.classList.remove('light', 'dark');
-    
-    // Add new theme
-    root.classList.add(theme);
-    root.setAttribute('data-theme', theme);
-    root.style.colorScheme = theme;
-
-    // Apply to body as well for better compatibility
-    document.body.classList.remove('light', 'dark');
-    document.body.classList.add(theme);
-
-    // Save preference
-    try {
-      localStorage.setItem(this.config.storageKey, theme);
-    } catch (error) {
-      console.warn('Failed to save theme preference:', error);
+      // Listen for system theme changes
+      this.setupSystemThemeListener();
     }
 
-    // Dispatch event
-    const event = new CustomEvent('themeChanged', {
-      detail: { theme, animated: animate },
-      bubbles: true
-    });
-    
-    window.dispatchEvent(event);
-    document.dispatchEvent(event);
+    initializeTheme() {
+      try {
+        // Check saved preference
+        const savedTheme = localStorage.getItem(this.config.storageKey);
 
-    // Update CSS variables
-    this.updateCSSVariables(theme);
-    
-    // Apply more aggressive style overrides
-    this.injectThemeOverride(theme);
-    
-    // Force repaint to ensure changes take effect
-    void document.documentElement.offsetHeight;
-  }
+        if (savedTheme && ['light', 'dark'].includes(savedTheme)) {
+          this.state.theme = savedTheme;
+        } else {
+          // Use system preference
+          const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+          this.state.theme = prefersDark ? 'dark' : 'light';
+        }
 
-  updateCSSVariables(theme) {
-    const root = document.documentElement;
-    
-    // Define theme colors
-    const themes = {
-      dark: {
-        '--bg-primary': '#0a0a0a',
-        '--bg-secondary': '#1a1a1a',
-        '--text-primary': '#ffffff',
-        '--text-secondary': '#a0a0a0',
-        '--border-color': 'rgba(255, 255, 255, 0.1)',
-        // Add these for compatibility with existing styles
-        '--primary-bg': '#0a0a0a',
-        '--secondary-bg': '#1a1a1a',
-        '--card-bg': '#1a1a1a',
-        '--primary-text': '#ffffff',
-        '--secondary-text': '#a0a0a0',
-        '--color-scheme': 'dark'
-      },
-      light: {
-        '--bg-primary': '#ffffff',
-        '--bg-secondary': '#f5f5f5',
-        '--text-primary': '#0a0a0a',
-        '--text-secondary': '#666666',
-        '--border-color': 'rgba(0, 0, 0, 0.1)',
-        // Add these for compatibility with existing styles
-        '--primary-bg': '#ffffff',
-        '--secondary-bg': '#f5f5f5',
-        '--card-bg': '#ffffff',
-        '--primary-text': '#0a0a0a',
-        '--secondary-text': '#666666',
-        '--color-scheme': 'light'
+        this.applyTheme(this.state.theme, false);
+      } catch (error) {
+        console.error('Theme initialization error:', error);
+        this.state.theme = 'light';
+        this.applyTheme('light', false);
       }
-    };
+    }
 
-    // Apply theme variables
-    Object.entries(themes[theme]).forEach(([key, value]) => {
-      root.style.setProperty(key, value);
-    });
-    
-    // Apply directly to body as well for better coverage
-    document.body.style.backgroundColor = theme === 'dark' ? '#0a0a0a' : '#ffffff';
-    document.body.style.color = theme === 'dark' ? '#ffffff' : '#0a0a0a';
-  }
-  
-  // Add method to inject theme override styles
-  injectThemeOverride(theme) {
-    // Remove any existing theme override
-    const existingOverride = document.getElementById('theme-override');
-    if (existingOverride) existingOverride.remove();
-    
-    // Create style element
-    const styleEl = document.createElement('style');
-    styleEl.id = 'theme-override';
-    
-    if (theme === 'dark') {
-      styleEl.textContent = `
+    applyTheme(theme, animate = true) {
+      const root = document.documentElement;
+
+      // Remove old classes
+      root.classList.remove('light', 'dark');
+
+      // Add new theme
+      root.classList.add(theme);
+      root.setAttribute('data-theme', theme);
+      root.style.colorScheme = theme;
+
+      // Apply to body as well for better compatibility
+      document.body.classList.remove('light', 'dark');
+      document.body.classList.add(theme);
+
+      // Save preference
+      try {
+        localStorage.setItem(this.config.storageKey, theme);
+      } catch (error) {
+        console.warn('Failed to save theme preference:', error);
+      }
+
+      // Dispatch event
+      const event = new CustomEvent('themeChanged', {
+        detail: { theme, animated: animate },
+        bubbles: true
+      });
+
+      window.dispatchEvent(event);
+      document.dispatchEvent(event);
+
+      // Update CSS variables
+      this.updateCSSVariables(theme);
+
+      // Apply more aggressive style overrides
+      this.injectThemeOverride(theme);
+
+      // Force repaint to ensure changes take effect
+      void document.documentElement.offsetHeight;
+    }
+
+    updateCSSVariables(theme) {
+      const root = document.documentElement;
+
+      // Define theme colors
+      const themes = {
+        dark: {
+          '--bg-primary': '#0a0a0a',
+          '--bg-secondary': '#1a1a1a',
+          '--text-primary': '#ffffff',
+          '--text-secondary': '#a0a0a0',
+          '--border-color': 'rgba(255, 255, 255, 0.1)',
+          // Add these for compatibility with existing styles
+          '--primary-bg': '#0a0a0a',
+          '--secondary-bg': '#1a1a1a',
+          '--card-bg': '#1a1a1a',
+          '--primary-text': '#ffffff',
+          '--secondary-text': '#a0a0a0',
+          '--color-scheme': 'dark'
+        },
+        light: {
+          '--bg-primary': '#ffffff',
+          '--bg-secondary': '#f5f5f5',
+          '--text-primary': '#0a0a0a',
+          '--text-secondary': '#666666',
+          '--border-color': 'rgba(0, 0, 0, 0.1)',
+          // Add these for compatibility with existing styles
+          '--primary-bg': '#ffffff',
+          '--secondary-bg': '#f5f5f5',
+          '--card-bg': '#ffffff',
+          '--primary-text': '#0a0a0a',
+          '--secondary-text': '#666666',
+          '--color-scheme': 'light'
+        }
+      };
+
+      // Apply theme variables
+      Object.entries(themes[theme]).forEach(([key, value]) => {
+        root.style.setProperty(key, value);
+      });
+
+      // Apply directly to body as well for better coverage
+      document.body.style.backgroundColor = theme === 'dark' ? '#0a0a0a' : '#ffffff';
+      document.body.style.color = theme === 'dark' ? '#ffffff' : '#0a0a0a';
+    }
+
+    // Add method to inject theme override styles
+    injectThemeOverride(theme) {
+      // Remove any existing theme override
+      const existingOverride = document.getElementById('theme-override');
+      if (existingOverride) existingOverride.remove();
+
+      // Create style element
+      const styleEl = document.createElement('style');
+      styleEl.id = 'theme-override';
+
+      if (theme === 'dark') {
+        styleEl.textContent = `
         /* Dark theme overrides */
         html.dark,
         html[data-theme="dark"],
@@ -205,8 +205,8 @@ class SkyThemeToggle {
           color: #ffffff !important;
         }
       `;
-    } else {
-      styleEl.textContent = `
+      } else {
+        styleEl.textContent = `
         /* Light theme overrides */
         html.light,
         html[data-theme="light"],
@@ -226,48 +226,48 @@ class SkyThemeToggle {
           color: #0a0a0a !important;
         }
       `;
-    }
-    
-    // Add to document
-    document.head.appendChild(styleEl);
-    
-    // Also apply theme to common container elements
-    ['main', 'header', 'footer', '.app-container', '#root', '#app'].forEach(selector => {
-      try {
-        document.querySelectorAll(selector).forEach(el => {
-          el.classList.remove('light', 'dark');
-          el.classList.add(theme);
-          el.setAttribute('data-theme', theme);
-        });
-      } catch (e) {
-        // Ignore errors for selectors that don't exist
       }
-    });
-  }
 
-  setupSystemThemeListener() {
-    const mediaQuery = window.matchMedia('(prefers-color-scheme: dark)');
-    
-    const handleChange = (e) => {
-      // Only update if no saved preference
-      if (!localStorage.getItem(this.config.storageKey)) {
-        const newTheme = e.matches ? 'dark' : 'light';
-        this.state.theme = newTheme;
-        this.applyTheme(newTheme);
-        this.updateToggleState();
-      }
-    };
+      // Add to document
+      document.head.appendChild(styleEl);
+
+      // Also apply theme to common container elements
+      ['main', 'header', 'footer', '.app-container', '#root', '#app'].forEach(selector => {
+        try {
+          document.querySelectorAll(selector).forEach(el => {
+            el.classList.remove('light', 'dark');
+            el.classList.add(theme);
+            el.setAttribute('data-theme', theme);
+          });
+        } catch (e) {
+          // Ignore errors for selectors that don't exist
+        }
+      });
+    }
+
+    setupSystemThemeListener() {
+      const mediaQuery = window.matchMedia('(prefers-color-scheme: dark)');
+
+      const handleChange = (e) => {
+        // Only update if no saved preference
+        if (!localStorage.getItem(this.config.storageKey)) {
+          const newTheme = e.matches ? 'dark' : 'light';
+          this.state.theme = newTheme;
+          this.applyTheme(newTheme);
+          this.updateToggleState();
+        }
+      };
 
       // Modern way to add listener
-    if (mediaQuery.addEventListener) {
-      mediaQuery.addEventListener('change', handleChange);
+      if (mediaQuery.addEventListener) {
+        mediaQuery.addEventListener('change', handleChange);
       } else if (mediaQuery.addListener) { // Deprecated but fallback
-      mediaQuery.addListener(handleChange);
-    }
+        mediaQuery.addListener(handleChange);
+      }
 
       // Store the handler to remove it later if needed
       this._themeChangeHandler = handleChange;
-  }
+    }
 
     mount(parentElement = null) {
       if (this.state.mounted && document.getElementById(this.config.toggleId)) {
@@ -277,7 +277,7 @@ class SkyThemeToggle {
       }
 
       this.element = this.createElement();
-      
+
       if (parentElement) {
         parentElement.appendChild(this.element);
       } else if (this.config.isStandalone) {
@@ -285,8 +285,8 @@ class SkyThemeToggle {
       }
 
       this.updateDimensions(this.config.size); // Set initial dimensions via CSS vars
-    
-    this.state.mounted = true;
+
+      this.state.mounted = true;
       this.updateToggleState();
       this.applyTheme(this.state.theme, false);
 
@@ -302,7 +302,7 @@ class SkyThemeToggle {
 
         // Position adjustments
         if (isMobile) { // md breakpoint in Tailwind
-          this.element.style.top = '100px'; 
+          this.element.style.top = '100px';
           this.element.style.left = 'auto';
           this.element.style.right = '20px';
         } else {
@@ -313,9 +313,9 @@ class SkyThemeToggle {
       };
       window.addEventListener('resize', this._resizeListener);
       this._resizeListener(); // Initial check
-  }
+    }
 
-  cleanup() {
+    cleanup() {
       if (this._resizeListener) {
         window.removeEventListener('resize', this._resizeListener);
       }
@@ -327,16 +327,18 @@ class SkyThemeToggle {
           mediaQuery.removeListener(this._themeChangeHandler);
         }
       }
-  }
+    }
 
-  injectStyles() {
+    injectStyles() {
       if (document.getElementById('sky-theme-toggle-styles')) return;
 
       const css = `
       #${this.config.toggleId} {
         position: fixed;
-          top: ${this.config.position.top}; /* Will be overridden by JS for dynamic positioning */
-          left: ${this.config.position.left}; /* Will be overridden by JS for dynamic positioning */
+          top: ${this.config.position.top || 'auto'};
+          bottom: ${this.config.position.bottom || 'auto'};
+          left: ${this.config.position.left || 'auto'};
+          right: ${this.config.position.right || 'auto'};
           width: var(--sky-toggle-current-size, ${this.config.originalSize}px);
           height: var(--sky-toggle-current-size, ${this.config.originalSize}px);
         border-radius: 50%;
@@ -344,7 +346,7 @@ class SkyThemeToggle {
           cursor: pointer;
           z-index: ${this.config.zIndex};
         transition: transform 0.3s ease, box-shadow 0.3s ease;
-          /* Default shadow replaced by theme-specific glow */
+        /* Default shadow replaced by theme-specific glow */
         -webkit-tap-highlight-color: transparent;
           outline: none;
       }
@@ -452,17 +454,17 @@ class SkyThemeToggle {
       styleElement.id = 'sky-theme-toggle-styles';
       styleElement.textContent = css;
       document.head.appendChild(styleElement);
-  }
+    }
 
-  createElement() {
+    createElement() {
       this.injectStyles();
-    
+
       const toggle = document.createElement('div');
-    toggle.id = this.config.toggleId;
+      toggle.id = this.config.toggleId;
       toggle.setAttribute('role', 'button');
       toggle.setAttribute('aria-label', 'Toggle theme');
       toggle.setAttribute('tabindex', '0');
-      
+
       const sky = document.createElement('div');
       sky.className = 'sky-background';
       this.skyElement = sky;
@@ -484,7 +486,7 @@ class SkyThemeToggle {
       }
 
       this.starElements = [];
-      for (let i = 0; i < 20; i++) { 
+      for (let i = 0; i < 20; i++) {
         const star = document.createElement('div');
         star.className = 'star';
         star.style.left = `${Math.random() * 100}%`;
@@ -496,28 +498,28 @@ class SkyThemeToggle {
 
       sky.appendChild(sun);
       sky.appendChild(moon);
-    toggle.appendChild(sky);
+      toggle.appendChild(sky);
 
-    toggle.addEventListener('click', () => this.handleClick());
-    toggle.addEventListener('keydown', (e) => this.handleKeyboard(e));
+      toggle.addEventListener('click', () => this.handleClick());
+      toggle.addEventListener('keydown', (e) => this.handleKeyboard(e));
 
       return toggle;
-  }
+    }
 
-  createSky(isDark) {
-        this.skyElement.className = `sky-background ${isDark ? 'dark' : 'light'}`;
-  }
+    createSky(isDark) {
+      this.skyElement.className = `sky-background ${isDark ? 'dark' : 'light'}`;
+    }
 
-  createSun(isDark) {
-        this.sunElement.className = `sun ${isDark ? 'dark' : 'light'}`;
-  }
+    createSun(isDark) {
+      this.sunElement.className = `sun ${isDark ? 'dark' : 'light'}`;
+    }
 
-  createMoon(isDark) {
-        this.moonElement.className = `moon ${isDark ? 'dark' : 'light'}`;
-  }
+    createMoon(isDark) {
+      this.moonElement.className = `moon ${isDark ? 'dark' : 'light'}`;
+    }
 
-  createClouds(isDark) {
-    const positions = isDark ? this.cloudPositions.dark : this.cloudPositions.light;
+    createClouds(isDark) {
+      const positions = isDark ? this.cloudPositions.dark : this.cloudPositions.light;
       this.cloudElements.forEach((cloud, i) => {
         const pos = positions[i % positions.length];
         cloud.className = `cloud ${isDark ? 'dark' : 'light'}`;
@@ -526,42 +528,42 @@ class SkyThemeToggle {
         cloud.style.top = `${this.config.size * (pos.top / 100)}px`;
         cloud.style.left = `${this.config.size * (pos.left / 100)}px`;
         // cloud.style.opacity = isDark ? '0.2' : '0.6'; // Opacity is handled by CSS classes .cloud.light/dark
-    });
-  }
+      });
+    }
 
-  createStars() {
+    createStars() {
       const isDark = this.state.theme === 'dark';
       this.starElements.forEach(star => {
-          star.className = `star ${isDark ? 'dark' : 'light'}`;
+        star.className = `star ${isDark ? 'dark' : 'light'}`;
       });
-  }
-
-  handleClick() {
-    if (this.state.isAnimating) return;
-    this.state.isAnimating = true;
-    
-    const newTheme = this.state.theme === 'light' ? 'dark' : 'light';
-    this.state.theme = newTheme;
-    
-      this.applyTheme(newTheme, true);
-    this.updateToggleState();
-    
-    setTimeout(() => {
-      this.state.isAnimating = false;
-    }, this.config.animationDuration);
-  }
-
-  handleKeyboard(e) {
-    if (e.key === 'Enter' || e.key === ' ') {
-      e.preventDefault();
-      this.handleClick();
     }
-  }
 
-  updateToggleState() {
+    handleClick() {
+      if (this.state.isAnimating) return;
+      this.state.isAnimating = true;
+
+      const newTheme = this.state.theme === 'light' ? 'dark' : 'light';
+      this.state.theme = newTheme;
+
+      this.applyTheme(newTheme, true);
+      this.updateToggleState();
+
+      setTimeout(() => {
+        this.state.isAnimating = false;
+      }, this.config.animationDuration);
+    }
+
+    handleKeyboard(e) {
+      if (e.key === 'Enter' || e.key === ' ') {
+        e.preventDefault();
+        this.handleClick();
+      }
+    }
+
+    updateToggleState() {
       if (!this.element || !this.state.mounted) return;
-    const isDark = this.state.theme === 'dark';
-    
+      const isDark = this.state.theme === 'dark';
+
       this.element.setAttribute('aria-pressed', isDark.toString());
       this.updateSkyBackground(isDark);
       this.updateSunMoon(isDark);
@@ -570,23 +572,23 @@ class SkyThemeToggle {
     }
 
     updateSkyBackground(isDark) {
-      if(this.skyElement) this.skyElement.className = `sky-background ${isDark ? 'dark' : 'light'}`;
+      if (this.skyElement) this.skyElement.className = `sky-background ${isDark ? 'dark' : 'light'}`;
     }
 
     updateSunMoon(isDark) {
-      if(this.sunElement) this.sunElement.className = `sun ${isDark ? 'dark' : 'light'}`;
-      if(this.moonElement) this.moonElement.className = `moon ${isDark ? 'dark' : 'light'}`;
+      if (this.sunElement) this.sunElement.className = `sun ${isDark ? 'dark' : 'light'}`;
+      if (this.moonElement) this.moonElement.className = `moon ${isDark ? 'dark' : 'light'}`;
     }
 
     updateStars(isDark) {
-      if(this.starElements) {
+      if (this.starElements) {
         this.starElements.forEach(star => star.className = `star ${isDark ? 'dark' : 'light'}`);
-    }
+      }
     }
 
     updateClouds(isDark) {
-      if(this.cloudElements) {
-    const positions = isDark ? this.cloudPositions.dark : this.cloudPositions.light;
+      if (this.cloudElements) {
+        const positions = isDark ? this.cloudPositions.dark : this.cloudPositions.light;
         this.cloudElements.forEach((cloud, i) => {
           const pos = positions[i % positions.length];
           cloud.className = `cloud ${isDark ? 'dark' : 'light'}`;
@@ -600,23 +602,23 @@ class SkyThemeToggle {
     }
 
     updateDimensions(size) {
-        if (!this.element) return;
+      if (!this.element) return;
 
-        this.element.style.setProperty('--sky-toggle-current-size', `${size}px`);
-        this.element.style.setProperty('--sky-toggle-sun-size', `${size * 0.4}px`);
-        this.element.style.setProperty('--sky-toggle-moon-size', `${size * 0.35}px`);
-        
-        const isDark = this.state.theme === 'dark';
-        // this.config.size should have been updated by the caller (_resizeListener or constructor)
-        this.updateClouds(isDark); 
+      this.element.style.setProperty('--sky-toggle-current-size', `${size}px`);
+      this.element.style.setProperty('--sky-toggle-sun-size', `${size * 0.4}px`);
+      this.element.style.setProperty('--sky-toggle-moon-size', `${size * 0.35}px`);
+
+      const isDark = this.state.theme === 'dark';
+      // this.config.size should have been updated by the caller (_resizeListener or constructor)
+      this.updateClouds(isDark);
     }
 
     // Public methods
-  getTheme() {
-    return this.state.theme;
-  }
+    getTheme() {
+      return this.state.theme;
+    }
 
-  setTheme(theme) {
+    setTheme(theme) {
       if (!['light', 'dark'].includes(theme)) {
         console.warn('Invalid theme specified for setTheme. Use "light" or "dark".');
         return;
@@ -624,24 +626,24 @@ class SkyThemeToggle {
       this.state.theme = theme;
       this.applyTheme(theme);
       this.updateToggleState();
-  }
+    }
 
-  destroy() {
+    destroy() {
       if (this.element && this.element.parentElement) {
         this.element.parentElement.removeChild(this.element);
       }
-    this.cleanup();
-    this.state.mounted = false;
+      this.cleanup();
+      this.state.mounted = false;
       // Remove global instance if this is the one
       if (window.skyThemeToggleInstance === this) {
-          window.skyThemeToggleInstance = null;
+        window.skyThemeToggleInstance = null;
       }
+    }
   }
-}
 
   // Expose class to window if not already exposed by a module system
   if (typeof window !== 'undefined' && typeof window.SkyThemeToggle === 'undefined') {
-  window.SkyThemeToggle = SkyThemeToggle;
+    window.SkyThemeToggle = SkyThemeToggle;
   }
 
   // Auto-initialize for standalone usage, ensuring only one instance

@@ -39,32 +39,32 @@ export interface Constellation {
 export const constellations: Constellation[] = [
   {
     id: 'orion',
-    name: 'Orion - The Foundation',
-    description: 'Laying the groundwork: core software development skills, early professional experiences, and a commitment to innovative problem-solving.',
+    name: 'Orion — The foundation',
+    description: 'Early async discipline: QA rigor, first remote clients, and learning to document clearly, spot inconsistencies, and deliver reliably across time zones.',
     stars: [
       {
         id: 'orion-1',
         x: 120,
         y: 90,
         year: '2020',
-        title: 'Building Software Foundations',
-        description: 'Developed a strong foundation in software development'
+        title: 'Systems thinking',
+        description: 'From coursework and self-directed builds toward reliable delivery'
       },
       {
         id: 'orion-2',
         x: 360,
         y: 300,
         year: '2021',
-        title: 'Internship: Neverest/TAWA',
-        description: 'Enhanced UIs, integrated real-time updates'
+        title: 'QA & annotation ground game',
+        description: 'Structured testing and quality habits on Testlio and similar platforms'
       },
       {
         id: 'orion-3',
         x: 560,
         y: 480,
         year: '2021',
-        title: 'Innovative Problem Solving',
-        description: 'Focused on solving real-world problems'
+        title: 'Independent async path',
+        description: 'First remote clients; documentation, edge-case reporting, async delivery'
       }
     ],
     lines: [
@@ -74,32 +74,32 @@ export const constellations: Constellation[] = [
   },
   {
     id: 'cassiopeia',
-    name: 'Cassiopeia - The Craftsman',
-    description: 'Focusing on quality and user experience: championing user-centric design, mastering key technologies, and adhering to clean and ethical coding principles.',
+    name: 'Cassiopeia — Engineering depth',
+    description: 'Full-stack development, API integrations, and live product engineering — building the system intuition that now sharpens annotation accuracy.',
     stars: [
       {
         id: 'cassiopeia-1',
         x: 160,
         y: 180,
-        year: '2021',
-        title: 'User-Centric Design Focus',
-        description: 'Championed user-friendly design and development'
+        year: '2022',
+        title: 'Integration mindset',
+        description: 'OAuth2, REST, retries, fallbacks, quota-aware API batches'
       },
       {
         id: 'cassiopeia-2',
         x: 400,
         y: 180,
-        year: '2022',
-        title: 'Tech Stack Proficiency',
-        description: 'Mastered versatile tech stack'
+        year: '2023',
+        title: 'Stack depth',
+        description: 'React, TypeScript, Node, Firebase, payments (M-Pesa / IntaSend)'
       },
       {
         id: 'cassiopeia-3',
         x: 280,
         y: 330,
-        year: '2022',
-        title: 'Clean & Ethical Coding',
-        description: 'Committed to clean, maintainable code'
+        year: '2023',
+        title: 'Product-grade reliability',
+        description: 'Shipped apps with edge-case handling and system-level consistency checks'
       }
     ],
     lines: [
@@ -110,48 +110,48 @@ export const constellations: Constellation[] = [
   },
   {
     id: 'ursamajor',
-    name: 'Ursa Major - The Innovator',
-    description: 'Spearheading innovation: developing a decentralized voting system, exploring blockchain synergies, and committing to continuous learning and impactful solutions.',
+    name: 'Ursa Major — Annotation mastery',
+    description: 'Innodata AI content evaluation, perfect calibration score, auditor promotion, and JKUAT graduation — the convergence of engineering depth and evaluation precision.',
     stars: [
       {
         id: 'ursamajor-1',
         x: 560,
         y: 150,
         year: '2023',
-        title: 'Decentralized Voting System',
-        description: 'Blockchain-based voting solution'
+        title: 'Blockchain voting platform',
+        description: 'Secure elections stack — JWT, contracts, real-time results'
       },
       {
         id: 'ursamajor-2',
         x: 480,
         y: 210,
         year: '2023',
-        title: 'Voting System: Tech Deep Dive',
-        description: 'Smart contracts and real-time updates'
+        title: 'SoundSwapp & FlickCollection',
+        description: 'High-volume APIs, caching, and AI-augmented discovery'
       },
       {
         id: 'ursamajor-3',
         x: 400,
         y: 252,
         year: '2024',
-        title: 'Blockchain & Web Synergy',
-        description: 'Innovation in decentralized systems'
+        title: 'Neverest engineering',
+        description: 'TinyPesa, UzaKitu, Pickup Mtaani — fintech + data familiarity'
       },
       {
         id: 'ursamajor-4',
         x: 320,
         y: 210,
-        year: '2024',
-        title: 'Continuous Learning & Growth',
-        description: 'Expanding skills through practice'
+        year: '2025',
+        title: 'JKUAT degree milestone',
+        description: 'BSc Business Computing — tying engineering to data and systems'
       },
       {
         id: 'ursamajor-5',
         x: 200,
         y: 120,
-        year: '2024',
-        title: 'Focus on Impactful Solutions',
-        description: 'Building for positive change'
+        year: '2026',
+        title: 'Innodata: 35/35 & auditor',
+        description: 'Perfect score on Video Master Eval → promoted to annotation auditor'
       }
     ],
     lines: [

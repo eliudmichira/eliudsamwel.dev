@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Image Loading Test</title>
+    <style>
+        body { font-family: Arial, sans-serif; padding: 20px; }
+        .image-test { margin: 20px 0; padding: 10px; border: 1px solid #ccc; }
+        .image-test img { max-width: 200px; height: auto; margin: 10px; }
+        .error { color: red; }
+        .success { color: green; }
+    </style>
+</head>
+<body>
+    <h1>Image Loading Test</h1>
+    
+    <div class="image-test">
+        <h2>Profile Images</h2>
+        <div>
+            <h3>Main Profile (from public/profile.jpg)</h3>
+            <img src="/profile.jpg" alt="Profile" onerror="this.nextSibling.innerHTML='❌ Failed to load'; this.nextSibling.className='error'" onload="this.nextSibling.innerHTML='✅ Loaded successfully'; this.nextSibling.className='success'">
+            <span></span>
+        </div>
+        
+        <div>
+            <h3>Default Avatar (from public/default-avatar.png)</h3>
+            <img src="/default-avatar.png" alt="Default Avatar" onerror="this.nextSibling.innerHTML='❌ Failed to load'; this.nextSibling.className='error'" onload="this.nextSibling.innerHTML='✅ Loaded successfully'; this.nextSibling.className='success'">
+            <span></span>
+        </div>
+        
+        <div>
+            <h3>Profile from images directory (from public/images/profile.jpg)</h3>
+            <img src="/images/profile.jpg" alt="Profile from images" onerror="this.nextSibling.innerHTML='❌ Failed to load'; this.nextSibling.className='error'" onload="this.nextSibling.innerHTML='✅ Loaded successfully'; this.nextSibling.className='success'">
+            <span></span>
+        </div>
+    </div>
+    
+    <div class="image-test">
+        <h2>Project Images (Sample)</h2>
+        <div>
+            <h3>Portfolio Main Landing Page</h3>
+            <img src="/images/projects/portfolio main landing page.png" alt="Portfolio" onerror="this.nextSibling.innerHTML='❌ Failed to load'; this.nextSibling.className='error'" onload="this.nextSibling.innerHTML='✅ Loaded successfully'; this.nextSibling.className='success'">
+            <span></span>
+        </div>
+        
+        <div>
+            <h3>SoundsWapp Hero Section</h3>
+            <img src="/images/projects/soundswapp hero section dark mode.png" alt="SoundsWapp" onerror="this.nextSibling.innerHTML='❌ Failed to load'; this.nextSibling.className='error'" onload="this.nextSibling.innerHTML='✅ Loaded successfully'; this.nextSibling.className='success'">
+            <span></span>
+        </div>
+        
+        <div>
+            <h3>Blockchain Voting System</h3>
+            <img src="/images/projects/admin dashboard block chain.png" alt="Blockchain" onerror="this.nextSibling.innerHTML='❌ Failed to load'; this.nextSibling.className='error'" onload="this.nextSibling.innerHTML='✅ Loaded successfully'; this.nextSibling.className='success'">
+            <span></span>
+        </div>
+    </div>
+    
+    <div class="image-test">
+        <h2>Instructions</h2>
+        <p>This test page verifies that all critical images load correctly. Each image should show a green checkmark (✅) if it loads successfully, or a red X (❌) if it fails to load.</p>
+        <p><strong>For deployment:</strong> Make sure all images show green checkmarks before deploying to production.</p>
+    </div>
+</body>
+</html> 

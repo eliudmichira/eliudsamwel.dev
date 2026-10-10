@@ -54,9 +54,30 @@
 
   /* Better spacing for mobile */
   section {
-    margin-bottom: 3rem !important;
-    padding-top: 1.5rem !important;
-    padding-bottom: 1.5rem !important;
+    margin-bottom: 2rem !important;
+    padding-top: 1rem !important;
+    padding-bottom: 1rem !important;
+  }
+
+  /* Improve tab navigation on mobile */
+  .tab-navigation {
+    gap: 0.25rem !important;
+  }
+
+  /* Better button spacing on mobile */
+  .mobile-button-group {
+    gap: 0.75rem !important;
+  }
+
+  /* Improve text readability on mobile */
+  .mobile-text {
+    line-height: 1.6 !important;
+  }
+
+  /* Better card spacing on mobile */
+  .mobile-card {
+    margin-bottom: 1.5rem !important;
+    padding: 1rem !important;
   }
 
   /* Custom scrollbars for Android WebView */
@@ -89,6 +110,38 @@
     backface-visibility: hidden;
     transform: translateZ(0);
   }
+
+  /* Global mobile text optimization */
+  h1, h2, h3, h4, h5, h6 {
+    word-wrap: break-word !important;
+    overflow-wrap: break-word !important;
+    hyphens: auto !important;
+    -webkit-hyphens: auto !important;
+    -ms-hyphens: auto !important;
+    white-space: normal !important;
+  }
+  
+  p, span, div {
+    word-wrap: break-word !important;
+    overflow-wrap: break-word !important;
+    hyphens: auto !important;
+    -webkit-hyphens: auto !important;
+    -ms-hyphens: auto !important;
+    white-space: normal !important;
+  }
+  
+  /* Ensure containers use full width */
+  .container {
+    width: 100% !important;
+    max-width: 100% !important;
+  }
+  
+  /* Optimize input fields */
+  input, textarea {
+    word-wrap: break-word !important;
+    overflow-wrap: break-word !important;
+    white-space: normal !important;
+  }
 }
 
 /* Small phone screens - extreme cases */
@@ -107,5 +160,22 @@
   
   .xs-stack {
     flex-direction: column !important;
+  }
+
+  /* Extra aggressive text handling for very small screens */
+  h1, h2, h3, h4, h5, h6 {
+    word-break: break-all !important;
+    overflow-wrap: anywhere !important;
+  }
+  
+  p, span, div {
+    word-break: break-all !important;
+    overflow-wrap: anywhere !important;
+  }
+  
+  /* Ensure all text is visible */
+  * {
+    max-width: 100% !important;
+    overflow: visible !important;
   }
 } 

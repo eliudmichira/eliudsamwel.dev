@@ -83,11 +83,7 @@ export const Header: React.FC<HeaderProps> = ({ navLinks, onNavLinkClick, theme,
                    hidden lg:block`}
       >
         {/* Main Navbar Container */}
-        <div className={`relative backdrop-blur-xl 
-                        bg-gradient-to-r from-[var(--color-bg-card)]/60 via-[var(--color-bg-surface)]/40 to-[var(--color-bg-card)]/60 
-                        dark:bg-gradient-to-r dark:from-[var(--color-bg-card)]/50 dark:via-[var(--color-bg-surface)]/30 dark:to-[var(--color-bg-card)]/50 
-                        border border-white/30 dark:border-white/20 
-                        rounded-full px-3 py-2 shadow-lg`}>
+        <div className="lifted pill backdrop-blur-xl px-3 py-2">
           
           <ul className="flex list-none items-center gap-1 relative z-10">
             {navLinks.map((link) => (
@@ -95,18 +91,18 @@ export const Header: React.FC<HeaderProps> = ({ navLinks, onNavLinkClick, theme,
                 <a
                   href={link.href}
                   onClick={(e) => { e.preventDefault(); handleLinkClick(link.pageId); }}
-                  className={`group relative block px-4 py-2 rounded-full 
+                  className={`group relative block px-4 py-2 rounded-full magnetic cursor-interactive
                              transition-all duration-300 ease-out text-sm font-medium
                              ${link.current
-                                 ? 'text-neutral-900 dark:text-neutral-100'
-                                 : 'text-neutral-600 dark:text-neutral-400 hover:text-neutral-900 dark:hover:text-neutral-100'
+                                 ? 'text-[var(--color-text)] dark:text-[var(--color-text)]'
+                                 : 'text-[var(--color-text-secondary)] dark:text-[var(--color-text-secondary)] hover:text-[var(--color-text)] dark:hover:text-[var(--color-text)]'
                              }`}
                   aria-current={link.current ? 'page' : undefined}
                 >
                   <span className={`absolute inset-0 rounded-full transition-all duration-300 ease-out
                                    ${link.current 
-                                       ? 'bg-white dark:bg-neutral-700 shadow-sm opacity-100 scale-100'
-                                       : 'opacity-0 scale-95 group-hover:bg-neutral-100 dark:group-hover:bg-neutral-700/50 group-hover:opacity-100 group-hover:scale-100'
+                                       ? 'bg-[var(--color-bg-card)] dark:bg-[var(--color-bg-card)] shadow-sm opacity-100 scale-100'
+                                       : 'opacity-0 scale-95 group-hover:bg-[var(--color-hover-bg)] dark:group-hover:bg-[var(--color-hover-bg)] group-hover:opacity-100 group-hover:scale-100'
                                    }`}></span>
                   
                   <span className="relative z-10 block">
@@ -120,21 +116,21 @@ export const Header: React.FC<HeaderProps> = ({ navLinks, onNavLinkClick, theme,
       </nav>
 
       {/* Mobile Navigation Header with glassmorphism - Updated light theme background gradient */}
-      <header className={`lg:hidden fixed top-0 left-0 right-0 z-[1000] p-4 
+      <header className={`lg:hidden fixed top-0 left-0 right-0 z-[1000] px-3 sm:px-4 
                          backdrop-blur-xl 
                          bg-gradient-to-r from-[var(--color-bg-card)]/95 via-[var(--color-bg-surface)]/90 to-[var(--color-bg-card)]/95 
-                         dark:bg-black/70
-                         border-b border-black/10 dark:border-white/5
-                         transition-all duration-300 ${scrolled ? 'py-3' : 'py-4'}`}>
-        <div className="flex justify-between items-center w-full">
+                         dark:bg-[var(--color-bg-base)]/80
+                         border-b border-[var(--color-border)]/30 dark:border-[var(--color-border)]/30
+                         transition-all duration-300 ${scrolled ? 'py-2 sm:py-3' : 'py-3 sm:py-4'}`}>
+        <div className="flex justify-between items-center w-full max-w-7xl mx-auto">
           {/* Left Section: Logo - Takes 1/3 space */}
           <div className="flex-1 flex justify-start">
             <a
               href="#About"
               onClick={(e) => { e.preventDefault(); handleLinkClick('About');}}
-              className="text-lg sm:text-xl font-black flex items-center space-x-1 group"
+              className="text-base sm:text-lg md:text-xl font-black flex items-center space-x-1 group min-h-[44px] min-w-[44px] flex items-center justify-center"
             >
-              <span className="text-[var(--color-text)] dark:text-white group-hover:text-transparent group-hover:bg-clip-text group-hover:bg-gradient-to-r group-hover:from-[var(--color-nav-active-start)] group-hover:to-[var(--color-nav-active-end)] transition-all duration-300">EliudSamwel</span>
+              <span className="text-[var(--color-text)] dark:text-[var(--color-text)] group-hover:text-transparent group-hover:bg-clip-text group-hover:bg-gradient-to-r group-hover:from-[var(--color-nav-active-start)] group-hover:to-[var(--color-nav-active-end)] transition-all duration-300">EliudSamwel</span>
               <span className="bg-gradient-to-r from-[var(--color-nav-active-start)] to-[var(--color-nav-active-end)] bg-clip-text text-transparent">.dev</span>
             </a>
           </div>
@@ -144,16 +140,16 @@ export const Header: React.FC<HeaderProps> = ({ navLinks, onNavLinkClick, theme,
             <button
               ref={menuButtonRef}
               id="mobile-menu-button"
-              className="relative w-10 h-10 flex items-center justify-center rounded-xl bg-black/5 dark:bg-white/10 backdrop-blur-sm border border-black/10 dark:border-white/20 hover:bg-black/10 dark:hover:bg-white/20 transition-all duration-300 flex-shrink-0"
+              className="lifted pill relative w-11 h-11 sm:w-12 sm:h-12 flex items-center justify-center flex-shrink-0 magnetic cursor-interactive touch-manipulation"
               onClick={toggleMobileMenu}
               aria-controls="mobile-menu"
               aria-expanded={isMobileMenuOpen}
               aria-label="Toggle navigation menu"
             >
-              <div className="w-5 h-4 relative">
-                <span className={`absolute left-0 w-full h-0.5 bg-[var(--color-text)] dark:bg-white rounded-full transition-all duration-300 ${isMobileMenuOpen ? 'top-1.5 rotate-45' : 'top-0'}`}></span>
-                <span className={`absolute left-0 top-1.5 w-full h-0.5 bg-[var(--color-text)] dark:bg-white rounded-full transition-all duration-300 ${isMobileMenuOpen ? 'opacity-0' : 'opacity-100'}`}></span>
-                <span className={`absolute left-0 w-full h-0.5 bg-[var(--color-text)] dark:bg-white rounded-full transition-all duration-300 ${isMobileMenuOpen ? 'top-1.5 -rotate-45' : 'top-3'}`}></span>
+              <div className="w-6 h-5 relative">
+                <span className={`absolute left-0 w-full h-0.5 bg-[var(--color-text)] dark:bg-[var(--color-text)] rounded-full transition-all duration-300 ${isMobileMenuOpen ? 'top-2 rotate-45' : 'top-0'}`}></span>
+                <span className={`absolute left-0 top-2 w-full h-0.5 bg-[var(--color-text)] dark:bg-[var(--color-text)] rounded-full transition-all duration-300 ${isMobileMenuOpen ? 'opacity-0' : 'opacity-100'}`}></span>
+                <span className={`absolute left-0 w-full h-0.5 bg-[var(--color-text)] dark:bg-[var(--color-text)] rounded-full transition-all duration-300 ${isMobileMenuOpen ? 'top-2 -rotate-45' : 'top-4'}`}></span>
               </div>
             </button>
           </div>
@@ -174,7 +170,7 @@ export const Header: React.FC<HeaderProps> = ({ navLinks, onNavLinkClick, theme,
         
         {/* Drawer Container */}
         <div 
-          className={`relative w-4/5 max-w-sm h-full bg-[var(--color-bg-base)] dark:bg-neutral-900 shadow-xl flex flex-col transition-transform duration-300 ease-in-out transform 
+          className={`relative w-4/5 max-w-sm h-full bg-[var(--color-bg-base)] dark:bg-[var(--color-bg-base)] shadow-xl flex flex-col transition-transform duration-300 ease-in-out transform 
                      ${isMobileMenuOpen ? 'translate-x-0' : 'translate-x-full'}`}
         >
           {/* Animated background elements (optional for drawer) */}
@@ -184,22 +180,24 @@ export const Header: React.FC<HeaderProps> = ({ navLinks, onNavLinkClick, theme,
           </div>
         
           {/* Menu content */}
-          <div className="relative h-full flex flex-col pt-16 sm:pt-20 z-10">
-            {/* Close button inside drawer */}
-            <div className="absolute top-4 right-4">
-                <button
-                  onClick={closeMobileMenu}
-                  className="p-2 rounded-full hover:bg-black/10 dark:hover:bg-white/10 transition-colors"
-                  aria-label="Close navigation menu"
-                >
-                  <svg className="w-6 h-6 text-[var(--color-text)] dark:text-white" fill="none" strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" viewBox="0 0 24 24" stroke="currentColor">
-                    <path d="M6 18L18 6M6 6l12 12"></path>
-                  </svg>
-                </button>
+          <div className="relative z-10 flex flex-col h-full p-6">
+            {/* Header */}
+            <div className="flex justify-between items-center mb-8">
+              <h2 className="text-xl font-bold text-[var(--color-text)] dark:text-[var(--color-text)]">Menu</h2>
+              <button
+                onClick={closeMobileMenu}
+                className="lifted pill w-11 h-11 flex items-center justify-center text-[var(--color-text)] touch-manipulation"
+                aria-label="Close menu"
+              >
+                <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+                </svg>
+              </button>
             </div>
-
-            <div className="flex flex-col items-center justify-center flex-grow px-4">
-              <ul className="flex flex-col space-y-3 w-full">
+            
+            {/* Navigation Links */}
+            <nav className="flex-1">
+              <ul className="flex flex-col space-y-2 w-full">
                 {navLinks.map((link, index) => (
                   <li 
                     key={link.pageId}
@@ -209,24 +207,24 @@ export const Header: React.FC<HeaderProps> = ({ navLinks, onNavLinkClick, theme,
                     <a
                       href={link.href}
                       onClick={(e) => { e.preventDefault(); handleLinkClick(link.pageId); }}
-                      className={`group relative block w-full px-6 py-4 rounded-xl text-left transition-all duration-300
+                      className={`block w-full px-6 py-4 text-left min-h-[56px] flex items-center touch-manipulation pill
                                  ${link.current
-                                     ? 'bg-[var(--nav-active-gradient)] text-[var(--color-text-on-accent)] shadow-lg shadow-[var(--color-nav-active-start)]/20'
-                                     : 'text-[var(--color-text-muted)] dark:text-gray-400 hover:bg-black/5 dark:hover:bg-white/5 hover:text-[var(--color-text)] dark:hover:text-white'
+                                     ? 'lifted-primary font-black tracking-tight'
+                                     : 'lifted text-[var(--color-text-secondary)]'
                                  }`}
                       aria-current={link.current ? 'page' : undefined}
                     >
-                      <span className="text-md font-medium tracking-wide">{link.name}</span>
+                      <span className="text-lg font-medium tracking-wide">{link.name}</span>
                     </a>
                   </li>
                 ))}
               </ul>
-              
-              {/* Social links or additional info */}
-              <div className={`mt-auto pb-8 pt-6 w-full transform transition-all duration-500 ease-out ${isMobileMenuOpen ? 'translate-y-0 opacity-100' : 'translate-y-5 opacity-0'}`}
-                   style={{ transitionDelay: `${isMobileMenuOpen ? (navLinks.length * 70) + 200 : 0}ms` }}>
-                <p className="text-[var(--color-text-muted)] dark:text-gray-500 text-xs text-center">Eliud Samwel © {new Date().getFullYear()}</p>
-              </div>
+            </nav>
+            
+            {/* Social links or additional info */}
+            <div className={`mt-auto pb-8 pt-6 w-full transform transition-all duration-500 ease-out ${isMobileMenuOpen ? 'translate-y-0 opacity-100' : 'translate-y-5 opacity-0'}`}
+                 style={{ transitionDelay: `${isMobileMenuOpen ? (navLinks.length * 70) + 200 : 0}ms` }}>
+              <p className="text-[var(--color-text-muted)] dark:text-[var(--color-text-muted)] text-sm text-center">Eliud Samwel © {new Date().getFullYear()}</p>
             </div>
           </div>
         </div>

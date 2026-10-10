@@ -37,10 +37,11 @@
 
 /* Journey Page Wrapper - Remove previous debug styles */
 .journey-page {
-    /* border: 5px solid red !important; */
-    /* min-height: 100vh; */
-    /* padding-top: 60px; */ /* Handled globally or by App.tsx */
-    /* overflow: visible !important; */
+    width: 100%;
+    min-height: 100vh;
+    display: block;
+    position: relative;
+    overflow: visible;
 }
 
 /* Modern Timeline Section */
@@ -49,7 +50,9 @@
     padding: 120px 0;
     background: transparent; /* Changed from var(--gradient-dark) */
     overflow: hidden; 
-    min-height: 50vh; 
+    min-height: 100vh; 
+    width: 100%;
+    display: block;
 }
 
 /* Animated Background Pattern - Hide if it interferes with global background */
@@ -76,6 +79,9 @@
     margin-bottom: 80px;
     position: relative;
     z-index: 2;
+    width: 100%;
+    display: block;
+    padding: 0 20px;
 }
 
 .section-title {
@@ -757,37 +763,91 @@
 /* Responsive Design */
 @media (max-width: 768px) {
     .timeline-section, .constellation-section {
-        padding: 80px 0; /* Reduced padding */
+        padding: 60px 0; /* Reduced padding */
+        min-height: 80vh; /* Ensure section has height */
+        display: block !important;
+        visibility: visible !important;
+        opacity: 1 !important;
     }
+    
+    .section-header {
+        margin-bottom: 40px; /* Reduced margin */
+        padding: 0 20px;
+        display: block !important;
+        visibility: visible !important;
+    }
+    
+    .section-title {
+        font-size: clamp(2rem, 6vw, 3rem); /* Slightly smaller title */
+        display: block !important;
+        visibility: visible !important;
+    }
+    
+    .section-subtitle {
+        font-size: 1rem; /* Slightly smaller subtitle */
+        display: block !important;
+        visibility: visible !important;
+    }
+    
+    .timeline-container {
+        padding: 0 20px !important; /* Reduced horizontal padding */
+        display: block !important;
+        visibility: visible !important;
+        opacity: 1 !important;
+    }
+    
     .timeline-line {
         left: 20px; /* Consistent with original mobile style */
+        display: block !important;
+        visibility: visible !important;
     }
+    
     .timeline-line::before {
         left: 50%; /* Relative to the line itself */
     }
 
     .timeline-card {
-        width: calc(100% - 40px); /* Adjusted for new line position */
-        margin-left: 40px !important; /* Adjusted */
-        padding: 24px; /* Slightly reduced padding */
+        width: calc(100% - 60px); /* Adjusted for new line position */
+        margin-left: 50px !important; /* Adjusted */
+        margin-right: 0 !important;
+        padding: 20px; /* Slightly reduced padding */
+        display: block !important;
+        visibility: visible !important;
+        opacity: 1 !important;
     }
 
     .timeline-dot {
         left: 20px; /* Consistent */
-        top: 60px; /* Align with potentially reduced card padding */
+        top: 40px; /* Align with potentially reduced card padding */
         width: 16px;
         height: 16px;
+        display: block !important;
+        visibility: visible !important;
     }
+    
     .timeline-dot::before {
-      inset: -5px;
+        inset: -5px;
     }
+    
     .timeline-dot::after {
-      inset: 2.5px;
+        inset: 2.5px;
     }
-
 
     .timeline-connector { /* Already display: none in prompt, keep if intended */
         display: none; 
+    }
+    
+    .timeline-item {
+        display: block !important;
+        visibility: visible !important;
+        opacity: 1 !important;
+        transform: none !important;
+        padding: 40px 0;
+    }
+    
+    .timeline-item.visible {
+        opacity: 1 !important;
+        transform: none !important;
     }
 
     .constellation-canvas {
@@ -813,17 +873,7 @@
         border: 1px solid var(--floating-button-border);
     }
     
-    .section-header {
-        margin-bottom: 60px; /* Reduced margin */
-    }
-    .section-title {
-        font-size: clamp(2rem, 6vw, 3rem); /* Slightly smaller title */
-    }
-    .section-subtitle {
-        font-size: 1rem; /* Slightly smaller subtitle */
-    }
-
-    .progress-bar-wrapper, .timeline-container, .constellation-container {
+    .progress-bar-wrapper, .constellation-container {
         padding: 0 20px; /* Reduced horizontal padding for containers */
     }
 
@@ -848,6 +898,72 @@
      .star-label {
         font-size: 10px; /* Smaller labels on mobile */
         stroke-width: 2px;
+    }
+}
+
+/* Additional Mobile Fixes for Journey Section */
+@media (max-width: 768px) {
+    .journey-page {
+        display: block !important;
+        visibility: visible !important;
+        opacity: 1 !important;
+        width: 100% !important;
+        min-height: 100vh !important;
+    }
+    
+    .timeline-section {
+        display: block !important;
+        visibility: visible !important;
+        opacity: 1 !important;
+        width: 100% !important;
+        padding: 40px 0 !important;
+    }
+    
+    .section-header {
+        display: block !important;
+        visibility: visible !important;
+        opacity: 1 !important;
+        margin-bottom: 30px !important;
+    }
+    
+    .section-title {
+        display: block !important;
+        visibility: visible !important;
+        opacity: 1 !important;
+        font-size: 2.5rem !important;
+        line-height: 1.2 !important;
+        margin-bottom: 15px !important;
+    }
+    
+    .section-subtitle {
+        display: block !important;
+        visibility: visible !important;
+        opacity: 1 !important;
+        font-size: 1.1rem !important;
+        line-height: 1.5 !important;
+    }
+}
+
+/* Force visibility for critical elements on all mobile screens */
+@media (max-width: 480px) {
+    .journey-page,
+    .timeline-section,
+    .section-header,
+    .section-title,
+    .section-subtitle,
+    .timeline-container,
+    .timeline-item {
+        display: block !important;
+        visibility: visible !important;
+        opacity: 1 !important;
+    }
+    
+    .section-title {
+        font-size: 2rem !important;
+    }
+    
+    .section-subtitle {
+        font-size: 1rem !important;
     }
 }
 

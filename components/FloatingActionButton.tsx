@@ -114,7 +114,7 @@ export const FloatingActionButton: React.FC<FABProps> = ({ onNavigate, theme, to
             key={item.id}
             title={item.label}
             onClick={() => handleItemClick(item)}
-            className="w-12 h-12 sm:w-14 sm:h-14 bg-[var(--card-bg)] rounded-full flex items-center justify-center cursor-pointer transition-all duration-300 ease-[cubic-bezier(0.4,0,0.2,1)] border-2 border-[var(--accent-color)] text-[var(--accent-color)] hover:bg-[var(--accent-gradient)] hover:text-[var(--color-text)] dark:hover:text-[var(--primary-text)] hover:border-transparent hover:scale-110 shadow-lg"
+            className="lifted pill w-12 h-12 sm:w-14 sm:h-14 flex items-center justify-center cursor-pointer text-[var(--accent-primary)] magnetic cursor-interactive"
             aria-label={item.label}
           >
             {item.icon}
@@ -124,7 +124,7 @@ export const FloatingActionButton: React.FC<FABProps> = ({ onNavigate, theme, to
       <button
         id="floating-action-button"
         onClick={handleFabClick}
-        className="w-14 h-14 sm:w-16 sm:h-16 bg-[var(--accent-gradient)] rounded-full flex items-center justify-center cursor-pointer transition-all duration-300 ease-[cubic-bezier(0.4,0,0.2,1)] shadow-xl hover:scale-110 hover:shadow-2xl text-[var(--color-text)] dark:text-[var(--primary-text)]"
+        className="lifted-primary pill w-14 h-14 sm:w-16 sm:h-16 flex items-center justify-center cursor-pointer magnetic cursor-interactive"
         aria-expanded={isOpen}
         aria-label={isOpen ? "Close quick actions menu" : "Open quick actions menu"}
       >

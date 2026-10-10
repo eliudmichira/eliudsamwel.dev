@@ -36,6 +36,10 @@
   --accent-hover: #EA580C;       /* Darker orange for interactions */
   --accent-yellow: #FCD34D;      /* Kept from previous for compatibility if used directly */
   --accent-color-red: #f57c00;   /* Kept from previous for compatibility */
+  
+  /* Navigation active state - darker for better contrast in light mode */
+  --nav-active-start-light: #EA580C; /* Darker orange for light mode nav */
+  --nav-active-end-light: #F97316;   /* Orange for light mode nav */
 
   /* Gradients - Adapt to new accents if necessary, or keep if general enough */
   --accent-gradient: linear-gradient(135deg, var(--accent-secondary) 0%, var(--accent-primary) 100%);
@@ -62,8 +66,9 @@
   --hover-lift: -8px;
   --blur-amount: 15px;
 
-  /* Apple-Inspired Typography System - CSS Variables */
-  --font-primary: 'Inter', -apple-system, BlinkMacSystemFont, "SF Pro Display", "SF Pro Text", "Helvetica Neue", "Helvetica", "Arial", sans-serif; /* Prioritize Inter */
+  /* Professional Typography System - CSS Variables */
+  --font-primary: 'Inter', system-ui, -apple-system, BlinkMacSystemFont, "SF Pro Display", "SF Pro Text", "Helvetica Neue", "Helvetica", "Arial", sans-serif; /* Body text */
+  --font-heading: 'Forma DJR Display', 'Circular Std', 'Spotify Circular', 'Circular', 'Inter', system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", "Roboto", "Arial", sans-serif; /* Headings */
   --font-secondary: 'Georgia', serif; /* Example secondary/serif font if needed */
   --font-mono: 'SF Mono', 'Menlo', 'monospace'; /* Example mono font if needed */
   --font-ultralight: 100;
@@ -116,7 +121,8 @@
   /* Navigation Specific */
   --color-nav-active-start: var(--accent-secondary); /* Was #C026D3 Magenta 600 */
   --color-nav-active-end: var(--accent-primary);   /* Was #7C3AED Violet 600 */
-  --nav-active-gradient: linear-gradient(to right, var(--color-nav-active-start), var(--color-nav-active-end));
+  /* Use darker gradient for better contrast in light mode */
+  --nav-active-gradient: linear-gradient(to right, var(--nav-active-start-light), var(--nav-active-end-light));
 }
 
 /* Dark Theme (Largely unchanged from previous, ensure consistency) */
@@ -327,7 +333,7 @@ html.dark {
 
 .accent-button {
   background: var(--accent-gradient);
-  color: #000;
+  color: var(--color-text-on-accent, #000);
   font-weight: 700;
   transition: var(--transition);
   border-radius: var(--border-radius);
@@ -508,7 +514,7 @@ body {
 
 /* Headings */
 h1, .h1 { /* Added .h1 class for flexibility */
-  font-family: var(--font-primary);
+  font-family: var(--font-heading);
   font-weight: var(--font-bold); /* 700 */
   font-size: clamp(2.5rem, 6vw, 4.5rem); /* UPDATED */
   line-height: 1.1; /* UPDATED */
@@ -516,10 +522,11 @@ h1, .h1 { /* Added .h1 class for flexibility */
   color: var(--color-text);
   margin-bottom: 1.5rem; /* Spacing after heading */
   text-wrap: balance; /* Improve headline balance */
+  font-feature-settings: 'liga' 1, 'kern' 1; /* Enable ligatures and kerning */
 }
 
 h2, .h2 {
-  font-family: var(--font-primary);
+  font-family: var(--font-heading);
   font-weight: var(--font-semibold); /* 600 */
   font-size: 2rem; /* UPDATED */
   line-height: 1.25; /* UPDATED */
@@ -527,10 +534,11 @@ h2, .h2 {
   color: var(--color-text);
   margin-bottom: 1.25rem;
   text-wrap: balance;
+  font-feature-settings: 'liga' 1, 'kern' 1;
 }
 
 h3, .h3 {
-  font-family: var(--font-primary);
+  font-family: var(--font-heading);
   font-weight: var(--font-semibold); /* UPDATED from --font-medium (500) to 600 */
   font-size: 1.5rem; /* UPDATED */
   line-height: 1.3; /* UPDATED */
@@ -538,6 +546,7 @@ h3, .h3 {
   color: var(--color-text);
   margin-bottom: 1rem;
   text-wrap: balance;
+  font-feature-settings: 'liga' 1, 'kern' 1;
 }
 
 h4, .h4 {

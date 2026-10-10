@@ -1,9 +1,8 @@
 import React, { useState, useRef, useEffect, useCallback } from 'react';
-import { motion, AnimatePresence } from 'framer-motion';
-import { FaCommentDots, FaSpinner, FaArrowDown, FaPaperPlane, FaCircle, FaProjectDiagram, FaLaptopCode, FaUser, FaBookOpen } from 'react-icons/fa';
-import { chatConfig } from '../../../config/chatConfig';
-import { GEMINI_API_KEY } from '../../../config/chatConfig';
-import { getFormattedContext } from '../../../config/customContext';
+import { motion, AnimatePresence } from 'motion/react';
+import { FaSpinner, FaTimes, FaPaperPlane, FaCircle, FaProjectDiagram, FaLaptopCode, FaUser, FaBookOpen } from 'react-icons/fa';
+import { chatConfig, GEMINI_API_KEY } from '../../../config/chatConfig';
+import { getAssistantSystemInstruction } from '../../../config/customContext';
 import '../../../styles/futuristic-chatbot.css';
 
 interface Message {
@@ -20,11 +19,166 @@ interface Message {
   };
 }
 
-interface AIMemory {
-  userPreferences: string[];
-  conversationContext: string[];
-  learnedFacts: Map<string, string>;
+type GeminiRole = 'user' | 'model';
+
+interface GeminiPart {
+  text?: string;
 }
+
+interface GeminiResponseBody {
+  candidates?: Array<{
+    content?: { parts?: GeminiPart[] };
+    finishReason?: string;
+  }>;
+  promptFeedback?: { blockReason?: string };
+  error?: { message?: string; code?: number };
+}
+
+function messagesToGeminiContents(messages: Message[]): { role: GeminiRole; parts: { text: string }[] }[] {
+  const rows = messages
+    .filter(m => m.id !== 'welcome' && m.text.trim())
+    .map(m => ({
+      role: (m.sender === 'user' ? 'user' : 'model') as GeminiRole,
+      parts: [{ text: m.text.trim() }],
+    }));
+
+  if (rows.length === 0) {
+    return [];
+  }
+
+  if (rows[0].role === 'model') {
+    rows.unshift({
+      role: 'user',
+      parts: [{ text: '[Visitor opened the portfolio chat.]' }],
+    });
+  }
+
+  return rows;
+}
+
+function extractGeminiText(data: GeminiResponseBody): string {
+  if (data.error?.message) {
+    throw new Error(data.error.message);
+  }
+  if (data.promptFeedback?.blockReason) {
+    throw new Error(`Request blocked: ${data.promptFeedback.blockReason}`);
+  }
+  const candidate = data.candidates?.[0];
+  const finish = candidate?.finishReason;
+  if (finish === 'SAFETY' || finish === 'PROHIBITED_CONTENT' || finish === 'RECITATION') {
+    throw new Error('MODEL_BLOCKED');
+  }
+  const parts = candidate?.content?.parts || [];
+  const text = parts.map(p => p.text).filter(Boolean).join('\n').trim();
+  if (!text) {
+    throw new Error('EMPTY_MODEL_REPLY');
+  }
+  return text;
+}
+
+async function fetchGeminiReply(
+  systemInstruction: string,
+  contents: ReturnType<typeof messagesToGeminiContents>
+): Promise<string> {
+  const { modelName, apiVersion, aiConfig } = chatConfig;
+  const url = `https://generativelanguage.googleapis.com/${apiVersion}/models/${modelName}:generateContent`;
+
+  const payload = {
+    systemInstruction: {
+      parts: [{ text: systemInstruction }],
+    },
+    contents,
+    generationConfig: {
+      temperature: aiConfig.temperature,
+      maxOutputTokens: aiConfig.maxTokens,
+      topP: 0.9,
+      topK: 40,
+    },
+    safetySettings: [
+      { category: 'HARM_CATEGORY_HARASSMENT', threshold: 'BLOCK_MEDIUM_AND_ABOVE' },
+      { category: 'HARM_CATEGORY_HATE_SPEECH', threshold: 'BLOCK_MEDIUM_AND_ABOVE' },
+      { category: 'HARM_CATEGORY_SEXUALLY_EXPLICIT', threshold: 'BLOCK_MEDIUM_AND_ABOVE' },
+      { category: 'HARM_CATEGORY_DANGEROUS_CONTENT', threshold: 'BLOCK_MEDIUM_AND_ABOVE' },
+    ],
+  };
+
+  let lastErr: Error | null = null;
+  for (let attempt = 0; attempt < 2; attempt++) {
+    const response = await fetch(`${url}?key=${GEMINI_API_KEY}`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(payload),
+    });
+
+    let data: GeminiResponseBody = {};
+    try {
+      data = (await response.json()) as GeminiResponseBody;
+    } catch {
+      data = {};
+    }
+
+    if (response.status === 429 || response.status === 503) {
+      lastErr = new Error('RATE_LIMIT');
+      await new Promise(r => setTimeout(r, 900 * (attempt + 1)));
+      continue;
+    }
+
+    if (!response.ok) {
+      const msg = data.error?.message || `HTTP ${response.status}`;
+      throw new Error(msg);
+    }
+
+    return extractGeminiText(data);
+  }
+
+  throw lastErr || new Error('GEMINI_UNAVAILABLE');
+}
+
+function mockAssistantReply(userInput: string): string {
+  const lower = userInput.toLowerCase();
+
+  if (/\b(hi|hello|hey)\b/.test(lower)) {
+    return `${chatConfig.mockResponses.greeting}\n\n${chatConfig.mockResponses.defaultResponse}`;
+  }
+  if (/\b(project|portfolio|soundswapp|flick|sanarix)\b/i.test(userInput)) {
+    return `${chatConfig.mockResponses.projectInquiry}`;
+  }
+  if (/\b(skill|stack|n8n|zapier|automat|tooling)\b/.test(lower)) {
+    return `${chatConfig.mockResponses.skillsInquiry}`;
+  }
+  if (/\b(contact|email|reach|hire)\b/.test(lower)) {
+    return `${chatConfig.mockResponses.contactInquiry}`;
+  }
+  if (/\b(thank|thanks)\b/.test(lower)) {
+    return `${chatConfig.mockResponses.thankYouResponse}`;
+  }
+
+  return chatConfig.mockResponses.defaultResponse;
+}
+
+const SPLINE_CHAT_IFRAME_SRC =
+  'https://my.spline.design/voiceinteractionanimation-vFILIh8VqmDcswkA0xQyHamS/?transparent=true';
+
+function userFacingAiError(err: unknown): string {
+  const code = err instanceof Error ? err.message : '';
+  if (code === 'MODEL_BLOCKED') {
+    return "I can’t answer that in a safe way. Try rephrasing or ask something else about the portfolio.";
+  }
+  if (code === 'RATE_LIMIT' || code === 'GEMINI_UNAVAILABLE') {
+    return "The AI service is busy. Please try again in a few seconds.";
+  }
+  if (code === 'EMPTY_MODEL_REPLY') {
+    return "I didn’t get a usable reply. Could you ask again with a bit more detail?";
+  }
+  return "Something went wrong on my side. Please try again in a moment.";
+}
+
+// import { EnhancedFuturisticAIAssistant } from './EnhancedFuturisticAIAssistant';
+
+// Temporarily using original until enhanced version is fixed
+// export const FuturisticAIAssistant: React.FC = () => {
+//   return <EnhancedFuturisticAIAssistant />;
+// };
 
 export const FuturisticAIAssistant: React.FC = () => {
   const [messages, setMessages] = useState<Message[]>([]);
@@ -33,12 +187,6 @@ export const FuturisticAIAssistant: React.FC = () => {
   const [isAiActuallyLoading, setIsAiActuallyLoading] = useState(false);
   const [aiState, setAiState] = useState<'idle' | 'listening' | 'thinking' | 'speaking'>('idle');
   const [connectionStatus] = useState<'online' | 'offline' | 'syncing'>('online');
-  const [aiMemory] = useState<AIMemory>({
-    userPreferences: [],
-    conversationContext: [],
-    learnedFacts: new Map()
-  });
-
   const [hasNewMessages, setHasNewMessages] = useState(false);
   const [unreadMessageCount, setUnreadMessageCount] = useState(0);
   const [initialLoading, setInitialLoading] = useState(true);
@@ -52,19 +200,37 @@ export const FuturisticAIAssistant: React.FC = () => {
   const AI_NAME = "ARIA";
 
   useEffect(() => {
-    const personalizedWelcome = `Neural network initialized. Hello, I'm ${AI_NAME}, Mich's advanced AI assistant. How may I assist you today?`;
-    setMessages([{
-      id: 'welcome',
-      text: personalizedWelcome,
-      sender: 'ai',
-      timestamp: new Date(),
-      isRead: false,
-      emotion: 'neutral',
-      metadata: { confidence: 100, category: 'greeting' }
-    }]);
-    setHasNewMessages(true);
-    setUnreadMessageCount(1);
-    setTimeout(() => setInitialLoading(false), 1500);
+    let timeoutId: NodeJS.Timeout;
+    
+    try {
+      const welcomeText = `Hi — I'm ${AI_NAME}, Eliud's portfolio assistant. Ask about automation work, engineering experience, featured projects, or how to get in touch.`;
+      
+      setMessages([{
+        id: 'welcome',
+        text: welcomeText,
+        sender: 'ai',
+        timestamp: new Date(),
+        isRead: false,
+        emotion: 'neutral',
+      }]);
+      setHasNewMessages(true);
+      setUnreadMessageCount(1);
+      
+      // Set a timeout to update loading state
+      timeoutId = setTimeout(() => {
+        setInitialLoading(false);
+      }, 1500);
+    } catch (error) {
+      console.error('Error initializing AI assistant:', error);
+      setInitialLoading(false); // Ensure loading state is cleared even if there's an error
+    }
+
+    // Cleanup function to clear timeout
+    return () => {
+      if (timeoutId) {
+        clearTimeout(timeoutId);
+      }
+    };
   }, []);
 
   const typeMessage = useCallback((text: string, callback: () => void) => {
@@ -86,109 +252,24 @@ export const FuturisticAIAssistant: React.FC = () => {
     return () => clearInterval(typeInterval);
   }, []);
 
-  const generateAIResponse = async (userInput: string): Promise<string> => {
-    // Add a slight delay to make the AI response feel more natural
-    await new Promise(resolve => setTimeout(resolve, 500 + Math.random() * 500));
-
+  const generateAIResponse = async (conversation: Message[]): Promise<string> => {
     try {
-      // Use mock responses as fallback if API key is not set
-      if (!GEMINI_API_KEY || GEMINI_API_KEY === "YOUR_API_KEY_HERE") {
-        console.warn("No API key found, using mock responses instead");
-        const lowerInput = userInput.toLowerCase();
-        if (lowerInput.includes("hello") || lowerInput.includes("hi")) {
-            return chatConfig.mockResponses.greeting;
-        }
-        if (lowerInput.includes("project")) {
-            return chatConfig.mockResponses.projectInquiry;
-        }
-        if (lowerInput.includes("skills") || lowerInput.includes("tech")) {
-            return chatConfig.mockResponses.skillsInquiry;
-        }
-        if (lowerInput.includes("contact")) {
-            return chatConfig.mockResponses.contactInquiry;
-        }
-        if (lowerInput.includes("thank")) {
-            return chatConfig.mockResponses.thankYouResponse;
-        }
-        return chatConfig.mockResponses.defaultResponse;
+      if (!GEMINI_API_KEY || GEMINI_API_KEY === 'YOUR_API_KEY_HERE') {
+        console.warn('Gemini API key not set; using structured fallback replies.');
+        const lastUser = [...conversation].reverse().find(m => m.sender === 'user');
+        return mockAssistantReply(lastUser?.text ?? '');
       }
 
-      // Real API call to Gemini
-      const apiUrl = `https://generativelanguage.googleapis.com/${chatConfig.apiVersion}/models/${chatConfig.aiConfig.modelName}:generateContent`;
-      const customContext = getFormattedContext();
-      
-      // Create a conversational context from previous messages (last 5 messages)
-      const conversationHistory = messages.slice(-5).map(msg => {
-        return `${msg.sender === 'user' ? 'User' : 'Assistant'}: ${msg.text}`;
-      }).join('\n');
-      
-      // Build the prompt with context and conversation history
-      const enhancedPrompt = `
-${customContext}
-
-CONVERSATION HISTORY:
-${conversationHistory}
-
-USER: ${userInput}
-
-ASSISTANT (as ${chatConfig.aiConfig.name}):
-`;
-
-      // Build the API request payload
-      const payload = {
-        contents: [{ 
-          parts: [{ text: enhancedPrompt }] 
-        }],
-        generationConfig: {
-          temperature: chatConfig.aiConfig.temperature,
-          maxOutputTokens: chatConfig.aiConfig.maxTokens,
-          topP: 0.9,
-          topK: 40
-        },
-        safetySettings: [
-          {
-            category: "HARM_CATEGORY_HARASSMENT",
-            threshold: "BLOCK_MEDIUM_AND_ABOVE"
-          },
-          {
-            category: "HARM_CATEGORY_HATE_SPEECH",
-            threshold: "BLOCK_MEDIUM_AND_ABOVE"
-          },
-          {
-            category: "HARM_CATEGORY_SEXUALLY_EXPLICIT",
-            threshold: "BLOCK_MEDIUM_AND_ABOVE"
-          },
-          {
-            category: "HARM_CATEGORY_DANGEROUS_CONTENT",
-            threshold: "BLOCK_MEDIUM_AND_ABOVE"
-          }
-        ]
-      };
-
-      // Make the API call
-      const response = await fetch(`${apiUrl}?key=${GEMINI_API_KEY}`, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json'
-        },
-        body: JSON.stringify(payload)
-      });
-
-      if (!response.ok) {
-        throw new Error(`API request failed: ${response.status}`);
+      const contents = messagesToGeminiContents(conversation);
+      const last = contents[contents.length - 1];
+      if (!last || last.role !== 'user') {
+        throw new Error('INVALID_CONVERSATION');
       }
 
-      const data = await response.json();
-      
-      // Extract and return the response text
-      if (data.candidates && data.candidates[0]?.content?.parts?.[0]?.text) {
-        return data.candidates[0].content.parts[0].text;
-      } else {
-        throw new Error("Unexpected API response format");
-      }
-    } catch (error) {
-      console.error('Error calling Gemini API:', error);
-      return "I encountered an issue processing your request. Please try again or ask something else.";
+      return await fetchGeminiReply(getAssistantSystemInstruction(), contents);
+    } catch (err) {
+      console.error('AI reply error:', err);
+      return userFacingAiError(err);
     }
   };
 
@@ -202,9 +283,7 @@ ASSISTANT (as ${chatConfig.aiConfig.name}):
     if (inputRef.current) inputRef.current.style.height = 'auto';
 
     try {
-      const startTime = Date.now();
-      const responseText = await generateAIResponse(userMessage.text);
-      const processingTime = Date.now() - startTime;
+      const responseText = await generateAIResponse([...messages, userMessage]);
       const emotion = responseText.toLowerCase().includes('error') ? 'concerned' : responseText.toLowerCase().includes('great') || responseText.toLowerCase().includes('excellent') ? 'happy' : 'neutral';
       const aiMessage: Message = {
         id: `ai-${Date.now()}`,
@@ -213,7 +292,6 @@ ASSISTANT (as ${chatConfig.aiConfig.name}):
         timestamp: new Date(),
         isRead: false,
         emotion,
-        metadata: { processingTime, confidence: 95 + Math.random() * 5, category: detectCategory(userMessage.text) }
       };
       setAiState('speaking');
       typeMessage(responseText, () => {
@@ -231,7 +309,7 @@ ASSISTANT (as ${chatConfig.aiConfig.name}):
       });
     } catch (error) {
       console.error('AI Error:', error);
-      const errorMessage: Message = { id: `error-${Date.now()}`, text: "Neural network synchronization error.", sender: 'ai', timestamp: new Date(), emotion: 'concerned', isRead: false };
+      const errorMessage: Message = { id: `error-${Date.now()}`, text: "Something went wrong. Please try again in a moment.", sender: 'ai', timestamp: new Date(), emotion: 'concerned', isRead: false };
       setMessages(prev => [...prev, errorMessage]);
       if (!isOpen) { setHasNewMessages(true); setUnreadMessageCount(c => c + 1); }
       setAiState('idle');
@@ -240,19 +318,10 @@ ASSISTANT (as ${chatConfig.aiConfig.name}):
     }
   };
   
-  const detectCategory = (text: string): string => {
-    const lower = text.toLowerCase();
-    if (lower.includes('project') || lower.includes('work')) return 'projects';
-    if (lower.includes('skill') || lower.includes('tech')) return 'technical';
-    if (lower.includes('contact') || lower.includes('hire')) return 'business';
-    if (lower.includes('who') || lower.includes('about')) return 'personal';
-    return 'general';
-  };
-
   const handleVoiceCommand = () => {
     setAiState('listening');
     setTimeout(() => {
-      setInput("Tell me about Mich's latest project");
+      setInput("What projects has Eliud shipped recently?");
       setAiState('idle');
     }, 2000);
   };
@@ -282,25 +351,15 @@ ASSISTANT (as ${chatConfig.aiConfig.name}):
 
   const buttonVariants = {
     initial: { scale: 0, y: 50 },
-    animate: { scale: 1, y: 0, transition: { type: 'spring', stiffness: 260, damping: 20, delay: 0.5 } },
+    animate: { scale: 1, y: 0, transition: { type: 'spring' as const, stiffness: 260, damping: 20, delay: 0.5 } },
     hover: { scale: 1.1, transition: { duration: 0.2 } },
     tap: { scale: 0.95 }
   };
   
   const iconContainerVariants = {
-    open: { rotate: -45 },
+    open: { rotate: 0 },
     closed: { rotate: 0 }
   };
-
-  // For animated data particles
-  const sparkPositions = [
-    { x: 1, y: 0 },    // Right
-    { x: -1, y: 0 },   // Left
-    { x: 0, y: 1 },    // Bottom
-    { x: 0, y: -1 },   // Top
-    { x: 0.707, y: 0.707 },  // Diagonal
-    { x: -0.707, y: 0.707 }, // Diagonal
-  ];
 
   return (
     <AnimatePresence>
@@ -325,20 +384,20 @@ ASSISTANT (as ${chatConfig.aiConfig.name}):
           animate={isOpen ? "open" : "closed"}
         >
           {initialLoading ? (
-            <FaSpinner className="ai-loading-spinner" />
+            <FaSpinner className="ai-loading-spinner" aria-hidden />
           ) : isOpen ? (
-            <div className="ai-icon-close">
+            <div className="ai-icon-close" aria-hidden>
               <span className="close-line"></span>
               <span className="close-line"></span>
             </div>
           ) : (
             <div className="ai-spline-wrapper">
-              <iframe 
-                src='https://my.spline.design/voiceinteractionanimation-vFILIh8VqmDcswkA0xQyHamS/?transparent=true' 
-                frameBorder='0' 
+              <iframe
+                src={SPLINE_CHAT_IFRAME_SRC}
+                frameBorder={0}
                 title="AI Voice Animation"
                 className="ai-spline-iframe"
-                  style={{
+                style={{
                   position: 'absolute',
                   top: '50%',
                   left: '50%',
@@ -347,9 +406,9 @@ ASSISTANT (as ${chatConfig.aiConfig.name}):
                   transform: 'translate(calc(-50% + 2px), calc(-50% + 5px)) scale(1.3)',
                   pointerEvents: 'none',
                   border: 'none',
-                  zIndex: 3
+                  zIndex: 3,
                 }}
-              ></iframe>
+              />
             </div>
           )}
         </motion.div>
@@ -359,12 +418,12 @@ ASSISTANT (as ${chatConfig.aiConfig.name}):
             initial={{ scale: 0 }}
             animate={{ scale: 1 }}
             exit={{ scale: 0 }}
-            transition={{ type: "spring", stiffness: 500, damping: 30 }}
+            transition={{ type: "spring" as const, stiffness: 500, damping: 30 }}
           >
             {unreadMessageCount > 0 && <span className="ai-message-count">{unreadMessageCount}</span>}
           </motion.div>
         )}
-         <div className="ai-tooltip">Chat with ARIA</div>
+         <div className="ai-tooltip">Chat with {AI_NAME}</div>
       </motion.button>
 
       {isOpen && (
@@ -378,49 +437,20 @@ ASSISTANT (as ${chatConfig.aiConfig.name}):
         >
           <div className="ai-header">
             <div className="ai-header-left">
-              <div className="ai-avatar">
-                <div className="ai-avatar-hex">
-                  <div className="ai-avatar-ring"></div>
-                  <div className="ai-avatar-core">
-                    <div className={`ai-eye ${aiState}`}></div>
-                  </div>
-                </div>
-              </div>
+              <div className="ai-header-mark" aria-hidden="true">✦</div>
               <div className="ai-identity">
-                <h3>{AI_NAME}</h3>
+                <h3 className="ai-header-title">{AI_NAME}</h3>
                 <div className="ai-status">
-                  <FaCircle size={6} style={{ color: connectionStatus === 'online' ? 'var(--ai-success)' : 'var(--ai-text-secondary)' }} />
-                  <span>{connectionStatus === 'online' ? 'Neural network connected' : connectionStatus === 'syncing' ? 'Synchronizing' : 'Local mode'}</span>
+                  <FaCircle size={6} className="ai-status-dot" aria-hidden />
+                  <span>
+                    {connectionStatus === 'online' ? 'Online · Portfolio knowledge' : connectionStatus === 'syncing' ? 'Connecting…' : 'Offline mode'}
+                  </span>
                 </div>
               </div>
             </div>
-            <button onClick={() => setIsOpen(false)} className="ai-close-button" aria-label="Close chat window">
-              <FaArrowDown />
+            <button type="button" onClick={() => setIsOpen(false)} className="ai-close-button" aria-label="Close chat">
+              <FaTimes size={16} />
             </button>
-          </div>
-
-          <div className="ai-system-status">
-            <div className="status-item">
-              <span className="status-dot" data-status={connectionStatus === 'online' ? 'active' : undefined}></span>
-              Core Logic
-              <div className="metric-bar"></div>
-            </div>
-            <div className="status-item">
-              <span className="status-dot" data-status={aiMemory.learnedFacts.size > 0 ? 'active' : undefined}></span>
-              Memory Index
-              <div className="metric-bar"></div>
-            </div>
-            <div className="status-item">
-              <span className="status-dot" data-status={!isAiActuallyLoading ? 'active' : undefined}></span>
-              Response Module
-              <div className="metric-bar"></div>
-            </div>
-            {/* Data flow particles */}
-            <div className="data-particle"></div>
-            <div className="data-particle"></div>
-            <div className="data-particle"></div>
-            <div className="data-particle"></div>
-            <div className="data-particle"></div>
           </div>
 
           <div className="ai-messages-container" ref={chatContainerRef}>
@@ -441,12 +471,6 @@ ASSISTANT (as ${chatConfig.aiConfig.name}):
                     </div>
                   )}
                   <div className="ai-message-bubble">
-                    {msg.sender === 'ai' && msg.metadata && (
-                        <div className="message-metadata">
-                            <span className="category">{msg.metadata.category}</span>
-                            {msg.metadata.confidence && <span className="confidence">{msg.metadata.confidence.toFixed(0)}%</span>}
-                        </div>
-                    )}
                     <div className="message-text">
                       {msg.sender === 'ai' && isTyping && index === messages.length -1 && messages.some(m => m.id === msg.id && !m.isRead) ? typingText : msg.text}
                       {msg.sender === 'ai' && isTyping && index === messages.length -1 && messages.some(m => m.id === msg.id && !m.isRead) && <span className="cursor">|</span>}
@@ -489,7 +513,7 @@ ASSISTANT (as ${chatConfig.aiConfig.name}):
                     e.target.style.height = `${e.target.scrollHeight}px`;
                 }} 
                 onKeyPress={(e) => e.key === 'Enter' && !e.shiftKey && (e.preventDefault(), handleSendMessage())} 
-                placeholder="Type your query for ARIA..." 
+                placeholder="Message Eliud's assistant…" 
                 className="ai-input" 
                 rows={1}
                 maxLength={chatConfig.maxInputLength}
@@ -500,10 +524,10 @@ ASSISTANT (as ${chatConfig.aiConfig.name}):
             </div>
             <div className="quick-actions">
               {[
-                { icon: <FaProjectDiagram />, label: "Projects", prompt: "Tell me about Mich's projects" },
-                { icon: <FaLaptopCode />, label: "Skills", prompt: "What are Mich's technical skills?" },
-                { icon: <FaUser />, label: "About", prompt: "Tell me about Mich's background" },
-                { icon: <FaBookOpen />, label: "Experience", prompt: "What experience does Mich have?" }
+                { icon: <FaProjectDiagram />, label: "Projects", prompt: "What projects should I look at on this portfolio?" },
+                { icon: <FaLaptopCode />, label: "Skills", prompt: "Summarize Eliud's technical and automation skills." },
+                { icon: <FaUser />, label: "About", prompt: "Give a short overview of Eliud's background." },
+                { icon: <FaBookOpen />, label: "Experience", prompt: "What is Eliud's professional experience?" }
               ].map((action, index) => (
                 <motion.button 
                   key={action.label} 

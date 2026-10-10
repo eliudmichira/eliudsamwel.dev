@@ -28,4 +28,15 @@ declare module '*.svg' {
 declare module '*.gif' {
   const content: string;
   export default content;
+}
+
+// Vite environment variables
+interface ImportMetaEnv {
+  readonly VITE_TELEGRAM_BOT_TOKEN?: string;
+  readonly VITE_TELEGRAM_CHAT_ID?: string;
+  readonly VITE_NEWSLETTER_WEBHOOK_URL?: string;
+}
+
+interface ImportMeta {
+  readonly env: ImportMetaEnv;
 } 

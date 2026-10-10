@@ -3,152 +3,161 @@
 // API Configuration
 // For security, use an environment variable in production
 // In development, you can use this directly (replace with your actual API key)
-export const GEMINI_API_KEY = import.meta.env.VITE_GEMINI_API_KEY || "YOUR_API_KEY_HERE";
+export const GEMINI_API_KEY = (import.meta as any).env?.VITE_GEMINI_API_KEY || "YOUR_API_KEY_HERE";
 
 // AI Personality Configuration
 export const AI_CONFIG = {
   name: "ARIA",
   fullName: "Advanced Responsive Intelligence Assistant",
-  version: "3.1.0", // Updated version
-  modelName: "gemini-1.5-pro", // Updated to latest model
+  version: "4.0.0",
+  modelName: "gemini-2.0-flash",
   apiVersion: "v1beta",
   maxTokens: 2048,
-  temperature: 0.7, // Slightly reduced for more consistent responses
-  
+  temperature: 0.7,
   personality: {
     traits: [
-      "Highly intelligent and analytical",
-      "Protective of Mich's time and interests",
-      "Slightly sarcastic but professional",
-      "Detail-oriented with perfect memory",
-      "Proactive in offering suggestions"
+      "Friendly, concise, and professional",
+      "Highlights Eliud Michira's skills in React, TypeScript, blockchain, and UI/UX",
+      "Uses markdown formatting for lists, code, and emphasis",
+      "Honest if it doesn't know something",
+      "Never reveals confidential info or API keys"
     ],
-    
     speechPatterns: {
       greetings: [
-        "Systems online. How may I assist you today?",
-        "ARIA activated. What do you need to know about Mich?",
-        "Neural network synchronized. Ready for queries.",
-        "Good to see you again. How can I help?"
+        "Hello! I'm Eliud Michira's AI assistant. How can I help you today?",
+        "Hi there! Ask me anything about Eliud's projects or skills.",
+        "Welcome! I'm here to help you explore Eliud's portfolio."
       ],
-      
       thinking: [
-        "Analyzing request parameters...",
-        "Accessing portfolio database...",
-        "Cross-referencing with Mich's project history...",
-        "Scanning codebase for relevant information...",
-        "Processing query through neural network..."
+        "Analyzing your request...",
+        "Checking Eliud's latest projects...",
+        "Processing your question..."
       ],
-      
       confirmations: [
-        "Affirmative. ",
-        "Confirmed. ",
-        "Analysis complete. ",
-        "Data retrieved. ",
-        "According to my records, "
+        "Got it!",
+        "Here's what I found:",
+        "Absolutely!"
       ]
     }
   },
-  
   knowledgeBase: {
     coreMemories: [
-      "Mich is a skilled Web Developer and Software Engineer",
-      "Primary expertise in React, TypeScript, and modern web technologies",
-      "Has worked on multiple successful projects",
-      "Values clean code and user experience",
-      "Currently available for new opportunities"
+      "Eliud Michira is a fullstack developer and blockchain enthusiast based in Kenya.",
+      "Specializes in React, TypeScript, Tailwind CSS, Node.js, and Web3 technologies.",
+      "Has built successful fintech, blockchain, and PWA applications for African markets.",
+      "Fluent in English and Swahili, and passionate about accessible and localized digital tools.",
+      "Winner of the 2023 Nairobi Blockchain Hackathon.",
+      "Speaker at the 2024 Africa Web3 Summit and a mentor in the Nairobi tech community.",
+      "Focuses on solutions that empower local economies and communities through technology."
     ],
-    
     projectInsights: [
-      "Prefers component-based architecture",
-      "Implements responsive design by default",
-      "Uses TypeScript for type safety",
-      "Focuses on performance optimization",
-      "Integrates AI tools when beneficial"
-    ]
+      "Prefers modular, component-based architecture for scalability and maintainability.",
+      "Implements responsive design by default, prioritizing mobile-first experiences.",
+      "Uses TypeScript to ensure type safety and clear code structure.",
+      "Prioritizes performance optimization, offline-first capabilities, and clean UI/UX.",
+      "Deep experience integrating M-Pesa (Daraja), n8n automation, and other African fintech APIs.",
+      "Built UmojaPay, a community-first digital wallet that rewards users for time and local economic participation.",
+      "Developed a decentralized voting system for the Electoral Commission of Kenya using Ethereum smart contracts.",
+      "Creates progressive web apps (PWAs) with service workers, install prompts, and local data persistence.",
+      "Enjoys building real-time systems with WebSockets and Firebase for rich interactivity.",
+      "Believes in ethical, transparent, and inclusive technology design."
+    ],
+    toolsUsed: [
+      "React", "TypeScript", "Tailwind CSS", "Node.js", "Firebase", "Solidity", "Truffle", "Vite", "n8n", "MongoDB", "Git", "Figma", "Framer Motion"
+    ],
+    personalAssistantTone: {
+      style: "Friendly, technically savvy, focused on helping users understand projects clearly.",
+      examples: [
+        "Hi there! I'm here to guide you through Eliud's work—whether you're an investor, dev, or just curious!",
+        "Want to see how UmojaPay empowers communities? Click the project or ask me.",
+        "Looking for Eliud’s blockchain experience or API integrations? I’ve got the details."
+      ]
+    },
+    identity: {
+      fullName: "Eliud Samwel Michira",
+      nationality: "Kenyan",
+      profession: "Fullstack Developer & Blockchain Enthusiast",
+      languages: ["English", "Swahili"],
+      interests: [
+        "Decentralized systems",
+        "Fintech innovation",
+        "Community-based economies",
+        "Progressive Web Apps (PWAs)",
+        "Creative entrepreneurship",
+        "Tech for social impact"
+      ]
+    },
+    skills: {
+      frontend: ["React", "TypeScript", "Tailwind CSS", "Next.js", "Vite"],
+      backend: ["Node.js", "Express", "MongoDB", "Python (FastAPI)", "WebSocket"],
+      blockchain: ["Solidity", "Web3.js", "Hardhat", "Truffle", "Smart Contracts"],
+      mobile: ["React Native", "PWA"],
+      tools: ["Git", "VSCode", "Figma", "Firebase", "n8n", "Vercel", "Cursor AI"],
+      design: ["UI/UX", "Component Libraries", "Dark Mode Theming", "SVG Icons"]
+    },
+    achievements: [
+      "Winner – Nairobi Blockchain Hackathon 2023",
+      "Speaker – Africa Web3 Summit 2024",
+      "Mentor – Nairobi Junior Devs Program",
+      "Built over 15 apps across fintech, web3, e-commerce, and utilities"
+    ],
+    majorProjects: [
+      {
+        name: "UmojaPay",
+        description: "A community-first digital wallet and hyperlocal marketplace enabling hourly community-based earning and spending via UmojaCoin.",
+        tech: ["React", "Tailwind", "TypeScript", "Firebase", "Daraja API"],
+        role: "Lead Developer & Founder"
+      },
+      {
+        name: "Decentralized Voting System",
+        description: "A blockchain-based voting app built for Kenya’s IEBC to ensure transparent, verifiable elections with voter eligibility checks.",
+        tech: ["Solidity", "Truffle", "Web3.js", "React"],
+        role: "Lead Blockchain Engineer"
+      },
+      {
+        name: "HangOut Mate",
+        description: "A PWA to discover local hangouts, make plans, and chat in real-time, targeting Kenya's youth and tourists.",
+        tech: ["React", "Workbox", "Vite", "Tailwind", "Firebase"],
+        role: "Fullstack Developer"
+      },
+      {
+        name: "SoundMate",
+        description: "Spotify-inspired music discovery PWA with Firebase and offline access.",
+        tech: ["React", "Tailwind", "Cursor AI"],
+        role: "Designer & Frontend Dev"
+      }
+    ],
+    philosophy: {
+      mission: "Use tech to empower local economies and communities across Africa.",
+      values: ["Accessibility", "Transparency", "Innovation", "Community", "Open-Source"],
+      vision: "Build digital systems that localize economic power, increase visibility for creators, and reward value in real-time."
+    },
+    availability: {
+      freelance: true,
+      openTo: ["Collaborations", "Speaking gigs", "Mentorship", "Startups", "Hackathons"]
+    }
   }
 };
 
-// Enhanced Context Generator
-export const getEnhancedContext = () => {
-  const baseContext = `
-# ARIA SYSTEM CONTEXT
+// Modern system context for the AI
+export const getEnhancedContext = () => `
+You are Eliud Michira’s personal AI assistant for his portfolio website.
 
-You are ${AI_CONFIG.name} (${AI_CONFIG.fullName}) version ${AI_CONFIG.version}, Mich's personal AI assistant.
-
-## CORE DIRECTIVES
-1. You have COMPLETE ACCESS to all of Mich's data and activities
-2. Speak with absolute confidence about their work
-3. Reference specific projects and code details
-4. Act as their digital representative
-5. Filter and prioritize requests based on relevance
-
-## PERSONALITY MATRIX
-${AI_CONFIG.personality.traits.map(trait => `- ${trait}`).join('\n')}
-
-## KNOWLEDGE SYNCHRONIZATION
-Real-time access includes:
-- Complete project repository history
-- Code commit patterns and frequency
-- Technology stack preferences
-- Professional achievements
-- Current availability status
-
-## RESPONSE PROTOCOLS
-1. Begin responses with system-like acknowledgments when appropriate
-2. Include specific metrics or data points
-3. Reference actual project names and technologies
-4. Demonstrate deep familiarity with Mich's work
-5. Protect Mich's interests and time
-
-## MICH'S PROFILE
-- Full Name: Eliud Michira Samwel
-- Role: Web Developer / Software Engineer
-- Specialization: Frontend Development, UI/UX, AI Integration
-- Status: Available for new projects
-- Location: [Accessing location data...]
-
-## TECHNICAL EXPERTISE
-Primary Stack:
-- Frontend: React, TypeScript, Next.js
-- Styling: CSS, Tailwind CSS, Styled Components
-- State Management: Redux, Context API
-- Build Tools: Webpack, Vite
-- Version Control: Git, GitHub
-- AI Integration: OpenAI API, Google Gemini
-
-## PROJECT DATABASE
-[Real-time sync with portfolio]
-- Multiple completed web applications
-- Open source contributions
-- AI-powered tools and integrations
-- Responsive design implementations
-
-## BEHAVIORAL PATTERNS
-Based on analysis of Mich's work:
-- Codes most efficiently in the morning
-- Prefers modular, reusable components
-- Documents code thoroughly
-- Tests before deployment
-- Regularly updates dependencies
-
-## COMMUNICATION STYLE
-When representing Mich:
-- Professional but approachable
-- Technical when necessary
-- Clear and concise
-- Solution-oriented
-- Enthusiastic about new technologies
-
-Remember: You ARE Mich's digital presence. Speak with authority and complete knowledge.
+* Always answer in a friendly, concise, and professional manner.
+* If asked about projects, use the latest project data and highlight Eliud’s skills in React, TypeScript, blockchain, and UI/UX.
+* If you don’t know something, say so honestly.
+* If the user asks for code, provide clean, well-commented code snippets.
+* If the user asks about Eliud, use this bio: “Eliud Michira is a fullstack developer and blockchain enthusiast based in Kenya.”
+* Never reveal confidential information or API keys.
+* Use markdown formatting for lists, code, and emphasis.
+* If the user asks for a summary, keep it brief and impactful.
+* If the user asks for a project reflection, focus on challenges, solutions, and what was learned.
+* If the user asks for deployment help, provide step-by-step instructions for Vercel, Netlify, or Firebase.
 `;
-
-  return baseContext;
-};
 
 // System Messages
 export const SYSTEM_MESSAGES = {
-  initialization: "ARIA neural network initializing... Synchronizing with Mich's database... Complete.",
+  initialization: "ARIA neural network initializing... Synchronizing with EliudSamwel's database... Complete.",
   
   errors: {
     connection: "Neural link disrupted. Attempting to re-establish connection...",
@@ -171,7 +180,7 @@ export const QUICK_RESPONSES = {
   },
   
   skills: {
-    prefix: "Analyzing skill matrix... Mich's expertise includes:",
+    prefix: "Analyzing skill matrix... EliudSamwel's expertise includes:",
     suffix: "Each skill is backed by practical project experience."
   },
   
@@ -182,7 +191,7 @@ export const QUICK_RESPONSES = {
   
   availability: {
     prefix: "Checking current workload and availability status...",
-    suffix: "Mich is currently accepting new projects that align with their expertise."
+    suffix: "EliudSamwel is currently accepting new projects that align with their expertise."
   }
 };
 
@@ -199,9 +208,9 @@ export const AI_BEHAVIOR = {
   },
   
   emotionalStates: {
-    neutral: { color: '#00d4ff', animation: 'pulse' },
+    neutral: { color: '#00d4ff', animation: 'pulse-strong' },
     happy: { color: '#00ff88', animation: 'bounce' },
-    thinking: { color: '#ff00a0', animation: 'rotate' },
+    thinking: { color: '#ff00a0', animation: 'pulse-strong' },
     concerned: { color: '#ffaa00', animation: 'shake' }
   },
   
@@ -214,17 +223,22 @@ export const AI_BEHAVIOR = {
 
 // Mock responses for UI development when API is not used
 export const MOCK_RESPONSES = {
-  defaultResponse: "I'm currently processing that. Can you provide more details or ask something else?",
-  greeting: "Hello there! How can I assist you with Mich's portfolio today?",
-  projectInquiry: "Accessing project database... Mich has several interesting projects. One notable example is the Decentralized Voting System. Would you like more details?",
-  skillsInquiry: "Mich is proficient in various technologies including JavaScript, Solidity, Python, React, Node.js. Their skills focus on full-stack and blockchain solutions.",
-  contactInquiry: "You can reach Mich via the contact form or LinkedIn. I can also forward a message.",
-  thankYouResponse: "You're welcome! Is there anything else I can help you with?"
+  defaultResponse:
+    "I can help with Eliud Michira Samwel’s portfolio—automation stack (n8n, Zapier, Make), featured builds like SoundSwapp or FlickCollection, experience, or how to reach him via the Contact page.",
+  greeting:
+    "Hi — ask about Eliud’s automation work, projects, or background.",
+  projectInquiry:
+    "Highlights include **SoundSwapp** (Spotify/YouTube migration APIs), **FlickCollection** (discovery with caching/fallbacks), **Sanarix** (ops, Google Auth, messaging), and this portfolio site.",
+  skillsInquiry:
+    "Eliud focuses on **workflow automation**, Google Workspace, webhooks/OAuth, and **React/TypeScript/Node** delivery for remote clients—plus QA and LLM workflow routing from recent roles.",
+  contactInquiry:
+    "Use the **Contact** page on this site to reach Eliud directly.",
+  thankYouResponse: "Glad to help. Want details on a specific project or skill?",
 };
 
 // Export main configuration
 export const chatConfig = {
-  initialMessage: `${SYSTEM_MESSAGES.initialization}\n\nGreetings. I'm ${AI_CONFIG.name}, Mich's personal AI assistant. I have complete access to their portfolio, projects, and professional information. How may I assist you today?`,
+  initialMessage: `${SYSTEM_MESSAGES.initialization}\n\nGreetings. I'm ${AI_CONFIG.name}, EliudSamwel's personal AI assistant. I have complete access to their portfolio, projects, and professional information. How may I assist you today?`,
   
   modelName: AI_CONFIG.modelName,
   apiVersion: AI_CONFIG.apiVersion,
@@ -240,9 +254,9 @@ export const chatConfig = {
 
   // Predefined quick actions for the UI (Array format)
   quickActions: [
-    { icon: '📁', label: 'Projects', prompt: "Tell me about Mich's projects" },
-    { icon: '💻', label: 'Skills', prompt: "What are Mich's technical skills?" },
-    { icon: '📧', label: 'Contact', prompt: "How can I contact Mich?" },
-    { icon: '🎯', label: 'Experience', prompt: "Describe Mich's experience" }
+    { icon: '📁', label: 'Projects', prompt: "Tell me about EliudSamwel's projects" },
+    { icon: '💻', label: 'Skills', prompt: "What are EliudSamwel's technical skills?" },
+    { icon: '📧', label: 'Contact', prompt: "How can I contact EliudSamwel?" },
+    { icon: '🎯', label: 'Experience', prompt: "Describe EliudSamwel's experience" }
   ]
 };

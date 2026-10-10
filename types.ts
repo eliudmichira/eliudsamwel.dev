@@ -15,6 +15,7 @@ export interface ProjectCardProps {
   title: string;
   description: string;
   image: string;
+  images?: string[]; // Added for gallery support
   category: string;
   type: string;
   tags: string[];
@@ -47,7 +48,8 @@ export interface ProjectChallenge {
 export interface ProjectTechnicalImplementation {
   title: string;
   description: string;
-  code: string;
+  /** Optional code sample shown in the project modal when present */
+  code?: string;
 }
 
 export interface ProjectGalleryItem {

@@ -1,16 +1,17 @@
 /** @type {import('tailwindcss').Config} */
-module.exports = {
+export default {
   content: [
-    "./src/**/*.{js,jsx,ts,tsx}",
-    "./public/index.html",
-    "./*.html",
-    "./components/**/*.{js,jsx,ts,tsx}"
+    "./index.html",
+    "./src/**/*.{js,ts,jsx,tsx}",
+    "./components/**/*.{js,ts,jsx,tsx}",
   ],
   darkMode: 'class', // for toggling dark mode via class (html.dark)
   theme: {
     extend: {
       fontFamily: {
         sans: ['var(--font-primary)', 'sans-serif'],
+        heading: ['var(--font-heading)', 'sans-serif'],
+        display: ['var(--font-heading)', 'sans-serif'],
       },
       colors: {
         // Updated white to use the new base background color
@@ -65,102 +66,8 @@ module.exports = {
       transitionProperty: {
         'standard': 'var(--transition)',
         'fast': 'var(--transition-fast)'
-      },
-      typography: (theme) => ({
-        DEFAULT: {
-          css: {
-            color: 'var(--color-text)',
-            a: {
-              color: 'var(--accent-primary)',
-              '&:hover': {
-                color: 'var(--accent-hover)',
-              },
-              textDecoration: 'none',
-            },
-            h1: {
-              color: 'var(--color-text)',
-              fontWeight: '800',
-            },
-            h2: {
-              color: 'var(--color-text)',
-              fontWeight: '700',
-            },
-            h3: {
-              color: 'var(--color-text)',
-              fontWeight: '600',
-            },
-            h4: {
-              color: 'var(--color-text)',
-            },
-            blockquote: {
-              borderLeftColor: 'var(--accent-primary)',
-              color: 'var(--color-text-secondary)',
-              fontStyle: 'normal',
-            },
-            code: {
-              color: 'var(--accent-primary)',
-              backgroundColor: 'var(--color-bg-muted)',
-              padding: '0.25rem 0.4rem',
-              borderRadius: '0.25rem',
-              fontWeight: '500',
-            },
-            pre: {
-              backgroundColor: 'var(--color-bg-muted)',
-              code: {
-                backgroundColor: 'transparent',
-                color: 'inherit',
-                padding: '0',
-                fontWeight: 'inherit',
-              },
-            },
-            strong: {
-              color: 'var(--color-text)',
-              fontWeight: '600',
-            },
-            hr: {
-              borderColor: 'var(--color-border)',
-              marginTop: '2.5rem',
-              marginBottom: '2.5rem',
-            },
-            ol: {
-              li: {
-                '&:before': {
-                  color: 'var(--accent-primary)',
-                  fontWeight: '600',
-                },
-              },
-            },
-            ul: {
-              li: {
-                '&:before': {
-                  backgroundColor: 'var(--accent-primary)',
-                },
-              },
-            },
-            table: {
-              thead: {
-                borderBottomColor: 'var(--color-border)',
-                th: {
-                  color: 'var(--color-text)',
-                },
-              },
-              tbody: {
-                tr: {
-                  borderBottomColor: 'var(--color-border-light)',
-                },
-              },
-            },
-          },
-        },
-        dark: {
-          css: {
-            color: 'var(--color-text)',
-          },
-        },
-      }),
+      }
     },
   },
-  plugins: [
-    require('@tailwindcss/typography'),
-  ],
+  plugins: [],
 } 

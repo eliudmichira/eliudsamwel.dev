@@ -69,7 +69,7 @@ export const TestimonialsCarousel: React.FC<TestimonialsCarouselProps> = ({ test
         {/* Navigation arrows */}
         <button 
           onClick={prevTestimonial}
-          className="absolute left-0 top-1/2 transform -translate-y-1/2 -translate-x-4 bg-[var(--card-bg)] rounded-full p-2 shadow-lg border border-[var(--card-border)] hover:bg-[var(--secondary-bg)] transition-colors z-10"
+          className="lifted pill absolute left-0 top-1/2 transform -translate-y-1/2 -translate-x-4 w-11 h-11 flex items-center justify-center z-10"
           aria-label="Previous testimonial"
         >
           <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6 text-[var(--primary-text)]" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -79,7 +79,7 @@ export const TestimonialsCarousel: React.FC<TestimonialsCarouselProps> = ({ test
         
         <button 
           onClick={nextTestimonial}
-          className="absolute right-0 top-1/2 transform -translate-y-1/2 translate-x-4 bg-[var(--card-bg)] rounded-full p-2 shadow-lg border border-[var(--card-border)] hover:bg-[var(--secondary-bg)] transition-colors z-10"
+          className="lifted pill absolute right-0 top-1/2 transform -translate-y-1/2 translate-x-4 w-11 h-11 flex items-center justify-center z-10"
           aria-label="Next testimonial"
         >
           <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6 text-[var(--primary-text)]" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -94,8 +94,8 @@ export const TestimonialsCarousel: React.FC<TestimonialsCarouselProps> = ({ test
           <button
             key={index}
             onClick={() => goToTestimonial(index)}
-            className={`w-3 h-3 rounded-full transition-all duration-300 ${
-              index === currentIndex ? 'bg-[var(--accent-color)]' : 'bg-[var(--secondary-bg)]'
+            className={`pill transition-all duration-200 ${
+              index === currentIndex ? 'lifted-primary w-8 h-3' : 'recessed w-3 h-3'
             }`}
             aria-label={`Go to testimonial ${index + 1}`}
           />

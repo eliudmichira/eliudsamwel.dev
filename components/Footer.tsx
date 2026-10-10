@@ -1,5 +1,6 @@
 import React from 'react';
 import { FaGithub, FaLinkedin, FaEnvelope, FaTwitter, FaArrowUp } from 'react-icons/fa';
+import { motion } from 'motion/react';
 
 interface FooterProps {
   onNavLinkClick: (pageId: string) => void;
@@ -46,7 +47,7 @@ export const Footer: React.FC<FooterProps> = ({ onNavLinkClick }) => {
 
       {/* Glass morphism card for content remains */}
       <div className="relative z-10 container mx-auto px-4 sm:px-6 max-w-7xl py-12 sm:py-16">
-        <div className="backdrop-blur-md bg-[var(--card-bg)] dark:bg-white/5 rounded-3xl p-8 sm:p-12 border border-black/10 dark:border-white/10 shadow-2xl">
+        <div className="card-embossed p-8 sm:p-12">
           <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 lg:gap-12">
             {/* Brand section */}
             <div className="lg:col-span-1">
@@ -71,38 +72,62 @@ export const Footer: React.FC<FooterProps> = ({ onNavLinkClick }) => {
                   href="https://github.com/eliudmichira" 
                   target="_blank" 
                   rel="noopener noreferrer" 
-                  className="group relative p-3 bg-[var(--surface-raised)] dark:bg-white/5 backdrop-blur-sm rounded-xl border border-black/10 dark:border-white/10 hover:border-[var(--color-accent-start)]/50 hover:bg-[var(--color-accent-start)]/10 transition-all duration-300" 
+                  className="lifted pill group relative p-3 w-11 h-11 flex items-center justify-center"
                   aria-label="Visit Eliud's GitHub profile"
                 >
-                  <FaGithub className="h-5 w-5 text-[var(--color-text-muted)] dark:text-gray-400 group-hover:text-[var(--color-accent-start)] transition-colors" />
+                  <motion.span
+                    whileHover={{ scale: 1.2, rotate: 10 }}
+                    whileTap={{ scale: 0.9, rotate: -10 }}
+                    transition={{ type: 'spring', stiffness: 300 }}
+                  >
+                    <FaGithub className="h-5 w-5 text-[var(--color-text-muted)] dark:text-gray-400 group-hover:text-[var(--color-accent-start)] transition-colors" />
+                  </motion.span>
                   <span className="absolute -top-8 left-1/2 transform -translate-x-1/2 px-2 py-1 bg-[var(--color-bg-surface)] dark:bg-gray-800 text-[var(--color-text)] dark:text-white rounded opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap shadow-md">GitHub</span>
                 </a>
                 <a 
-                  href="https://linkedin.com/in/eliudsamwel" 
+                  href="https://www.linkedin.com/in/eliud-samwel-72b8622b3" 
                   target="_blank" 
                   rel="noopener noreferrer" 
-                  className="group relative p-3 bg-[var(--surface-raised)] dark:bg-white/5 backdrop-blur-sm rounded-xl border border-black/10 dark:border-white/10 hover:border-[var(--color-accent-mid)]/50 hover:bg-[var(--color-accent-mid)]/10 transition-all duration-300" 
+                  className="lifted pill group relative p-3 w-11 h-11 flex items-center justify-center"
                   aria-label="Visit Eliud's LinkedIn profile"
                 >
-                  <FaLinkedin className="h-5 w-5 text-[var(--color-text-muted)] dark:text-gray-400 group-hover:text-[var(--color-accent-mid)] transition-colors" />
+                  <motion.span
+                    whileHover={{ scale: 1.2, rotate: 10 }}
+                    whileTap={{ scale: 0.9, rotate: -10 }}
+                    transition={{ type: 'spring', stiffness: 300 }}
+                  >
+                    <FaLinkedin className="h-5 w-5 text-[var(--color-text-muted)] dark:text-gray-400 group-hover:text-[var(--color-accent-mid)] transition-colors" />
+                  </motion.span>
                   <span className="absolute -top-8 left-1/2 transform -translate-x-1/2 px-2 py-1 bg-[var(--color-bg-surface)] dark:bg-gray-800 text-[var(--color-text)] dark:text-white rounded opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap shadow-md">LinkedIn</span>
                 </a>
                 <a 
                   href="https://x.com/mich_michira" 
                   target="_blank" 
                   rel="noopener noreferrer" 
-                  className="group relative p-3 bg-[var(--surface-raised)] dark:bg-white/5 backdrop-blur-sm rounded-xl border border-black/10 dark:border-white/10 hover:border-[var(--color-accent-end)]/50 hover:bg-[var(--color-accent-end)]/10 transition-all duration-300" 
+                  className="lifted pill group relative p-3 w-11 h-11 flex items-center justify-center"
                   aria-label="Visit Eliud's Twitter profile"
                 >
-                  <FaTwitter className="h-5 w-5 text-[var(--color-text-muted)] dark:text-gray-400 group-hover:text-[var(--color-accent-end)] transition-colors" />
+                  <motion.span
+                    whileHover={{ scale: 1.2, rotate: 10 }}
+                    whileTap={{ scale: 0.9, rotate: -10 }}
+                    transition={{ type: 'spring', stiffness: 300 }}
+                  >
+                    <FaTwitter className="h-5 w-5 text-[var(--color-text-muted)] dark:text-gray-400 group-hover:text-[var(--color-accent-end)] transition-colors" />
+                  </motion.span>
                   <span className="absolute -top-8 left-1/2 transform -translate-x-1/2 px-2 py-1 bg-[var(--color-bg-surface)] dark:bg-gray-800 text-[var(--color-text)] dark:text-white rounded opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap shadow-md">Twitter</span>
                 </a>
                 <a 
                   href="mailto:eliudmichira7@gmail.com" 
-                  className="group relative p-3 bg-[var(--surface-raised)] dark:bg-white/5 backdrop-blur-sm rounded-xl border border-black/10 dark:border-white/10 hover:border-[var(--color-accent-mid)]/50 hover:bg-[var(--color-accent-mid)]/10 transition-all duration-300" 
+                  className="lifted pill group relative p-3 w-11 h-11 flex items-center justify-center"
                   aria-label="Email Eliud Michira"
                 >
-                  <FaEnvelope className="h-5 w-5 text-[var(--color-text-muted)] dark:text-gray-400 group-hover:text-[var(--color-accent-mid)] transition-colors" />
+                  <motion.span
+                    whileHover={{ scale: 1.2, rotate: 10 }}
+                    whileTap={{ scale: 0.9, rotate: -10 }}
+                    transition={{ type: 'spring', stiffness: 300 }}
+                  >
+                    <FaEnvelope className="h-5 w-5 text-[var(--color-text-muted)] dark:text-gray-400 group-hover:text-[var(--color-accent-mid)] transition-colors" />
+                  </motion.span>
                   <span className="absolute -top-8 left-1/2 transform -translate-x-1/2 px-2 py-1 bg-[var(--color-bg-surface)] dark:bg-gray-800 text-[var(--color-text)] dark:text-white rounded opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap shadow-md">Email</span>
                 </a>
               </div>
@@ -181,7 +206,7 @@ export const Footer: React.FC<FooterProps> = ({ onNavLinkClick }) => {
           {/* Copyright and back to top */}
           <div className="mt-12 pt-8 border-t border-black/10 dark:border-white/10 flex flex-col sm:flex-row justify-between items-center">
             <p className="text-[var(--color-text-muted)] dark:text-gray-500 text-xs sm:text-sm mb-4 sm:mb-0">
-            &copy; {new Date().getFullYear()} Eliud Samwel Michira. All rights reserved.
+            &copy; {new Date().getFullYear()} Eliud Michira Samwel. All rights reserved.
           </p>
           
             {/* Back to top button */}
@@ -192,9 +217,14 @@ export const Footer: React.FC<FooterProps> = ({ onNavLinkClick }) => {
                 aria-label="Scroll to top"
               >
                 <span className="text-xs sm:text-sm">Back to top</span>
-                <div className="p-2 bg-[var(--surface-raised)] dark:bg-white/5 backdrop-blur-sm rounded-lg border border-black/10 dark:border-white/10 group-hover:border-[var(--color-accent-mid)]/50 group-hover:bg-[var(--color-accent-mid)]/10 transition-all duration-300">
+                <motion.div
+                  className="p-2 bg-[var(--surface-raised)] dark:bg-white/5 backdrop-blur-sm rounded-lg border border-black/10 dark:border-white/10 group-hover:border-[var(--color-accent-mid)]/50 group-hover:bg-[var(--color-accent-mid)]/10 transition-all duration-300"
+                  whileHover={{ scale: 1.2, rotate: 10 }}
+                  whileTap={{ scale: 0.9, rotate: -10 }}
+                  transition={{ type: 'spring', stiffness: 300 }}
+                >
                   <FaArrowUp className="h-3 w-3" />
-                </div>
+                </motion.div>
               </button>
             )}
           </div>

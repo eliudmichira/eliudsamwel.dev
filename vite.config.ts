@@ -1,6 +1,7 @@
 import path from 'path';
 import { defineConfig, loadEnv, Plugin } from 'vite';
 import { readFileSync, existsSync, mkdirSync, copyFileSync } from 'fs';
+import react from '@vitejs/plugin-react';
 
 // Plugin to inject mobile optimization meta tags
 const mobileOptimizationPlugin = (): Plugin => {
@@ -55,7 +56,8 @@ const copyAssetsPlugin = (): Plugin => {
         // Copy styles
         const styleFiles = [
           'mobile.css',
-          'theme.css'
+          'theme.css',
+          'emboss.css'
         ];
         
         styleFiles.forEach(file => {
@@ -76,6 +78,7 @@ const copyAssetsPlugin = (): Plugin => {
 export default defineConfig(({ mode }) => {
     const env = loadEnv(mode, '.', '');
     return {
+      plugins: [react(), mobileOptimizationPlugin(), copyAssetsPlugin()],
       define: {
         'process.env.API_KEY': JSON.stringify(env.GEMINI_API_KEY),
         'process.env.GEMINI_API_KEY': JSON.stringify(env.GEMINI_API_KEY)
@@ -89,13 +92,13 @@ export default defineConfig(({ mode }) => {
           'framer-motion': path.resolve(__dirname, 'node_modules/framer-motion'),
         }
       },
-      plugins: [
-        mobileOptimizationPlugin(),
-        copyAssetsPlugin()
-      ],
+      // Configure asset handling
+      assetsInclude: ['**/*.png', '**/*.jpg', '**/*.jpeg', '**/*.gif', '**/*.svg', '**/*.webp'],
       build: {
         outDir: 'dist',
         minify: 'esbuild',
+        // Ensure assets are properly included
+        assetsDir: 'assets',
         rollupOptions: {
           output: {
             // Better code splitting for mobile optimizations
@@ -106,6 +109,20 @@ export default defineConfig(({ mode }) => {
               if (id.includes('mobile') || id.includes('responsive')) {
                 return 'mobile';
               }
+            },
+            // Preserve asset names for better debugging
+            assetFileNames: (assetInfo) => {
+              const info = assetInfo.name?.split('.') || [];
+              const extType = info[info.length - 1] || 'assets';
+              
+              // Keep image files in predictable paths
+              if (/png|jpe?g|svg|gif|tiff|bmp|ico|webp/i.test(extType)) {
+                return `images/[name]-[hash][extname]`;
+              }
+              if (/css/i.test(extType)) {
+                return `css/[name]-[hash][extname]`;
+              }
+              return `assets/[name]-[hash][extname]`;
             }
           }
         }

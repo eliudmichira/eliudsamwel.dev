@@ -1,13 +1,134 @@
-import React, { useState, useEffect, useRef } from 'react';
-import { 
+import React, { useState, useEffect, useRef, useCallback, useMemo } from 'react';
+import type { FC } from 'react';
+import { motion, AnimatePresence } from 'motion/react';
+import type { LucideIcon } from 'lucide-react';
+import {
   Zap, Star, Bell, Menu, X, Loader, 
   Grid, Edit, Eye, Mail, ToggleRight,
   Check, Search, ShoppingCart, User, ChevronDown,
   Home, Plus, FileText, Settings, ArrowRight,
   Play, EyeOff, Minus, Calendar, ImageIcon, Bookmark,
   Trash2, Send, Share2, Phone, Info, ChevronRight,
-  ChevronLeft, ChevronUp, Upload
+  ChevronLeft, ChevronUp, Upload, Filter, Heart, Palette
 } from 'lucide-react';
+
+// Import the new LoginLayoutsShowcase
+import LoginLayoutsShowcase from './LoginLayoutsShowcase';
+// Import the DesignLanguageShowcase
+import DesignLanguageShowcase from './DesignLanguageShowcase';
+// Import styles for creative toggles
+import '../../styles/showcase-toggles.css';
+
+// Enhanced component metadata interface
+interface ComponentMetadata {
+  difficulty: 'beginner' | 'intermediate' | 'advanced';
+  estimatedTime: string;
+  useCase: string[];
+  dependencies: string[];
+  accessibility: 'excellent' | 'good' | 'needs-improvement';
+  responsive: boolean;
+  popular: boolean;
+  new: boolean;
+}
+
+// Enhanced section interface with metadata
+interface EnhancedSection {
+  id: string;
+  name: string;
+  icon: React.ReactNode;
+  category: 'essentials' | 'interactive' | 'specialized' | 'experimental';
+  metadata: ComponentMetadata;
+  description: string;
+}
+
+// Helper function to get difficulty color
+const getDifficultyColor = (difficulty: string) => {
+  switch (difficulty) {
+    case 'beginner': return 'text-green-600 bg-green-100 dark:text-green-400 dark:bg-green-900/20';
+    case 'intermediate': return 'text-amber-600 bg-amber-100 dark:text-amber-400 dark:bg-amber-900/20';
+    case 'advanced': return 'text-red-600 bg-red-100 dark:text-red-400 dark:bg-red-900/20';
+    default: return 'text-gray-600 bg-gray-100 dark:text-gray-400 dark:bg-gray-900/20';
+  }
+};
+
+// Helper function to get accessibility color
+const getAccessibilityColor = (accessibility: string) => {
+  switch (accessibility) {
+    case 'excellent': return 'text-green-600 bg-green-100 dark:text-green-400 dark:bg-green-900/20';
+    case 'good': return 'text-amber-600 bg-amber-100 dark:text-amber-400 dark:bg-amber-900/20';
+    case 'needs-improvement': return 'text-red-600 bg-red-100 dark:text-red-400 dark:bg-red-900/20';
+    default: return 'text-gray-600 bg-gray-100 dark:text-gray-400 dark:bg-gray-900/20';
+  }
+};
+
+// Enhanced component metadata display component
+const ComponentMetadataDisplay: React.FC<{ section: EnhancedSection }> = ({ section }) => {
+  return (
+    <div className="text-center mb-12">
+      <div className="flex items-center justify-center gap-4 mb-6">
+        <div className="w-12 h-12 bg-gradient-to-br from-[var(--accent-primary)] to-[var(--accent-secondary)] rounded-xl flex items-center justify-center text-white text-xl">
+          {section.icon}
+        </div>
+        <div>
+          <h2 className="text-4xl font-bold mb-2 text-[var(--color-text-primary)]">{section.name}</h2>
+          <p className="text-lg text-[var(--color-text-muted)] max-w-2xl">
+            {section.description}
+          </p>
+        </div>
+      </div>
+      
+      {/* Metadata Pills */}
+      <div className="flex items-center justify-center gap-3 flex-wrap mb-6">
+        <span className={`px-3 py-1 rounded-full text-sm font-medium ${getDifficultyColor(section.metadata.difficulty)}`}>
+          {section.metadata.difficulty.charAt(0).toUpperCase() + section.metadata.difficulty.slice(1)}
+        </span>
+        <span className="px-3 py-1 rounded-full text-sm font-medium bg-blue-100 text-blue-600 dark:bg-blue-900/20 dark:text-blue-400">
+          ⏱️ {section.metadata.estimatedTime}
+        </span>
+        <span className={`px-3 py-1 rounded-full text-sm font-medium ${getAccessibilityColor(section.metadata.accessibility)}`}>
+          ♿ {section.metadata.accessibility === 'needs-improvement' ? 'Fair A11y' : `${section.metadata.accessibility} A11y`}
+        </span>
+        {section.metadata.responsive && (
+          <span className="px-3 py-1 rounded-full text-sm font-medium bg-purple-100 text-purple-600 dark:bg-purple-900/20 dark:text-purple-400">
+            📱 Responsive
+          </span>
+        )}
+        {section.metadata.popular && (
+          <span className="px-3 py-1 rounded-full text-sm font-medium bg-amber-100 text-amber-600 dark:bg-amber-900/20 dark:text-amber-400">
+            ⭐ Popular
+          </span>
+        )}
+        {section.metadata.new && (
+          <span className="px-3 py-1 rounded-full text-sm font-medium bg-green-100 text-green-600 dark:bg-green-900/20 dark:text-green-400">
+            ✨ New
+          </span>
+        )}
+      </div>
+      
+      {/* Use Cases */}
+      <div className="flex items-center justify-center gap-2 flex-wrap mb-4">
+        <span className="text-sm text-[var(--color-text-muted)]">Best for:</span>
+        {section.metadata.useCase.map((useCase, index) => (
+          <span key={index} className="px-2 py-1 bg-gray-100 text-gray-600 rounded text-sm dark:bg-gray-800 dark:text-gray-400">
+            {useCase}
+          </span>
+        ))}
+      </div>
+      
+      {/* Dependencies */}
+      {section.metadata.dependencies.length > 0 && (
+        <div className="flex items-center justify-center gap-2 flex-wrap">
+          <span className="text-sm text-[var(--color-text-muted)]">Dependencies:</span>
+          {section.metadata.dependencies.map((dep, index) => (
+            <code key={index} className="px-2 py-1 bg-gray-100 text-gray-700 rounded text-xs font-mono dark:bg-gray-800 dark:text-gray-300">
+              {dep}
+            </code>
+          ))}
+        </div>
+      )}
+    </div>
+  );
+};
 
 // Content for the new "Creative Toggles" section
 const CreativeTogglesSectionContent: React.FC = () => {
@@ -73,6 +194,11 @@ const CreativeTogglesSectionContent: React.FC = () => {
     { id: 6, title: '3D Flip', description: '3D rotating card effect' },
     { id: 7, title: 'Neon Glow', description: 'Cyberpunk neon effect' },
     { id: 8, title: 'Particle Burst', description: 'Explosive particle animation' },
+    // New creative toggles
+    { id: 9, title: 'Aurora Switch', description: 'Animated aurora gradient toggle' },
+    { id: 10, title: 'Emoji Parade', description: 'Toggle to unleash a parade of emojis' },
+    { id: 11, title: 'Confetti Celebration', description: 'Confetti burst animation on toggle' },
+    { id: 12, title: 'Firefly Night', description: 'Fireflies light up the toggle at night' },
   ];
 
   return (
@@ -145,6 +271,97 @@ const CreativeTogglesSectionContent: React.FC = () => {
                     <div className="slider"></div>
                 </div>
               )}
+              {toggle.id === 9 && (
+                <div className={`toggle-9-actual ${toggleStates[index] ? 'active' : ''}`} style={{position: 'relative', width: 100, height: 40, borderRadius: 20, overflow: 'hidden', background: toggleStates[index] ? 'linear-gradient(90deg, #7f7fd5, #86a8e7, #91eac9, #f9d29d, #ffdde1)' : 'linear-gradient(90deg, #232526, #414345)'}}>
+                  {/* Aurora effect: animated gradient waves */}
+                  <div style={{position: 'absolute', top: 0, left: 0, width: '100%', height: '100%', pointerEvents: 'none'}}>
+                    <motion.div
+                      animate={{ x: toggleStates[index] ? [0, 40, 0] : 0 }}
+                      transition={{ repeat: Infinity, duration: 2, ease: 'easeInOut' }}
+                      style={{ width: '100%', height: 10, background: 'rgba(255,255,255,0.2)', borderRadius: 10, filter: 'blur(4px)', position: 'absolute', top: 10 }}
+                    />
+                    <motion.div
+                      animate={{ x: toggleStates[index] ? [0, -40, 0] : 0 }}
+                      transition={{ repeat: Infinity, duration: 2.5, ease: 'easeInOut' }}
+                      style={{ width: '100%', height: 10, background: 'rgba(0,255,255,0.15)', borderRadius: 10, filter: 'blur(6px)', position: 'absolute', top: 22 }}
+                    />
+                  </div>
+                </div>
+              )}
+              {toggle.id === 10 && (
+                <div className={`toggle-10-actual ${toggleStates[index] ? 'active' : ''}`} style={{position: 'relative', width: 100, height: 40, borderRadius: 20, background: '#fff', overflow: 'hidden', display: 'flex', alignItems: 'center', justifyContent: 'center'}}>
+                  {/* Emoji Parade: parade of emojis when active */}
+                  {toggleStates[index] ? (
+                    <motion.div initial={{ y: 30, opacity: 0 }} animate={{ y: 0, opacity: 1 }} transition={{ type: 'spring', stiffness: 200 }} style={{ display: 'flex', gap: 4 }}>
+                      <span role="img" aria-label="party">🎉</span>
+                      <span role="img" aria-label="star">⭐</span>
+                      <span role="img" aria-label="rocket">🚀</span>
+                      <span role="img" aria-label="fire">🔥</span>
+                      <span role="img" aria-label="sparkles">✨</span>
+                    </motion.div>
+                  ) : (
+                    <span role="img" aria-label="smile">🙂</span>
+                  )}
+                </div>
+              )}
+              {toggle.id === 11 && (
+                <div className={`toggle-11-actual ${toggleStates[index] ? 'active' : ''}`} style={{position: 'relative', width: 100, height: 40, borderRadius: 20, background: '#f9fafb', overflow: 'hidden'}}>
+                  {/* Confetti: burst of confetti when toggled on */}
+                  {toggleStates[index] && (
+                    <motion.div
+                      initial={{ scale: 0.7, opacity: 0 }}
+                      animate={{ scale: 1, opacity: 1 }}
+                      transition={{ type: 'spring', stiffness: 200 }}
+                      style={{ position: 'absolute', left: 0, top: 0, width: '100%', height: '100%', pointerEvents: 'none' }}
+                    >
+                      {[...Array(12)].map((_, i) => (
+                        <motion.div
+                          key={i}
+                          initial={{ y: 20, opacity: 0 }}
+                          animate={{ y: [-10 - Math.random()*20, 40 + Math.random()*20], opacity: [1, 0] }}
+                          transition={{ duration: 1.2, delay: i * 0.05 }}
+                          style={{
+                            position: 'absolute',
+                            left: `${8 + i * 7}%`,
+                            top: 10,
+                            width: 6,
+                            height: 6,
+                            borderRadius: 3,
+                            background: `hsl(${i * 30}, 80%, 60%)`,
+                          }}
+                        />
+                      ))}
+                    </motion.div>
+                  )}
+                  <span style={{ position: 'absolute', left: '50%', top: '50%', transform: 'translate(-50%,-50%)', fontSize: 18 }}>🎊</span>
+                </div>
+              )}
+              {toggle.id === 12 && (
+                <div className={`toggle-12-actual ${toggleStates[index] ? 'active' : ''}`} style={{position: 'relative', width: 100, height: 40, borderRadius: 20, background: toggleStates[index] ? '#232526' : '#111', overflow: 'hidden'}}>
+                  {/* Firefly Night: animated fireflies when active */}
+                  {toggleStates[index] && (
+                    <>
+                      {[...Array(6)].map((_, i) => (
+                        <motion.div
+                          key={i}
+                          initial={{ opacity: 0, scale: 0.5, x: 10 + i*12, y: 20 }}
+                          animate={{ opacity: [0, 1, 0], scale: [0.5, 1.2, 0.5], x: [10 + i*12, 80 - i*10], y: [20, 5 + Math.random()*20, 30] }}
+                          transition={{ duration: 2 + Math.random(), repeat: Infinity, delay: i * 0.3 }}
+                          style={{
+                            position: 'absolute',
+                            width: 8,
+                            height: 8,
+                            borderRadius: 8,
+                            background: 'radial-gradient(circle, #fff700 60%, #fff0 100%)',
+                            boxShadow: '0 0 8px 2px #fff700',
+                          }}
+                        />
+                      ))}
+                    </>
+                  )}
+                  <span style={{ position: 'absolute', left: '50%', top: '50%', transform: 'translate(-50%,-50%)', fontSize: 18 }}>🌙</span>
+                </div>
+              )}
             </div>
             <p className="text-sm text-center text-[var(--secondary-text)] mt-3">{toggle.description}</p>
           </div>
@@ -156,7 +373,7 @@ const CreativeTogglesSectionContent: React.FC = () => {
 // End of CreativeTogglesSectionContent
 
 export const CompleteUIShowcase: React.FC = () => {
-  const [activeSection, setActiveSection] = useState('preloaders');
+  const [activeSection, setActiveSection] = useState('hero');
   const [cursorPosition, setCursorPosition] = useState({ x: 0, y: 0 });
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [formData, setFormData] = useState({ email: '', password: '' });
@@ -166,7 +383,14 @@ export const CompleteUIShowcase: React.FC = () => {
   const [activeTab, setActiveTab] = useState(0);
   const [notifications, setNotifications] = useState<number[]>([]);
   const [progress, setProgress] = useState(0);
-
+  
+  // Enhanced navigation state
+  const [searchQuery, setSearchQuery] = useState('');
+  const [selectedCategory, setSelectedCategory] = useState<string>('all');
+  const [selectedDifficulty, setSelectedDifficulty] = useState<string>('all');
+  const [showFilters, setShowFilters] = useState(false);
+  const [favorites, setFavorites] = useState<string[]>([]);
+  
   // Simulate progress for new progress indicators
   useEffect(() => {
     const timer = setInterval(() => {
@@ -183,18 +407,225 @@ export const CompleteUIShowcase: React.FC = () => {
     return () => window.removeEventListener('mousemove', handleMouseMove);
   }, []);
 
-  const sections = [
-    { id: 'preloaders', name: 'Preloaders', icon: <Loader className="w-4 h-4" /> },
-    { id: 'navigation', name: 'Navigation Bars', icon: <Menu className="w-4 h-4" /> },
-    { id: 'cursors', name: 'Custom Cursors', icon: <Eye className="w-4 h-4" /> },
-    { id: 'hero', name: 'Hero Sections', icon: <Zap className="w-4 h-4" /> },
-    { id: 'forms', name: 'Form Elements', icon: <Edit className="w-4 h-4" /> },
-    { id: 'cards', name: 'Card Designs', icon: <Grid className="w-4 h-4" /> },
-    { id: 'modals', name: 'Modals & Popups', icon: <Bell className="w-4 h-4" /> },
-    { id: 'footers', name: 'Footer Designs', icon: <Mail className="w-4 h-4" /> },
-    { id: 'creative-toggles', name: 'Creative Toggles', icon: <ToggleRight className="w-4 h-4" /> },
-    { id: 'misc', name: 'Miscellaneous', icon: <Star className="w-4 h-4" /> }
+  // Enhanced sections with metadata
+  const sections: EnhancedSection[] = [
+    { 
+      id: 'hero', 
+      name: 'Hero Sections', 
+      icon: <Zap className="w-4 h-4" />,
+      category: 'essentials',
+      description: 'Eye-catching landing page sections',
+      metadata: {
+        difficulty: 'beginner',
+        estimatedTime: '15 minutes',
+        useCase: ['landing-page', 'portfolio', 'marketing'],
+        dependencies: ['framer-motion'],
+        accessibility: 'excellent',
+        responsive: true,
+        popular: true,
+        new: false
+      }
+    },
+    { 
+      id: 'design-languages', 
+      name: 'Design Languages', 
+      icon: <Palette className="w-4 h-4" />,
+      category: 'essentials',
+      description: 'Complete design system showcases with 14 unique styles',
+      metadata: {
+        difficulty: 'intermediate',
+        estimatedTime: '45 minutes',
+        useCase: ['branding', 'portfolio', 'showcase', 'inspiration'],
+        dependencies: ['tailwind', 'lucide-react'],
+        accessibility: 'excellent',
+        responsive: true,
+        popular: true,
+        new: true
+      }
+    },
+    { 
+      id: 'cards', 
+      name: 'Card Designs', 
+      icon: <Grid className="w-4 h-4" />,
+      category: 'essentials',
+      description: 'Flexible content containers',
+      metadata: {
+        difficulty: 'beginner',
+        estimatedTime: '10 minutes',
+        useCase: ['dashboard', 'portfolio', 'e-commerce'],
+        dependencies: ['tailwind'],
+        accessibility: 'excellent',
+        responsive: true,
+        popular: true,
+        new: false
+      }
+    },
+    { 
+      id: 'navigation', 
+      name: 'Navigation Bars', 
+      icon: <Menu className="w-4 h-4" />,
+      category: 'essentials',
+      description: 'Website navigation components',
+      metadata: {
+        difficulty: 'intermediate',
+        estimatedTime: '25 minutes',
+        useCase: ['website', 'dashboard', 'mobile-app'],
+        dependencies: ['react-router', 'framer-motion'],
+        accessibility: 'excellent',
+        responsive: true,
+        popular: true,
+        new: false
+      }
+    },
+    { 
+      id: 'forms', 
+      name: 'Form Elements', 
+      icon: <Edit className="w-4 h-4" />,
+      category: 'essentials',
+      description: 'Interactive form components',
+      metadata: {
+        difficulty: 'intermediate',
+        estimatedTime: '20 minutes',
+        useCase: ['contact', 'registration', 'checkout'],
+        dependencies: ['react-hook-form'],
+        accessibility: 'excellent',
+        responsive: true,
+        popular: true,
+        new: false
+      }
+    },
+    { 
+      id: 'modals', 
+      name: 'Modals & Popups', 
+      icon: <Bell className="w-4 h-4" />,
+      category: 'interactive',
+      description: 'Overlay dialogs and notifications',
+      metadata: {
+        difficulty: 'intermediate',
+        estimatedTime: '30 minutes',
+        useCase: ['notifications', 'confirmations', 'details'],
+        dependencies: ['framer-motion', 'focus-trap'],
+        accessibility: 'good',
+        responsive: true,
+        popular: true,
+        new: false
+      }
+    },
+    { 
+      id: 'login-layouts', 
+      name: 'Login Layouts', 
+      icon: <User className="w-4 h-4" />,
+      category: 'specialized',
+      description: 'Authentication interface designs',
+      metadata: {
+        difficulty: 'intermediate',
+        estimatedTime: '35 minutes',
+        useCase: ['authentication', 'dashboard', 'saas'],
+        dependencies: ['react-hook-form', 'validation'],
+        accessibility: 'excellent',
+        responsive: true,
+        popular: false,
+        new: false
+      }
+    },
+    { 
+      id: 'preloaders', 
+      name: 'Preloaders', 
+      icon: <Loader className="w-4 h-4" />,
+      category: 'specialized',
+      description: 'Loading animations and indicators',
+      metadata: {
+        difficulty: 'beginner',
+        estimatedTime: '10 minutes',
+        useCase: ['loading', 'feedback', 'transitions'],
+        dependencies: ['css-animations'],
+        accessibility: 'good',
+        responsive: true,
+        popular: false,
+        new: false
+      }
+    },
+    { 
+      id: 'footers', 
+      name: 'Footer Designs', 
+      icon: <Mail className="w-4 h-4" />,
+      category: 'specialized',
+      description: 'Website footer components',
+      metadata: {
+        difficulty: 'beginner',
+        estimatedTime: '15 minutes',
+        useCase: ['website', 'newsletter', 'links'],
+        dependencies: ['react-router'],
+        accessibility: 'excellent',
+        responsive: true,
+        popular: false,
+        new: false
+      }
+    },
+    { 
+      id: 'creative-toggles', 
+      name: 'Creative Toggles', 
+      icon: <ToggleRight className="w-4 h-4" />,
+      category: 'interactive',
+      description: 'Animated theme and state toggles',
+      metadata: {
+        difficulty: 'advanced',
+        estimatedTime: '45 minutes',
+        useCase: ['theme-switching', 'settings', 'creative'],
+        dependencies: ['css-animations', 'state-management'],
+        accessibility: 'good',
+        responsive: true,
+        popular: false,
+        new: true
+      }
+    },
+    { 
+      id: 'cursors', 
+      name: 'Custom Cursors', 
+      icon: <Eye className="w-4 h-4" />,
+      category: 'experimental',
+      description: 'Interactive cursor effects',
+      metadata: {
+        difficulty: 'advanced',
+        estimatedTime: '40 minutes',
+        useCase: ['creative', 'portfolio', 'interactive'],
+        dependencies: ['mouse-events', 'animations'],
+        accessibility: 'needs-improvement',
+        responsive: false,
+        popular: false,
+        new: false
+      }
+    },
+    { 
+      id: 'misc', 
+      name: 'Miscellaneous', 
+      icon: <Star className="w-4 h-4" />,
+      category: 'experimental',
+      description: 'Various experimental components',
+      metadata: {
+        difficulty: 'intermediate',
+        estimatedTime: '20 minutes',
+        useCase: ['various', 'experimental', 'utility'],
+        dependencies: ['various'],
+        accessibility: 'good',
+        responsive: true,
+        popular: false,
+        new: false
+      }
+    }
   ];
+
+  // Filter sections based on search and filters
+  const filteredSections = sections.filter(section => {
+    const matchesSearch = section.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
+                         section.description.toLowerCase().includes(searchQuery.toLowerCase()) ||
+                         section.metadata.useCase.some(use => use.toLowerCase().includes(searchQuery.toLowerCase()));
+    
+    const matchesCategory = selectedCategory === 'all' || section.category === selectedCategory;
+    const matchesDifficulty = selectedDifficulty === 'all' || section.metadata.difficulty === selectedDifficulty;
+    
+    return matchesSearch && matchesCategory && matchesDifficulty;
+  });
 
   const addNotification = () => {
     const id = Date.now();
@@ -203,6 +634,30 @@ export const CompleteUIShowcase: React.FC = () => {
       setNotifications(prev => prev.filter(n => n !== id));
     }, 3000);
   };
+
+  const toggleFavorite = (sectionId: string) => {
+    setFavorites(prev => 
+      prev.includes(sectionId) 
+        ? prev.filter(id => id !== sectionId)
+        : [...prev, sectionId]
+    );
+  };
+
+  // Categories for filtering
+  const categories = [
+    { id: 'all', name: 'All Categories', count: sections.length },
+    { id: 'essentials', name: 'Essentials', count: sections.filter(s => s.category === 'essentials').length },
+    { id: 'interactive', name: 'Interactive', count: sections.filter(s => s.category === 'interactive').length },
+    { id: 'specialized', name: 'Specialized', count: sections.filter(s => s.category === 'specialized').length },
+    { id: 'experimental', name: 'Experimental', count: sections.filter(s => s.category === 'experimental').length }
+  ];
+
+  const difficulties = [
+    { id: 'all', name: 'All Levels' },
+    { id: 'beginner', name: 'Beginner' },
+    { id: 'intermediate', name: 'Intermediate' },
+    { id: 'advanced', name: 'Advanced' }
+  ];
 
   return (
     <div className={`complete-ui-showcase min-h-screen bg-gradient-to-br from-gray-50 to-gray-100 dark:from-gray-900 dark:to-black ${activeSection === 'cursors' ? 'custom-cursor-active' : ''}`}>
@@ -245,78 +700,368 @@ export const CompleteUIShowcase: React.FC = () => {
         </>
       )}
 
-      {/* Header */}
-      <header className="sticky top-0 z-40 bg-[var(--color-bg-card)]/80 dark:bg-[var(--color-bg-card)]/80 backdrop-blur-lg border-b border-[var(--color-border)] dark:border-[var(--color-border)]">
+      {/* Enhanced Header with Search and Filters */}
+      <header className="sticky top-0 z-40 bg-[var(--color-bg-card)]/95 backdrop-blur-lg border-b border-[var(--color-border)]">
         <div className="container mx-auto px-4 py-4">
-          <div className="flex items-center justify-between">
-            <h1 className="text-2xl font-bold bg-gradient-to-r from-[var(--accent-primary)] to-[var(--accent-secondary)] bg-clip-text text-transparent">
-              UI Component Library
-            </h1>
-            <nav className="hidden md:flex items-center gap-4 overflow-x-auto flex-nowrap py-1">
-              {sections.map(section => (
-                <button
-                  key={section.id}
-                  onClick={() => setActiveSection(section.id)}
-                  className={`flex items-center gap-2 px-3 py-2 rounded-lg transition-all ${
-                    activeSection === section.id
-                      ? 'bg-[var(--accent-light)] text-[var(--accent-primary)] dark:bg-[var(--accent-hover)] dark:text-[var(--accent-light)] font-semibold' 
-                      : 'text-[var(--color-text-muted)] hover:bg-[var(--color-hover-bg)] hover:text-[var(--color-text-secondary)] dark:text-[var(--color-text-muted)] dark:hover:bg-[var(--color-hover-bg)] dark:hover:text-[var(--color-text-secondary)]'
-                  }`}
-                >
-                  {section.icon}
-                  <span className="text-sm font-medium">{section.name}</span>
-                </button>
-              ))}
-            </nav>
-            <button 
-              onClick={() => setIsMenuOpen(!isMenuOpen)}
-              className="md:hidden p-2 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-800"
-            >
-              <Menu className="w-6 h-6" />
-            </button>
+          {/* Main header row */}
+          <div className="flex items-center justify-between mb-4">
+            <div className="flex items-center gap-4">
+              <h1 className="text-2xl font-bold bg-gradient-to-r from-[var(--accent-primary)] to-[var(--accent-secondary)] bg-clip-text text-transparent">
+                UI Component Library
+              </h1>
+              <div className="hidden md:flex items-center gap-2">
+                <span className="text-sm text-[var(--color-text-muted)]">
+                  {filteredSections.length} components
+                </span>
+                {favorites.length > 0 && (
+                  <span className="text-xs px-2 py-1 bg-red-100 text-red-600 rounded-full dark:bg-red-900/20 dark:text-red-400">
+                    {favorites.length} favorites
+                  </span>
+                )}
+              </div>
+            </div>
+            
+            <div className="flex items-center gap-3">
+              {/* Search Input */}
+              <div className="relative hidden md:block">
+                <Search size={16} className="absolute left-3 top-1/2 transform -translate-y-1/2 text-[var(--color-text-muted)]" />
+                <input
+                  type="text"
+                  placeholder="Search components..."
+                  value={searchQuery}
+                  onChange={(e) => setSearchQuery(e.target.value)}
+                  className="pl-10 pr-4 py-2 w-64 bg-[var(--color-bg-input)] border border-[var(--color-border)] rounded-lg focus:outline-none focus:ring-2 focus:ring-[var(--accent-primary)] focus:border-transparent text-[var(--color-text-primary)] placeholder-[var(--color-text-muted)]"
+                  aria-label="Search components by name, description, or use case"
+                />
+                {searchQuery && (
+                  <button
+                    onClick={() => setSearchQuery('')}
+                    className="absolute right-3 top-1/2 transform -translate-y-1/2 text-[var(--color-text-muted)] hover:text-[var(--color-text-primary)]"
+                    aria-label="Clear search"
+                  >
+                    <X className="w-4 h-4" />
+                  </button>
+                )}
+              </div>
+              
+              {/* Filter Toggle */}
+              <button
+                onClick={() => setShowFilters(!showFilters)}
+                className={`p-2 rounded-lg transition-colors ${showFilters ? 'bg-[var(--accent-light)] text-[var(--accent-primary)]' : 'hover:bg-[var(--color-hover-bg)]'}`}
+                aria-label="Toggle filters"
+                aria-expanded={showFilters}
+              >
+                <Filter className="w-5 h-5" />
+              </button>
+              
+              {/* Mobile Menu Toggle */}
+              <button 
+                onClick={() => setIsMenuOpen(!isMenuOpen)}
+                className="md:hidden p-2 rounded-lg hover:bg-[var(--color-hover-bg)]"
+                aria-label="Open navigation menu"
+                aria-expanded={isMenuOpen}
+              >
+                <Menu className="w-6 h-6" />
+              </button>
+            </div>
           </div>
+
+          {/* Mobile Search */}
+          <div className="md:hidden mb-4">
+            <div className="relative">
+              <Search size={16} className="absolute left-3 top-1/2 transform -translate-y-1/2 text-[var(--color-text-muted)]" />
+              <input
+                type="text"
+                placeholder="Search components..."
+                value={searchQuery}
+                onChange={(e) => setSearchQuery(e.target.value)}
+                className="w-full pl-10 pr-4 py-2 bg-[var(--color-bg-input)] border border-[var(--color-border)] rounded-lg focus:outline-none focus:ring-2 focus:ring-[var(--accent-primary)] text-[var(--color-text-primary)]"
+              />
+            </div>
+          </div>
+          
+          {/* Filters Panel */}
+          {showFilters && (
+            <div className="bg-[var(--color-bg-surface)] border border-[var(--color-border)] rounded-lg p-4 mb-4">
+              <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                {/* Category Filter */}
+                <div>
+                  <label className="block text-sm font-medium text-[var(--color-text-primary)] mb-2">
+                    Category
+                  </label>
+                  <select
+                    value={selectedCategory}
+                    onChange={(e) => setSelectedCategory(e.target.value)}
+                    className="w-full p-2 bg-[var(--color-bg-input)] border border-[var(--color-border)] rounded-md focus:outline-none focus:ring-2 focus:ring-[var(--accent-primary)] text-[var(--color-text-primary)]"
+                  >
+                    {categories.map(category => (
+                      <option key={category.id} value={category.id}>
+                        {category.name} ({category.count})
+                      </option>
+                    ))}
+                  </select>
+                </div>
+                
+                {/* Difficulty Filter */}
+                <div>
+                  <label className="block text-sm font-medium text-[var(--color-text-primary)] mb-2">
+                    Difficulty
+                  </label>
+                  <select
+                    value={selectedDifficulty}
+                    onChange={(e) => setSelectedDifficulty(e.target.value)}
+                    className="w-full p-2 bg-[var(--color-bg-input)] border border-[var(--color-border)] rounded-md focus:outline-none focus:ring-2 focus:ring-[var(--accent-primary)] text-[var(--color-text-primary)]"
+                  >
+                    {difficulties.map(difficulty => (
+                      <option key={difficulty.id} value={difficulty.id}>
+                        {difficulty.name}
+                      </option>
+                    ))}
+                  </select>
+                </div>
+                
+                {/* Quick Filters */}
+                <div>
+                  <label className="block text-sm font-medium text-[var(--color-text-primary)] mb-2">
+                    Quick Filters
+                  </label>
+                  <div className="flex flex-wrap gap-2">
+                    <button
+                      onClick={() => {
+                        const popularSections = sections.filter(s => s.metadata.popular);
+                        if (popularSections.length > 0) {
+                          setActiveSection(popularSections[0].id);
+                        }
+                      }}
+                      className="px-3 py-1 text-xs bg-[var(--accent-light)] text-[var(--accent-primary)] rounded-full hover:bg-[var(--accent-hover)] transition-colors"
+                    >
+                      Popular
+                    </button>
+                    <button
+                      onClick={() => {
+                        const newSections = sections.filter(s => s.metadata.new);
+                        if (newSections.length > 0) {
+                          setActiveSection(newSections[0].id);
+                        }
+                      }}
+                      className="px-3 py-1 text-xs bg-green-100 text-green-600 rounded-full hover:bg-green-200 dark:bg-green-900/20 dark:text-green-400 transition-colors"
+                    >
+                      New
+                    </button>
+                    {favorites.length > 0 && (
+                      <button
+                        onClick={() => setActiveSection(favorites[0])}
+                        className="px-3 py-1 text-xs bg-red-100 text-red-600 rounded-full hover:bg-red-200 dark:bg-red-900/20 dark:text-red-400 transition-colors"
+                      >
+                        Favorites
+                      </button>
+                    )}
+                  </div>
+                </div>
+              </div>
+            </div>
+          )}
+
+          {/* Enhanced Navigation */}
+          <nav className="hidden md:block">
+            <div className="flex items-center gap-2 overflow-x-auto pb-2">
+              {filteredSections.map(section => {
+                const isActive = activeSection === section.id;
+                const isFavorite = favorites.includes(section.id);
+                
+                return (
+                  <div key={section.id} className="relative flex-shrink-0">
+                    <button
+                      onClick={() => setActiveSection(section.id)}
+                      className={`flex items-center gap-2 px-3 py-2 rounded-lg transition-all magnetic cursor-interactive ${
+                        isActive
+                          ? 'bg-[var(--accent-light)] text-[var(--accent-primary)] font-semibold shadow-sm' 
+                          : 'text-[var(--color-text-muted)] hover:bg-[var(--color-hover-bg)] hover:text-[var(--color-text-primary)]'
+                      }`}
+                      aria-current={isActive ? 'page' : undefined}
+                    >
+                      {section.icon}
+                      <span className="text-sm font-medium">{section.name}</span>
+                      {section.metadata.new && (
+                        <span className="ml-1 w-2 h-2 bg-green-500 rounded-full" aria-label="New component"></span>
+                      )}
+                      {section.metadata.popular && (
+                        <Star className="w-3 h-3 fill-amber-400 text-amber-400" aria-label="Popular component" />
+                      )}
+                    </button>
+                    
+                    {/* Favorite Toggle */}
+                    <button
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        toggleFavorite(section.id);
+                      }}
+                      className={`absolute -top-1 -right-1 w-5 h-5 rounded-full flex items-center justify-center transition-colors magnetic cursor-interactive ${
+                        isFavorite 
+                          ? 'bg-red-500 text-white' 
+                          : 'bg-[var(--color-bg-surface)] border border-[var(--color-border)] text-[var(--color-text-muted)] hover:text-red-500'
+                      }`}
+                      aria-label={isFavorite ? `Remove ${section.name} from favorites` : `Add ${section.name} to favorites`}
+                    >
+                      <Heart className={`w-3 h-3 ${isFavorite ? 'fill-current' : ''}`} />
+                    </button>
+                  </div>
+                );
+              })}
+            </div>
+          </nav>
         </div>
       </header>
 
-      {/* Mobile Menu */}
+      {/* Enhanced Mobile Menu */}
       {isMenuOpen && (
         <div className="fixed inset-0 z-50 md:hidden">
           <div className="absolute inset-0 bg-black/50" onClick={() => setIsMenuOpen(false)}></div>
-          <div className="absolute right-0 top-0 h-full w-64 bg-white dark:bg-gray-900 shadow-xl">
+          <div className="absolute right-0 top-0 h-full w-80 bg-[var(--color-bg-card)] shadow-xl overflow-y-auto">
             <div className="p-4">
-              <button onClick={() => setIsMenuOpen(false)} className="mb-4">
-                <X className="w-6 h-6" />
-              </button>
-              {sections.map(section => (
-                <button
-                  key={section.id}
-                  onClick={() => {
-                    setActiveSection(section.id);
-                    setIsMenuOpen(false);
-                  }}
-                  className="flex items-center gap-3 w-full px-4 py-3 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-800"
+              <div className="flex items-center justify-between mb-6">
+                <h2 className="text-lg font-semibold text-[var(--color-text-primary)]">Components</h2>
+                <button 
+                  onClick={() => setIsMenuOpen(false)} 
+                  className="p-2 hover:bg-[var(--color-hover-bg)] rounded-lg"
+                  aria-label="Close menu"
                 >
-                  {section.icon}
-                  <span>{section.name}</span>
+                  <X className="w-5 h-5" />
                 </button>
-              ))}
+              </div>
+              
+              {/* Mobile Filters */}
+              <div className="mb-6 space-y-3">
+                <select
+                  value={selectedCategory}
+                  onChange={(e) => setSelectedCategory(e.target.value)}
+                  className="w-full p-2 bg-[var(--color-bg-input)] border border-[var(--color-border)] rounded-md text-[var(--color-text-primary)]"
+                >
+                  {categories.map(category => (
+                    <option key={category.id} value={category.id}>
+                      {category.name}
+                    </option>
+                  ))}
+                </select>
+                
+                <select
+                  value={selectedDifficulty}
+                  onChange={(e) => setSelectedDifficulty(e.target.value)}
+                  className="w-full p-2 bg-[var(--color-bg-input)] border border-[var(--color-border)] rounded-md text-[var(--color-text-primary)]"
+                >
+                  {difficulties.map(difficulty => (
+                    <option key={difficulty.id} value={difficulty.id}>
+                      {difficulty.name}
+                    </option>
+                  ))}
+                </select>
+              </div>
+              
+              {/* Component List */}
+              <div className="space-y-2">
+                {filteredSections.map(section => {
+                  const isActive = activeSection === section.id;
+                  const isFavorite = favorites.includes(section.id);
+                  
+                  return (
+                    <div key={section.id} className="relative">
+                      <button
+                        onClick={() => {
+                          setActiveSection(section.id);
+                          setIsMenuOpen(false);
+                        }}
+                        className={`flex flex-col w-full p-3 rounded-lg text-left transition-all ${
+                          isActive 
+                            ? 'bg-[var(--accent-light)] text-[var(--accent-primary)]' 
+                            : 'hover:bg-[var(--color-hover-bg)] text-[var(--color-text-primary)]'
+                        }`}
+                      >
+                        <div className="flex items-center gap-3 mb-2">
+                          {section.icon}
+                          <span className="font-medium">{section.name}</span>
+                          {section.metadata.new && (
+                            <span className="w-2 h-2 bg-green-500 rounded-full"></span>
+                          )}
+                          {section.metadata.popular && (
+                            <Star className="w-3 h-3 fill-amber-400 text-amber-400" />
+                          )}
+                        </div>
+                        
+                        <p className="text-xs text-[var(--color-text-muted)] mb-2">
+                          {section.description}
+                        </p>
+                        
+                        <div className="flex items-center gap-2 flex-wrap">
+                          <span className={`text-xs px-2 py-1 rounded-full ${getDifficultyColor(section.metadata.difficulty)}`}>
+                            {section.metadata.difficulty}
+                          </span>
+                          <span className="text-xs text-[var(--color-text-muted)]">
+                            {section.metadata.estimatedTime}
+                          </span>
+                          <span className={`text-xs px-2 py-1 rounded-full ${getAccessibilityColor(section.metadata.accessibility)}`}>
+                            {section.metadata.accessibility === 'needs-improvement' ? 'A11y: Fair' : `A11y: ${section.metadata.accessibility}`}
+                          </span>
+                        </div>
+                      </button>
+                      
+                      {/* Mobile Favorite Toggle */}
+                      <button
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          toggleFavorite(section.id);
+                        }}
+                        className={`absolute top-2 right-2 w-6 h-6 rounded-full flex items-center justify-center transition-colors ${
+                          isFavorite 
+                            ? 'bg-red-500 text-white' 
+                            : 'bg-[var(--color-bg-surface)] border border-[var(--color-border)] text-[var(--color-text-muted)]'
+                        }`}
+                      >
+                        <Heart className={`w-3 h-3 ${isFavorite ? 'fill-current' : ''}`} />
+                      </button>
+                    </div>
+                  );
+                })}
+              </div>
+              
+              {filteredSections.length === 0 && (
+                <div className="text-center py-8">
+                  <p className="text-[var(--color-text-muted)]">No components match your search criteria.</p>
+                  <button
+                    onClick={() => {
+                      setSearchQuery('');
+                      setSelectedCategory('all');
+                      setSelectedDifficulty('all');
+                    }}
+                    className="mt-2 text-[var(--accent-primary)] hover:underline"
+                  >
+                    Clear filters
+                  </button>
+                </div>
+              )}
             </div>
           </div>
         </div>
       )}
 
-      {/* Main Content */}
-      <main className="container mx-auto px-4 py-8">
-        {/* Section: Preloaders */}
+      {/* Main Content Area */}
+      <div className="container mx-auto px-4 py-8 mt-24">
+        {/* 
+          Sections are rendered in order of popularity and usefulness:
+          1. Hero Sections - Highest visual impact, first impression maker
+          2. Card Designs - Most commonly used in modern web design
+          3. Navigation Bars - Essential for every website, high practical value
+          4. Form Elements - Critical for user interaction
+          5. Modals & Popups - High user engagement, important UX flows
+          6. Login Layouts - Important but specialized authentication UX
+          7. Preloaders - Enhances UX, shows attention to detail
+          8. Footer Designs - Necessary but lower visual priority
+          9. Creative Toggles - Cool but niche appeal
+          10. Custom Cursors - Fun novelty, often unnecessary
+          11. Miscellaneous - Catch-all category
+        */}
         {activeSection === 'preloaders' && (
           <section className="space-y-8">
-            <div className="text-center mb-12">
-              <h2 className="text-4xl font-bold mb-4">Preloaders</h2>
-              <p className="text-gray-600 dark:text-gray-400 max-w-2xl mx-auto">
-                Preloaders enhance user experience by providing visual feedback during content loading. 
-                They reduce perceived wait time and keep users engaged.
-              </p>
-            </div>
+            <ComponentMetadataDisplay section={sections.find(s => s.id === 'preloaders')!} />
 
             <div className="grid grid-cols-2 md:grid-cols-4 gap-8">
               {/* Existing Preloaders - Keeping all of them */}
@@ -496,8 +1241,6 @@ export const CompleteUIShowcase: React.FC = () => {
             </div>
           </section>
         )}
-
-        {/* Section: Navigation Bars */}
         {activeSection === 'navigation' && (
           <section className="space-y-8">
             <div className="text-center mb-12">
@@ -524,7 +1267,7 @@ export const CompleteUIShowcase: React.FC = () => {
                     </div>
                   </div>
                   <div className="flex items-center gap-4">
-                    <Search className="w-5 h-5 text-gray-600" />
+                    <Search size={16} className="w-5 h-5 text-gray-600" />
                     <ShoppingCart className="w-5 h-5 text-gray-600" />
                     <User className="w-5 h-5 text-gray-600" />
                   </div>
@@ -597,7 +1340,7 @@ export const CompleteUIShowcase: React.FC = () => {
                       <Home className="w-5 h-5" />
                     </button>
                     <button className="text-white/70 hover:text-white transition-colors">
-                      <Search className="w-5 h-5" />
+                      <Search size={16} className="w-5 h-5" />
                     </button>
                     <button className="w-12 h-12 bg-gradient-to-r from-purple-500 to-pink-500 rounded-full flex items-center justify-center text-white shadow-lg hover:scale-110 transition-transform">
                       <Plus className="w-6 h-6" />
@@ -699,8 +1442,6 @@ export const CompleteUIShowcase: React.FC = () => {
             </div>
           </section>
         )}
-
-        {/* Section: Custom Cursors */}
         {activeSection === 'cursors' && (
           <section className="space-y-8" id="cursors-section">
             <div className="text-center mb-12">
@@ -1078,17 +1819,9 @@ const CustomCursor = () => {
             </div>
           </section>
         )}
-
-        {/* Section: Hero Sections */}
         {activeSection === 'hero' && (
           <section className="space-y-8">
-            <div className="text-center mb-12">
-              <h2 className="text-4xl font-bold mb-4">Hero Sections</h2>
-              <p className="text-gray-600 dark:text-gray-400 max-w-2xl mx-auto">
-                The hero section is your first impression. It should immediately communicate 
-                your value proposition and guide users to take action.
-              </p>
-            </div>
+            <ComponentMetadataDisplay section={sections.find(s => s.id === 'hero')!} />
 
             {/* Hero Examples */}
             <div className="space-y-12">
@@ -1228,8 +1961,6 @@ const CustomCursor = () => {
             </div>
           </section>
         )}
-
-        {/* Section: Form Elements */}
         {activeSection === 'forms' && (
           <section className="space-y-8">
             <div className="text-center mb-12">
@@ -1258,7 +1989,6 @@ const CustomCursor = () => {
                   </div>
 
                   <div className="relative">
-                    <Mail className="absolute left-3 top-3.5 w-5 h-5 text-gray-400" />
                     <input 
                       type="email" 
                       placeholder="Email with icon" 
@@ -1359,7 +2089,6 @@ const CustomCursor = () => {
                 <div className="space-y-4">
                   {/* Search with suggestions */}
                   <div className="relative">
-                    <Search className="absolute left-3 top-3.5 w-5 h-5 text-gray-400" />
                     <input 
                       type="search" 
                       placeholder="Search products..." 
@@ -1374,14 +2103,12 @@ const CustomCursor = () => {
                   {/* Date Range Picker */}
                   <div className="grid grid-cols-2 gap-2">
                     <div className="relative">
-                      <Calendar className="absolute left-3 top-3.5 w-5 h-5 text-gray-400" />
                       <input 
                         type="date" 
                         className="w-full pl-10 pr-3 py-3 border-2 border-gray-300 rounded-lg focus:border-purple-500 focus:outline-none transition-colors"
                       />
                     </div>
                     <div className="relative">
-                      <Calendar className="absolute left-3 top-3.5 w-5 h-5 text-gray-400" />
                       <input 
                         type="date" 
                         className="w-full pl-10 pr-3 py-3 border-2 border-gray-300 rounded-lg focus:border-purple-500 focus:outline-none transition-colors"
@@ -1431,8 +2158,12 @@ const CustomCursor = () => {
             </div>
           </section>
         )}
-
-        {/* Section: Cards */}
+        {activeSection === 'design-languages' && (
+          <section className="space-y-8">
+            <ComponentMetadataDisplay section={sections.find(s => s.id === 'design-languages')!} />
+            <DesignLanguageShowcase />
+          </section>
+        )}
         {activeSection === 'cards' && (
           <section className="space-y-8">
             <div className="text-center mb-12">
@@ -1599,8 +2330,6 @@ const CustomCursor = () => {
             </div>
           </section>
         )}
-
-        {/* Section: Modals */}
         {activeSection === 'modals' && (
           <section className="space-y-8">
             <div className="text-center mb-12">
@@ -1746,8 +2475,6 @@ const CustomCursor = () => {
             </div>
           </section>
         )}
-
-        {/* Section: Footers */}
         {activeSection === 'footers' && (
           <section className="space-y-8">
             <div className="text-center mb-12">
@@ -1885,11 +2612,12 @@ const CustomCursor = () => {
             </footer>
           </section>
         )}
-
-        {/* Section: Creative Toggles */}
         {activeSection === 'creative-toggles' && <CreativeTogglesSectionContent />}
-
-        {/* Section: Miscellaneous */}
+        {activeSection === 'login-layouts' && ( 
+          <div style={{ width: '100vw', height: '100vh', position: 'fixed', top: 0, left: 0, right:0, bottom:0, zIndex: 2000, background: 'var(--primary-bg, white)', overflow: 'auto' }}>
+            <LoginLayoutsShowcase />
+          </div>
+        )}
         {activeSection === 'misc' && (
           <section className="space-y-8">
             <div className="text-center mb-12">
@@ -2060,647 +2788,7 @@ const CustomCursor = () => {
             </div>
           </section>
         )}
-      </main>
-
-      {/* CSS Animations */}
-      <style>{`
-        /* Creative Toggles Styles */
-        .theme-toggle-showcase-container {
-          min-height: 100vh;
-        }
-        
-        .gradient-text {
-          background: linear-gradient(to right, #8B5CF6, #EC4899);
-          -webkit-background-clip: text;
-          -webkit-text-fill-color: transparent;
-          background-clip: text;
-        }
-        
-        .toggles-grid {
-          display: grid;
-          grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-          gap: 2rem;
-          max-width: 1200px;
-          margin: 0 auto;
-        }
-        
-        .toggle-card {
-          background: white;
-          border-radius: 1rem;
-          padding: 2rem;
-          box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
-          transition: transform 0.3s ease, box-shadow 0.3s ease;
-        }
-        
-        .dark .toggle-card {
-          background: #1F2937;
-          box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
-        }
-        
-        .toggle-card:hover {
-          transform: translateY(-5px);
-          box-shadow: 0 15px 40px rgba(0, 0, 0, 0.15);
-        }
-        
-        .showcase-card {
-          transition: all 0.3s ease;
-        }
-        
-        .toggle-placeholder {
-          width: 120px;
-          height: 60px;
-          margin: 0 auto;
-          cursor: pointer;
-          position: relative;
-          user-select: none;
-          transition: transform 0.2s ease;
-          outline: none;
-        }
-        
-        .toggle-placeholder:focus-visible {
-          box-shadow: 0 0 0 3px rgba(139, 92, 246, 0.5);
-          border-radius: 30px;
-        }
-        
-        .toggle-placeholder:active {
-          transform: scale(0.95);
-        }
-        
-        /* Toggle 1 - Day/Night Cycle */
-        .toggle-1 {
-          background: #4A90E2;
-          border-radius: 30px;
-          overflow: hidden;
-          transition: background 0.5s ease;
-        }
-        
-        .toggle-1.active {
-          background: #1a1a2e;
-        }
-        
-        .toggle-1-actual {
-          width: 100%;
-          height: 100%;
-          position: relative;
-        }
-        
-        .toggle-1-actual::before {
-          content: '☀️';
-          position: absolute;
-          left: 10px;
-          top: 50%;
-          transform: translateY(-50%);
-          font-size: 28px;
-          transition: all 0.5s ease;
-        }
-        
-        .toggle-1-actual.active::before {
-          content: '🌙';
-          left: calc(100% - 40px);
-        }
-        
-        .stars {
-          position: absolute;
-          width: 100%;
-          height: 100%;
-          opacity: 0;
-          transition: opacity 0.5s ease;
-        }
-        
-        .toggle-1-actual.active .stars {
-          opacity: 1;
-        }
-        
-        .star {
-          position: absolute;
-          width: 2px;
-          height: 2px;
-          background: white;
-          border-radius: 50%;
-          animation: twinkle 2s infinite;
-        }
-        
-        @keyframes twinkle {
-          0%, 100% { opacity: 0.3; }
-          50% { opacity: 1; }
-        }
-        
-        /* Toggle 2 - Morphing Shape */
-        .toggle-2 {
-          background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-          border-radius: 60px;
-          transition: border-radius 0.5s ease;
-        }
-        
-        .toggle-2.active {
-          border-radius: 20px;
-        }
-        
-        .toggle-2-actual::before {
-          content: '😊';
-          position: absolute;
-          left: 10px;
-          top: 50%;
-          transform: translateY(-50%);
-          font-size: 28px;
-          transition: all 0.5s ease;
-        }
-        
-        .toggle-2-actual.active::before {
-          content: '😎';
-          left: calc(100% - 40px);
-        }
-        
-        /* Toggle 3 - Sliding Sky */
-        .toggle-3 {
-          background: linear-gradient(to bottom, #87CEEB 0%, #98D8E8 100%);
-          border-radius: 30px;
-          overflow: hidden;
-          transition: background 0.5s ease;
-        }
-        
-        .toggle-3.active {
-          background: linear-gradient(to bottom, #0c1445 0%, #1a237e 100%);
-        }
-        
-        .cloud {
-          position: absolute;
-          background: white;
-          border-radius: 100px;
-          opacity: 0.8;
-        }
-        
-        .cloud::before,
-        .cloud::after {
-          content: '';
-          position: absolute;
-          background: white;
-          border-radius: 100px;
-        }
-        
-        .cloud1 {
-          width: 40px;
-          height: 15px;
-          top: 20%;
-          left: 20%;
-          animation: float-cloud 20s infinite;
-        }
-        
-        .cloud1::before {
-          width: 20px;
-          height: 20px;
-          top: -10px;
-          left: 5px;
-        }
-        
-        .cloud2 {
-          width: 30px;
-          height: 10px;
-          top: 60%;
-          right: 20%;
-          animation: float-cloud 25s infinite reverse;
-        }
-        
-        .celestial {
-          position: absolute;
-          width: 30px;
-          height: 30px;
-          border-radius: 50%;
-          top: 50%;
-          transform: translateY(-50%);
-          transition: all 0.5s ease;
-        }
-        
-        .toggle-3 .celestial {
-          background: #FFD700;
-          left: 10px;
-          box-shadow: 0 0 20px #FFD700;
-        }
-        
-        .toggle-3.active .celestial {
-          background: #F0F0F0;
-          left: calc(100% - 40px);
-          box-shadow: 0 0 15px #F0F0F0;
-        }
-        
-        @keyframes float-cloud {
-          0%, 100% { transform: translateX(0); }
-          50% { transform: translateX(10px); }
-        }
-        
-        /* Toggle 4 - Eclipse Effect */
-        .toggle-4 {
-          background: #1a1a1a;
-          border-radius: 30px;
-          overflow: hidden;
-        }
-        
-        .toggle-4 .sun {
-          position: absolute;
-          width: 40px;
-          height: 40px;
-          background: #FFD700;
-          border-radius: 50%;
-          top: 50%;
-          left: 50%;
-          transform: translate(-50%, -50%);
-          box-shadow: 0 0 30px #FFD700;
-        }
-        
-        .toggle-4 .moon {
-          position: absolute;
-          width: 40px;
-          height: 40px;
-          background: #2c3e50;
-          border-radius: 50%;
-          top: 50%;
-          left: 10px;
-          transform: translateY(-50%);
-          transition: left 0.5s ease;
-        }
-        
-        .toggle-4.active .moon {
-          left: calc(100% - 50px);
-        }
-        
-        /* Toggle 5 - Liquid Morph */
-        .toggle-5 {
-          background: linear-gradient(135deg, #ee0979 0%, #ff6a00 100%);
-          border-radius: 30px;
-          overflow: hidden;
-        }
-        
-        .toggle-5 .handle {
-          position: absolute;
-          width: 50px;
-          height: 50px;
-          background: white;
-          border-radius: 50%;
-          top: 5px;
-          left: 5px;
-          transition: all 0.5s cubic-bezier(0.68, -0.55, 0.265, 1.55);
-        }
-        
-        .toggle-5.active .handle {
-          left: calc(100% - 55px);
-          transform: scale(1.1);
-        }
-        
-        /* Toggle 6 - 3D Flip */
-        .toggle-6 {
-          background: #e0e0e0;
-          border-radius: 30px;
-          perspective: 1000px;
-        }
-        
-        .toggle-6-inner {
-          position: relative;
-          width: 100%;
-          height: 100%;
-          transform-style: preserve-3d;
-          transition: transform 0.6s;
-        }
-        
-        .toggle-6.active .toggle-6-inner {
-          transform: rotateY(180deg);
-        }
-        
-        .toggle-6-front,
-        .toggle-6-back {
-          position: absolute;
-          width: 100%;
-          height: 100%;
-          backface-visibility: hidden;
-          display: flex;
-          align-items: center;
-          justify-content: center;
-          font-size: 28px;
-        }
-        
-        .toggle-6-back {
-          transform: rotateY(180deg);
-          background: #2c3e50;
-          border-radius: 30px;
-        }
-        
-        /* Toggle 7 - Neon Glow */
-        .toggle-7 {
-          background: #0a0a0a;
-          border-radius: 30px;
-          overflow: hidden;
-          position: relative;
-        }
-        
-        .neon-text {
-          position: absolute;
-          top: 50%;
-          left: 50%;
-          transform: translate(-50%, -50%);
-          font-weight: bold;
-          font-size: 18px;
-          transition: all 0.3s ease;
-        }
-        
-        .day-text {
-          color: #FFD700;
-          text-shadow: 0 0 10px #FFD700;
-          opacity: 1;
-        }
-        
-        .night-text {
-          color: #00ffff;
-          text-shadow: 0 0 20px #00ffff, 0 0 40px #00ffff;
-          opacity: 0;
-        }
-        
-        .toggle-7.active .day-text {
-          opacity: 0;
-        }
-        
-        .toggle-7.active .night-text {
-          opacity: 1;
-        }
-        
-        /* Toggle 8 - Particle Burst */
-        .toggle-8 {
-          background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
-          border-radius: 30px;
-          overflow: visible;
-          position: relative;
-        }
-        
-        .toggle-8 .slider {
-          position: absolute;
-          width: 50px;
-          height: 50px;
-          background: white;
-          border-radius: 50%;
-          top: 5px;
-          left: 5px;
-          transition: left 0.3s ease;
-          cursor: pointer;
-        }
-        
-        .toggle-8.active .slider {
-          left: calc(100% - 55px);
-        }
-        
-        .particle {
-          position: absolute;
-          width: 4px;
-          height: 4px;
-          background: #ff6b6b;
-          border-radius: 50%;
-          pointer-events: none;
-          animation: particle-explosion 0.7s ease-out forwards;
-        }
-        
-        @keyframes particle-explosion {
-          0% {
-            transform: translate(0, 0) scale(1);
-            opacity: 1;
-          }
-          100% {
-            transform: translate(var(--x), var(--y)) scale(0);
-            opacity: 0;
-          }
-        }
-        
-        /* Animation keyframes */
-        @keyframes wave-bar {
-          0%, 100% { height: 20px; }
-          50% { height: 48px; }
-        }
-        
-        @keyframes morph {
-          0% { border-radius: 30% 70% 70% 30% / 30% 30% 70% 70%; }
-          50% { border-radius: 70% 30% 30% 70% / 70% 70% 30% 30%; }
-          100% { border-radius: 30% 70% 70% 30% / 30% 30% 70% 70%; }
-        }
-        
-        @keyframes progress-circle {
-          from { stroke-dashoffset: 176; }
-          to { stroke-dashoffset: 0; }
-        }
-        
-        @keyframes rotate-scale {
-          0% { transform: rotate(0deg) scale(1); }
-          50% { transform: rotate(180deg) scale(1.1); }
-          100% { transform: rotate(360deg) scale(1); }
-        }
-        
-        @keyframes float {
-          0%, 100% { transform: translateY(0); }
-          50% { transform: translateY(-20px); }
-        }
-        
-        @keyframes draw-infinity {
-          0% { 
-            stroke-dasharray: 0 200;
-            stroke-dashoffset: 0;
-          }
-          100% { 
-            stroke-dasharray: 200 0;
-            stroke-dashoffset: -200;
-          }
-        }
-        
-        @keyframes clock-hand {
-          from { transform: rotate(0deg); }
-          to { transform: rotate(360deg); }
-        }
-        
-        @keyframes clock-hand-fast {
-          from { transform: rotate(0deg); }
-          to { transform: rotate(360deg); }
-        }
-        
-        @keyframes glitch {
-          0%, 100% { transform: translate(0); }
-          20% { transform: translate(-2px, 2px); }
-          40% { transform: translate(-2px, -2px); }
-          60% { transform: translate(2px, 2px); }
-          80% { transform: translate(2px, -2px); }
-        }
-        
-        @keyframes glitch-2 {
-          0%, 100% { transform: translate(0); }
-          20% { transform: translate(2px, -2px); }
-          40% { transform: translate(2px, 2px); }
-          60% { transform: translate(-2px, -2px); }
-          80% { transform: translate(-2px, 2px); }
-        }
-        
-        @keyframes particle-orbit {
-          from {
-            transform: translate(-50%, -50%) rotate(0deg) translateX(32px) rotate(0deg);
-          }
-          to {
-            transform: translate(-50%, -50%) rotate(360deg) translateX(32px) rotate(-360deg);
-          }
-        }
-        
-        @keyframes slide-up {
-          from {
-            opacity: 0;
-            transform: translateY(30px);
-          }
-          to {
-            opacity: 1;
-            transform: translateY(0);
-          }
-        }
-        
-        @keyframes fade-in {
-          from { opacity: 0; }
-          to { opacity: 1; }
-        }
-        
-        @keyframes slide-in-right {
-          from {
-            transform: translateX(100%);
-            opacity: 0;
-          }
-          to {
-            transform: translateX(0);
-            opacity: 1;
-          }
-        }
-        
-        .animate-wave-bar {
-          animation: wave-bar 1.5s ease-in-out infinite;
-        }
-        
-        .animate-morph {
-          animation: morph 3s ease-in-out infinite;
-        }
-        
-        .animate-progress-circle {
-          animation: progress-circle 2s ease-out infinite;
-        }
-        
-        .animate-rotate-scale {
-          animation: rotate-scale 2s ease-in-out infinite;
-        }
-        
-        .animate-float {
-          animation: float 3s ease-in-out infinite;
-        }
-        
-        .animate-draw-infinity {
-          animation: draw-infinity 3s ease-in-out infinite;
-        }
-        
-        .animate-clock-hand {
-          animation: clock-hand 4s linear infinite;
-        }
-        
-        .animate-clock-hand-fast {
-          animation: clock-hand-fast 2s linear infinite;
-        }
-        
-        .animate-glitch {
-          animation: glitch 0.3s ease-in-out infinite;
-        }
-        
-        .animate-glitch-2 {
-          animation: glitch-2 0.3s ease-in-out infinite reverse;
-        }
-        
-        .animate-particle-orbit {
-          animation: particle-orbit 3s linear infinite;
-        }
-        
-        .animate-slide-up {
-          animation: slide-up 0.6s ease-out forwards;
-        }
-        
-        .animate-fade-in {
-          animation: fade-in 0.6s ease-out forwards;
-        }
-        
-        .animate-slide-in-right {
-          animation: slide-in-right 0.3s ease-out;
-        }
-        
-        .animation-delay-200 {
-          animation-delay: 0.2s;
-        }
-        
-        .animation-delay-400 {
-          animation-delay: 0.4s;
-        }
-        
-        .animation-delay-600 {
-          animation-delay: 0.6s;
-        }
-        
-        .animation-delay-800 {
-          animation-delay: 0.8s;
-        }
-        
-        .animation-delay-1000 {
-          animation-delay: 1s;
-        }
-        
-        /* Custom cursor styles */
-        .custom-cursor {
-          transition: transform 0.1s ease-out;
-        }
-        
-        /* Hide default cursor when custom cursor is active */
-        .custom-cursor-active * {
-          cursor: none !important;
-        }
-        
-        /* Show default cursor on specific elements */
-        .custom-cursor-active input,
-        .custom-cursor-active textarea,
-        .custom-cursor-active select {
-          cursor: auto !important;
-        }
-        
-        /* Cursor hover effects */
-        .cursor-example {
-          position: relative;
-          cursor: pointer;
-        }
-        
-        .cursor-demo-area {
-          cursor: none;
-        }
-        
-        .cursor-demo-btn {
-          position: relative;
-          cursor: none;
-        }
-        
-        .cursor-demo-card {
-          cursor: none;
-          transition: all 0.3s ease;
-        }
-        
-        .cursor-demo-card:hover {
-          background: rgba(147, 51, 234, 0.2) !important;
-          transform: translateY(-2px);
-        }
-        
-        /* Cursor preview animations */
-        .cursor-dot-preview div {
-          animation: pulse-glow 2s ease-in-out infinite;
-        }
-        
-        @keyframes pulse-glow {
-          0%, 100% { 
-            transform: translate(-50%, -50%) scale(1);
-            opacity: 1;
-          }
-          50% { 
-            transform: translate(-50%, -50%) scale(1.5);
-            opacity: 0.5;
-          }
-        }
-      `}</style>
+      </div>
     </div>
   );
 };
