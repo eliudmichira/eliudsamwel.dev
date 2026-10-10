@@ -1,0 +1,31 @@
+rules_version = '2';
+
+service cloud.firestore {
+  match /databases/{database}/documents {
+
+    // Keep in sync with ADMIN_EMAIL in config/firebase.ts
+    function isAdmin() {
+      return request.auth != null
+        && request.auth.token.email == 'eliudmichira7@gmail.com'
+        && request.auth.token.email_verified == true;
+    }
+
+    match /contactMessages/{messageId} {
+      // Anyone can submit the contact form, but nobody else can read it back
+      allow create: if request.resource.data.name is string
+        && request.resource.data.name.size() <= 200
+        && request.resource.data.email is string
+        && request.resource.data.email.size() <= 320
+        && request.resource.data.message is string
+        && request.resource.data.message.size() <= 10000;
+
+      // Only the site owner can read and triage messages (#admin dashboard)
+      allow read, update, delete: if isAdmin();
+    }
+
+    // Everything else is closed
+    match /{document=**} {
+      allow read, write: if false;
+    }
+  }
+}

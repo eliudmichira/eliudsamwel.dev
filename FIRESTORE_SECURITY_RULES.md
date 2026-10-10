@@ -1,5 +1,10 @@
 # 🔒 Firestore Security Rules Guide
 
+> **Superseded:** the live rules now live in [`firestore.rules`](firestore.rules) and deploy with
+> `firebase deploy --only firestore:rules`. They let anyone submit the contact form but only the
+> admin Google account read messages. Do **not** use the `allow read: if true` examples below —
+> they make every contact submission publicly readable.
+
 ## 🎯 Current Situation
 
 Your Firestore currently has **default rules** that deny all access:

@@ -128,6 +128,8 @@ export const ContactPage: React.FC = () => {
       
       // Save to Firestore
       let docRef;
+      let savedToFirestore = false;
+      let webhookDelivered = false;
       try {
         console.log('Calling addDoc...');
         docRef = await Promise.race([
@@ -137,6 +139,7 @@ export const ContactPage: React.FC = () => {
           )
         ]) as any;
         console.log('✅ Message saved to Firestore with ID:', docRef.id);
+        savedToFirestore = true;
       } catch (firestoreError: any) {
         console.error('❌ Firestore save error (non-fatal):', firestoreError?.message || firestoreError);
         // Don't throw — let Telegram + EmailJS still fire so the user's message gets through
@@ -159,8 +162,14 @@ export const ContactPage: React.FC = () => {
           timestamp: messageData.timestamp,
         });
         console.log(ok ? '✅ Webhook delivered — Zap will fire' : '⚠️ Webhook returned non-2xx');
+        webhookDelivered = ok;
       } catch (webhookError: any) {
         console.error('❌ Webhook error:', webhookError?.message || webhookError);
+      }
+
+      // Only report success if the message actually landed somewhere
+      if (!savedToFirestore && !webhookDelivered) {
+        throw new Error('Message was not saved to Firestore or delivered to the webhook');
       }
 
       console.log('✅ Form submission completed successfully');
@@ -175,6 +184,8 @@ export const ContactPage: React.FC = () => {
         message: 'Failed to send message. Please try the email button above or try again later.', 
         type: 'error' 
       });
+      // Re-throw so ContactForm keeps the visitor's text instead of clearing it
+      throw error;
     } finally {
       setTimeout(() => setNotification(null), 5000);
     }

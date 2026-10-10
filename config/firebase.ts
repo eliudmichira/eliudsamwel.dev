@@ -1,6 +1,7 @@
 import { initializeApp, FirebaseApp } from "firebase/app";
 import { getAnalytics, Analytics } from "firebase/analytics";
 import { getFirestore, Firestore } from "firebase/firestore";
+import { getAuth, Auth } from "firebase/auth";
 
 const firebaseConfig = {
   apiKey: "AIzaSyDGvkdWkDyQZPzSLtNllnJaCJ4XIWvtyQo",
@@ -15,5 +16,10 @@ const firebaseConfig = {
 const app: FirebaseApp = initializeApp(firebaseConfig);
 const analytics: Analytics = getAnalytics(app);
 const db: Firestore = getFirestore(app);
+const auth: Auth = getAuth(app);
 
-export { app, analytics, db };
+// Only this Google account can open the #admin dashboard.
+// Keep in sync with isAdmin() in firestore.rules, which is what actually enforces it.
+const ADMIN_EMAIL = "eliudmichira7@gmail.com";
+
+export { app, analytics, db, auth, ADMIN_EMAIL };

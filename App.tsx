@@ -19,7 +19,6 @@ import './styles/theme.css';
 import './styles/animations.css';
 import './styles/gallery.css';
 import { constellations, TimelineItem as JourneyTimelineItem } from './data/journeyData';
-import { HashRouter as Router } from 'react-router-dom';
 
 declare var particlesJS: any; 
 declare var pJSDom: any; 
@@ -321,30 +320,28 @@ const App: React.FC = () => {
   };
 
   return (
-    <Router>
-      <div className="App font-sans antialiased text-[var(--primary-text)] bg-[var(--primary-bg)] min-h-screen flex flex-col">
-        <CustomCursor />
-        <Suspense fallback={<div className="fixed inset-0 bg-black flex items-center justify-center text-white">Loading ARIA...</div>}>
-          <FuturisticAIAssistant />
-        </Suspense>
-        
-        <Header navLinks={navLinks} onNavLinkClick={handleNavLinkClick} theme={theme} toggleTheme={toggleTheme} />
-        
-        <main className="container mx-auto px-4 sm:px-6 lg:px-8 pt-28 pb-10 flex-1 max-w-7xl relative z-[5]">
-          {renderPage()}
-        </main>
-        
-        {/* Only show footer on pages that need it */}
-        {(['About', 'Contact', 'Blog'].includes(activePage)) && (
-          <Footer onNavLinkClick={handleNavLinkClick} />
-        )}
-        <FloatingActionButton 
-          onNavigate={handleNavLinkClick} 
-          theme={theme}
-          toggleTheme={toggleTheme}
-        />
-      </div>
-    </Router>
+    <div className="App font-sans antialiased text-[var(--primary-text)] bg-[var(--primary-bg)] min-h-screen flex flex-col">
+      <CustomCursor />
+      <Suspense fallback={<div className="fixed inset-0 bg-black flex items-center justify-center text-white">Loading ARIA...</div>}>
+        <FuturisticAIAssistant />
+      </Suspense>
+      
+      <Header navLinks={navLinks} onNavLinkClick={handleNavLinkClick} theme={theme} toggleTheme={toggleTheme} />
+      
+      <main className="container mx-auto px-4 sm:px-6 lg:px-8 pt-28 pb-10 flex-1 max-w-7xl relative z-[5]">
+        {renderPage()}
+      </main>
+      
+      {/* Only show footer on pages that need it */}
+      {(['About', 'Contact', 'Blog'].includes(activePage)) && (
+        <Footer onNavLinkClick={handleNavLinkClick} />
+      )}
+      <FloatingActionButton 
+        onNavigate={handleNavLinkClick} 
+        theme={theme}
+        toggleTheme={toggleTheme}
+      />
+    </div>
   );
 };
 

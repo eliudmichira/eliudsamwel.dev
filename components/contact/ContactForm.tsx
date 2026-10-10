@@ -44,6 +44,8 @@ export const ContactForm: React.FC<ContactFormProps> = ({ onSubmit }) => {
         name: '', email: '', company: '', budget: '', services: [], timeline: '', message: '',
       });
       setTimeout(() => setSubmitted(false), 2500);
+    } catch {
+      // Parent shows the error; keep the form filled so the visitor can retry
     } finally {
       setIsSubmitting(false);
     }

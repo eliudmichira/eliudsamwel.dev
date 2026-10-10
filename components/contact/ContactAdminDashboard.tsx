@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
-import { db } from '../../config/firebase';
+import { db, auth, ADMIN_EMAIL } from '../../config/firebase';
 import { collection, query, orderBy, getDocs, doc, updateDoc, Timestamp } from 'firebase/firestore';
+import { onAuthStateChanged, signInWithPopup, signOut, GoogleAuthProvider, User } from 'firebase/auth';
 
 interface ContactMessage {
   id: string;
@@ -24,10 +25,40 @@ export const ContactAdminDashboard: React.FC = () => {
   const [error, setError] = useState<string | null>(null);
   const [filter, setFilter] = useState<'all' | 'new' | 'read' | 'replied'>('all');
   const [selectedMessage, setSelectedMessage] = useState<ContactMessage | null>(null);
+  const [user, setUser] = useState<User | null>(null);
+  const [authChecked, setAuthChecked] = useState(false);
+  const [signInError, setSignInError] = useState<string | null>(null);
+
+  // UI gate only — firestore.rules is what actually blocks non-admin reads
+  const isAdmin = !!user && user.emailVerified && user.email === ADMIN_EMAIL;
 
   useEffect(() => {
-    loadMessages();
+    return onAuthStateChanged(auth, (currentUser) => {
+      setUser(currentUser);
+      setAuthChecked(true);
+    });
   }, []);
+
+  useEffect(() => {
+    if (isAdmin) {
+      loadMessages();
+    } else {
+      setMessages([]);
+      setSelectedMessage(null);
+    }
+  }, [isAdmin]);
+
+  const handleSignIn = async () => {
+    try {
+      setSignInError(null);
+      await signInWithPopup(auth, new GoogleAuthProvider());
+    } catch (error: any) {
+      console.error('Sign-in error:', error);
+      setSignInError(error?.message || 'Sign-in failed. Please try again.');
+    }
+  };
+
+  const handleSignOut = () => signOut(auth);
 
   const loadMessages = async () => {
     try {
@@ -121,6 +152,50 @@ export const ContactAdminDashboard: React.FC = () => {
   const unreadCount = messages.filter(msg => !msg.read).length;
   const newCount = messages.filter(msg => msg.status === 'new').length;
 
+  if (!authChecked) {
+    return (
+      <div className="min-h-screen flex items-center justify-center bg-[var(--bg-base)]">
+        <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-[var(--accent-color)]"></div>
+      </div>
+    );
+  }
+
+  if (!isAdmin) {
+    return (
+      <div className="min-h-screen flex items-center justify-center bg-[var(--bg-base)] p-4">
+        <div className="max-w-md w-full bg-[var(--card-bg)] rounded-lg p-6 border border-[var(--card-border)] text-center">
+          <h2 className="text-2xl font-bold text-[var(--primary-text)] mb-2">Admin Sign-in</h2>
+          {user ? (
+            <>
+              <p className="text-[var(--secondary-text)] mb-6">
+                {user.email} doesn't have access to this dashboard.
+              </p>
+              <button
+                onClick={handleSignOut}
+                className="px-4 py-2 bg-[var(--accent-color)] text-white rounded hover:opacity-90"
+              >
+                Sign out
+              </button>
+            </>
+          ) : (
+            <>
+              <p className="text-[var(--secondary-text)] mb-6">
+                Sign in with the site owner's Google account to view contact messages.
+              </p>
+              <button
+                onClick={handleSignIn}
+                className="px-4 py-2 bg-[var(--accent-color)] text-white rounded hover:opacity-90"
+              >
+                Sign in with Google
+              </button>
+              {signInError && <p className="text-sm text-red-500 mt-4">{signInError}</p>}
+            </>
+          )}
+        </div>
+      </div>
+    );
+  }
+
   if (loading) {
     return (
       <div className="min-h-screen flex items-center justify-center bg-[var(--bg-base)]">
@@ -143,7 +218,7 @@ export const ContactAdminDashboard: React.FC = () => {
             <h3 className="font-semibold text-[var(--primary-text)] mb-2">Common Solutions:</h3>
             <ul className="list-disc list-inside text-sm text-[var(--secondary-text)] space-y-1">
               <li>Make sure Firestore is enabled in Firebase Console</li>
-              <li>Check Firestore security rules allow reads: <code className="bg-black/10 px-1 rounded">allow read: if true;</code></li>
+              <li>Make sure the rules in <code className="bg-black/10 px-1 rounded">firestore.rules</code> are deployed: <code className="bg-black/10 px-1 rounded">firebase deploy --only firestore:rules</code></li>
               <li>Verify Firebase configuration in <code className="bg-black/10 px-1 rounded">config/firebase.ts</code></li>
               <li>Check browser console (F12) for detailed error messages</li>
             </ul>
@@ -163,13 +238,24 @@ export const ContactAdminDashboard: React.FC = () => {
     <div className="min-h-screen bg-[var(--bg-base)] p-4 sm:p-6 md:p-8">
       <div className="max-w-7xl mx-auto">
         {/* Header */}
-        <div className="mb-8">
-          <h1 className="text-3xl sm:text-4xl font-bold text-[var(--primary-text)] mb-2">
-            Contact Messages Dashboard
-          </h1>
-          <p className="text-[var(--secondary-text)]">
-            Manage and respond to contact form submissions
-          </p>
+        <div className="mb-8 flex flex-col sm:flex-row sm:items-start sm:justify-between gap-4">
+          <div>
+            <h1 className="text-3xl sm:text-4xl font-bold text-[var(--primary-text)] mb-2">
+              Contact Messages Dashboard
+            </h1>
+            <p className="text-[var(--secondary-text)]">
+              Manage and respond to contact form submissions
+            </p>
+          </div>
+          <div className="flex items-center gap-3 text-sm">
+            <span className="text-[var(--secondary-text)]">{user.email}</span>
+            <button
+              onClick={handleSignOut}
+              className="px-3 py-1 bg-[var(--card-bg)] text-[var(--primary-text)] border border-[var(--card-border)] rounded hover:bg-[var(--hover-bg)]"
+            >
+              Sign out
+            </button>
+          </div>
         </div>
 
         {/* Stats Cards */}

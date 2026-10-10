@@ -34,9 +34,10 @@ const getEnvVar = (key: string): string => {
   return '';
 };
 
-// Hardcoded credentials (fallback if env vars not set)
-const TELEGRAM_BOT_TOKEN = getEnvVar('VITE_TELEGRAM_BOT_TOKEN') || '8559402344:AAFhWy-nCsDfi0-xYarzyWoTAMkcL4oMng0';
-const TELEGRAM_CHAT_ID = getEnvVar('VITE_TELEGRAM_CHAT_ID') || '5168083427';
+// Never hardcode credentials here: this repo is public. Note that VITE_* values are
+// also bundled into the client JS, so a token set this way is visible to visitors.
+const TELEGRAM_BOT_TOKEN = getEnvVar('VITE_TELEGRAM_BOT_TOKEN');
+const TELEGRAM_CHAT_ID = getEnvVar('VITE_TELEGRAM_CHAT_ID');
 
 /**
  * Format contact form data into a Telegram message
