@@ -224,13 +224,13 @@ export const AI_BEHAVIOR = {
 // Mock responses for UI development when API is not used
 export const MOCK_RESPONSES = {
   defaultResponse:
-    "I can help with Eliud Michira Samwel’s portfolio—automation stack (n8n, Zapier, Make), featured builds like SoundSwapp or FlickCollection, experience, or how to reach him via the Contact page.",
+    "I can help with Eliud Michira Samwel’s portfolio—his data annotation and AI evaluation work, featured builds like FlickCollection or Duet, his experience, or how to reach him via the Contact page.",
   greeting:
-    "Hi — ask about Eliud’s automation work, projects, or background.",
+    "Hi — ask about Eliud’s annotation and evaluation work, projects, or background.",
   projectInquiry:
-    "Highlights include **SoundSwapp** (Spotify/YouTube migration APIs), **FlickCollection** (discovery with caching/fallbacks), **Sanarix** (ops, Google Auth, messaging), and this portfolio site.",
+    "Highlights include **FlickCollection** (AI-powered movie & TV discovery), **Duet** (a browser extension for watching videos in sync), **HomesKE** (a Kenyan real estate marketplace), and **SoundSwapp** (Spotify/YouTube playlist conversion).",
   skillsInquiry:
-    "Eliud focuses on **workflow automation**, Google Workspace, webhooks/OAuth, and **React/TypeScript/Node** delivery for remote clients—plus QA and LLM workflow routing from recent roles.",
+    "Eliud focuses on **multi-domain data annotation**, **rubric-based scoring of AI outputs**, and **QA auditing** (35/35 on Innodata’s Video Master eval), backed by a **React/TypeScript/Node** engineering background.",
   contactInquiry:
     "Use the **Contact** page on this site to reach Eliud directly.",
   thankYouResponse: "Glad to help. Want details on a specific project or skill?",
@@ -238,7 +238,7 @@ export const MOCK_RESPONSES = {
 
 // Export main configuration
 export const chatConfig = {
-  initialMessage: `${SYSTEM_MESSAGES.initialization}\n\nGreetings. I'm ${AI_CONFIG.name}, EliudSamwel's personal AI assistant. I have complete access to their portfolio, projects, and professional information. How may I assist you today?`,
+  initialMessage: `${SYSTEM_MESSAGES.initialization}\n\nGreetings. I'm ${AI_CONFIG.name}, the assistant for Eliud Samwel's portfolio. Ask about his work, projects, or background.`,
   
   modelName: AI_CONFIG.modelName,
   apiVersion: AI_CONFIG.apiVersion,

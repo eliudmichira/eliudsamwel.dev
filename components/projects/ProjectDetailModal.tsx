@@ -154,10 +154,10 @@ export const ProjectDetailModal: React.FC<ProjectDetailModalProps> = memo(({
       return project.details.gallery;
     }
 
-    // Final fallback to single hero image
-    return [
-      { src: project.image, alt: 'Hero', caption: 'Main Project View', type: 'screenshot' as const }
-    ];
+    // Final fallback to single hero image (none if the project has no screenshot)
+    return project.image
+      ? [{ src: project.image, alt: 'Hero', caption: 'Main Project View', type: 'screenshot' as const }]
+      : [];
   }, [project.images, project.details?.gallery, project.image, project.title]);
 
   // Memoized tech stack organization
@@ -191,44 +191,6 @@ export const ProjectDetailModal: React.FC<ProjectDetailModalProps> = memo(({
       techs: project.details?.techStack?.developmentTools ?? []
     }
   }), [project.details?.techStack, project.tags]);
-
-  // Performance metrics for the project (enhanced with Conison Commerce Hub data)
-  const projectMetrics = useMemo(() => {
-    // Special handling for Conison Commerce Hub project
-    const isConison = project.title?.includes('Conison Commerce Hub');
-
-    return [
-      {
-        icon: <FaRocket className="text-orange-500" />,
-        value: isConison ? 95 : (project.details?.resultsAndImpact?.performanceAchievements?.length ? 98 : 85),
-        suffix: '%',
-        label: 'Performance Score',
-        description: 'Lighthouse performance audit'
-      },
-      {
-        icon: <FaUsers className="text-blue-500" />,
-        value: isConison ? 12000 : (project.featured ? 15000 : 5000),
-        suffix: '+',
-        label: 'Total Views',
-        description: 'Project portfolio views'
-      },
-      {
-        icon: <FaCode className="text-green-500" />,
-        value: isConison ? 8500 : (project.details?.technicalImplementation?.length ?
-          project.details.technicalImplementation.length * 1500 : 3000),
-        suffix: '+',
-        label: 'Lines of Code',
-        description: 'Clean, maintainable codebase'
-      },
-      {
-        icon: <FaTrophy className="text-yellow-500" />,
-        value: isConison ? 9 : (project.details?.recognitionAndAchievements?.length ?? 3),
-        suffix: '',
-        label: 'Achievements',
-        description: 'Recognition and milestones'
-      }
-    ];
-  }, [project]);
 
   // Handle copy to clipboard with performance tracking
   const handleCopyCode = useCallback(async (code: string, id: string) => {
@@ -392,7 +354,7 @@ export const ProjectDetailModal: React.FC<ProjectDetailModalProps> = memo(({
                 applicationCategory: 'WebApplication',
                 operatingSystem: 'Web',
                 description: project.description,
-                image: project.image,
+                image: project.image || undefined,
                 url: project.demoLink && project.demoLink !== '#' ? project.demoLink : (project.codeLink || ''),
                 offers: { '@type': 'Offer', price: '0', priceCurrency: 'USD' }
               })
@@ -410,13 +372,21 @@ export const ProjectDetailModal: React.FC<ProjectDetailModalProps> = memo(({
               className="relative h-[55vw] min-h-[260px] max-h-[400px] sm:h-[400px] md:h-[500px] lg:h-[60vh] overflow-hidden"
               style={{ y: heroY, scale: heroScale, opacity: heroOpacity }}
             >
-              <img
-                src={project.image}
-                alt={project.title}
-                className="w-full h-full object-cover"
-                loading="eager"
-                onLoad={() => handleImageLoad(0)}
-              />
+              {project.image ? (
+                <img
+                  src={project.image}
+                  alt={project.title}
+                  className="w-full h-full object-cover"
+                  loading="eager"
+                  onLoad={() => handleImageLoad(0)}
+                />
+              ) : (
+                <div
+                  className="w-full h-full bg-[var(--color-bg-surface)]"
+                  style={{ backgroundImage: 'radial-gradient(circle at 30% 20%, rgba(255, 160, 0, 0.22), transparent 60%), radial-gradient(circle at 80% 90%, rgba(245, 124, 0, 0.16), transparent 55%)' }}
+                  aria-hidden="true"
+                />
+              )}
 
               {/* Soft bottom gradient — mobile gets deeper gradient */}
               <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-black/10 to-black/30 sm:from-black/80 sm:via-black/20 sm:to-transparent" />
@@ -650,38 +620,6 @@ export const ProjectDetailModal: React.FC<ProjectDetailModalProps> = memo(({
 
             {/* Main Content */}
             <div className="px-5 py-7 sm:p-6 md:p-8 space-y-10 sm:space-y-16 max-w-5xl mx-auto w-full">
-              {/* Project Metrics */}
-              <ProjectSection
-                title="Project Metrics"
-                icon={<FaChartLine />}
-                delay={0.1}
-              >
-                <div className="grid grid-cols-1 xs:grid-cols-2 sm:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6">
-                  {projectMetrics.map((metric, index) => (
-                    <motion.div
-                      key={metric.label}
-                      initial={{ opacity: 0, y: 20 }}
-                      animate={{ opacity: 1, y: 0 }}
-                      transition={{ delay: 0.1 + index * 0.1 }}
-                      className="bg-[var(--color-bg-surface)] rounded-xl p-4 sm:p-6 border border-[var(--color-border)] flex flex-col justify-center"
-                    >
-                      <div className="flex items-center gap-2 mb-2">
-                        <span className="text-base sm:text-lg">{metric.icon}</span>
-                        <h4 className="font-semibold text-[var(--color-text-primary)] text-xs sm:text-sm leading-tight">
-                          {metric.label}
-                        </h4>
-                      </div>
-                      <div className="text-xl sm:text-3xl font-bold text-[var(--primary-amber)] mb-0.5">
-                        {metric.value.toLocaleString()}{metric.suffix}
-                      </div>
-                      <p className="text-xs text-[var(--color-text-secondary)] leading-snug">
-                        {metric.description}
-                      </p>
-                    </motion.div>
-                  ))}
-                </div>
-              </ProjectSection>
-
               {/* Project Overview */}
               {project.details?.overview && (
                 <ProjectSection
@@ -813,6 +751,7 @@ export const ProjectDetailModal: React.FC<ProjectDetailModalProps> = memo(({
               </ProjectSection>
 
               {/* Project Gallery */}
+              {projectImages.length > 0 && (
               <ProjectSection
                 title="Project Gallery"
                 icon={<FaExpand />}
@@ -830,6 +769,7 @@ export const ProjectDetailModal: React.FC<ProjectDetailModalProps> = memo(({
                   />
                 </Suspense>
               </ProjectSection>
+              )}
 
               {/* Results & Impact */}
               {project.details?.resultsAndImpact && (

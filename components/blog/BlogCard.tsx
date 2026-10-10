@@ -153,22 +153,16 @@ export const BlogCard: React.FC<BlogCardProps> = ({ post, onClick }) => {
                 style={{ touchAction: "manipulation" }}
               >
                 <FaHeart className={`w-3 h-3 ${isLiked ? 'text-red-500' : 'text-[var(--primary-amber)]'} ${isLiking ? 'animate-pulse' : ''}`} />
-                {likeCount > 1000 ? `${(likeCount / 1000).toFixed(1)}k` : likeCount}
+                {likeCount > 0 && (likeCount > 1000 ? `${(likeCount / 1000).toFixed(1)}k` : likeCount)}
               </span>
               
-              {post.views && (
+              {post.views > 0 && (
                 <span className="flex items-center gap-1 text-xs text-[var(--secondary-text)]">
                   <FaEye className="w-3 h-3 text-[var(--primary-amber)]" />
                   {post.views > 1000 ? `${(post.views / 1000).toFixed(1)}k` : post.views}
                 </span>
               )}
               
-              {post.trending && (
-                <span className="flex items-center gap-1 text-xs font-medium text-[var(--primary-orange)]">
-                  <FaFire className="w-3 h-3" />
-                  Hot
-                </span>
-              )}
             </div>
           </div>
         </div>

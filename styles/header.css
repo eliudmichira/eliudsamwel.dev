@@ -22,3 +22,9 @@
   animation: nav-item-appear 0.5s ease-out forwards;
   opacity: 0; /* Initial state before animation starts */
 } 
+/* Mobile header background. Tailwind can't apply opacity modifiers to var() colors
+   (`bg-[var(--x)]/95` generates no CSS), which left this header transparent. */
+.mobile-header-surface {
+  background: var(--color-bg-base);
+  background: color-mix(in srgb, var(--color-bg-base) 88%, transparent);
+}

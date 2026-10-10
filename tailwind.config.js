@@ -14,8 +14,10 @@ export default {
         display: ['var(--font-heading)', 'sans-serif'],
       },
       colors: {
-        // Updated white to use the new base background color
-        'white': 'var(--color-bg-base)',
+        // Keep Tailwind's real white. It used to be remapped to --color-bg-base,
+        // which made every `text-white` near-black in dark mode and broke `bg-white/20`
+        // opacity utilities. Use `primary-bg` / `surface-base` for theme-aware backgrounds.
+        'white': '#ffffff',
         
         // Theme-aligned semantic color names using new CSS variables
         'primary-bg': 'var(--color-bg-base)',       // Maps to --color-bg-base

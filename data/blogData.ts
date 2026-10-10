@@ -1566,10 +1566,10 @@ A passionate writer and developer sharing insights and experiences in the world 
   },
   {
     id: 'sounsswapp-playlist-converter',
-    title: '🎵 Building Sounsswapp: From React PWA to Play Store Success',
+    title: '🎵 Building SoundSwapp: From React PWA to Play Store Success',
     excerpt: 'How I built a cross-platform playlist converter and deployed it to Google Play Store using modern web technologies',
     content: `
-# 🎵 Building Sounsswapp: From React PWA to Play Store Success
+# 🎵 Building SoundSwapp: From React PWA to Play Store Success
 
 *How I built a cross-platform playlist converter and deployed it to Google Play Store using modern web technologies*
 
@@ -1577,7 +1577,7 @@ A passionate writer and developer sharing insights and experiences in the world 
 
 ## 🚀 **The Vision**
 
-In today's fragmented music streaming landscape, users often find themselves switching between platforms like Spotify and YouTube Music. But what happens to your carefully curated playlists? They get left behind. That's the problem I set out to solve with **Sounsswapp** - a seamless playlist converter that bridges the gap between music platforms.
+In today's fragmented music streaming landscape, users often find themselves switching between platforms like Spotify and YouTube Music. But what happens to your carefully curated playlists? They get left behind. That's the problem I set out to solve with **SoundSwapp** - a seamless playlist converter that bridges the gap between music platforms.
 
 ## 🛠️ **Tech Stack & Architecture**
 
@@ -2234,7 +2234,7 @@ The traditional native development approach is becoming obsolete, replaced by th
 
 ---
 
-**Sounsswapp Case Study**: [https://soundsswapp.com](https://soundsswapp.com)  
+**SoundSwapp Case Study**: [https://soundsswapp.com](https://soundsswapp.com)  
 **Source Code**: [https://github.com/eliudmichira/SoundSwapp](https://github.com/eliudmichira/SoundSwapp)
 
 *The future of mobile development is web-native. Embrace it.* 🚀

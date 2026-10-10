@@ -17,7 +17,7 @@ export const StatsSection: React.FC = () => {
               Key <span className="gradient-text-multi">Metrics</span>
           </h2>
           <p className="text-lg text-[var(--secondary-text)] max-w-xl mx-auto">
-              Operations, automation platforms, shipped work, and flagship builds—at a glance.
+              The numbers behind the work: evaluation scores, domain coverage, and remote track record.
           </p>
       </div>
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 sm:gap-8 max-w-6xl mx-auto px-4">

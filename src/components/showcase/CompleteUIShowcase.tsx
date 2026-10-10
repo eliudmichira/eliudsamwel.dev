@@ -701,7 +701,8 @@ export const CompleteUIShowcase: React.FC = () => {
       )}
 
       {/* Enhanced Header with Search and Filters */}
-      <header className="sticky top-0 z-40 bg-[var(--color-bg-card)]/95 backdrop-blur-lg border-b border-[var(--color-border)]">
+      {/* Sticks below the site navigation (mobile header ~72px, desktop nav pill ~88px) */}
+      <header className="sticky top-20 lg:top-24 z-40 rounded-2xl bg-[var(--color-bg-card)]/95 backdrop-blur-lg border border-[var(--color-border)]">
         <div className="container mx-auto px-4 py-4">
           {/* Main header row */}
           <div className="flex items-center justify-between mb-4">

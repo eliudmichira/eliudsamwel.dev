@@ -70,6 +70,9 @@ export const BlogPage: React.FC = () => {
       }
     });
   }, [activeCategory, debouncedSearchTerm, sortBy]);
+
+  const featuredPost = posts.find(post => post.featured);
+  const showFeaturedBanner = !!featuredPost && sortBy !== 'popular' && activeCategory === 'all' && !searchTerm;
   
   // Handle post selection
   const handleSelectPost = (post: BlogPostProps) => {
@@ -132,7 +135,7 @@ export const BlogPage: React.FC = () => {
                   transition={{ duration: 0.5 }}
                   className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-bold mb-3 sm:mb-4"
                 >
-                  <span className="bg-gradient-to-r from-[var(--primary-amber)] via-[var(--accent-yellow)] to-[var(--primary-orange)] bg-clip-text text-transparent animate-gradient-x">
+                  <span className="title-gradient animate-gradient-x">
                     Tech Insights
                   </span>
                 </motion.h1>
@@ -142,7 +145,7 @@ export const BlogPage: React.FC = () => {
                   transition={{ duration: 0.5, delay: 0.1 }}
                   className="text-[var(--secondary-text)] max-w-2xl mx-auto text-sm sm:text-base md:text-lg px-2"
                 >
-                  Deep dives into web development, blockchain innovation, and the future of technology
+                  Write-ups from building and shipping: mobile apps, automation pipelines, and the debugging stories in between.
                 </motion.p>
                 
                 {/* Newsletter Signup → n8n (HubSpot + Telegram + Gmail welcome) */}
@@ -297,7 +300,7 @@ export const BlogPage: React.FC = () => {
                 </div>
                 
               {/* Featured Post */}
-              {posts.find(post => post.featured) && sortBy !== 'popular' && activeCategory === 'all' && !searchTerm && (
+              {showFeaturedBanner && (
                 <motion.div 
                   initial={{ opacity: 0, y: 20 }}
                   animate={{ opacity: 1, y: 0 }}
@@ -363,7 +366,10 @@ export const BlogPage: React.FC = () => {
                   animate={{ opacity: 1, y: 0 }}
                   transition={{ duration: 0.5, delay: 0.2 }}
                 >
-                  {filteredPosts.map((post) => (
+                  {filteredPosts
+                    // The featured post already has its own banner above the grid
+                    .filter(post => !(showFeaturedBanner && post.featured && post.id === featuredPost?.id))
+                    .map((post) => (
                     <BlogCard
                       key={post.id}
                       post={{

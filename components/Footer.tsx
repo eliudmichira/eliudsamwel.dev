@@ -1,5 +1,6 @@
 import React from 'react';
-import { FaGithub, FaLinkedin, FaEnvelope, FaTwitter, FaArrowUp } from 'react-icons/fa';
+import { FaGithub, FaLinkedin, FaEnvelope, FaArrowUp } from 'react-icons/fa';
+import { FaXTwitter } from 'react-icons/fa6';
 import { motion } from 'motion/react';
 
 interface FooterProps {
@@ -63,7 +64,7 @@ export const Footer: React.FC<FooterProps> = ({ onNavLinkClick }) => {
                 </div>
               </a>
               <p className="text-[var(--color-text)] dark:text-gray-400 text-sm sm:text-base leading-relaxed mb-6">
-                Crafting digital experiences with passion and precision. Software Developer & Tech Innovator.
+                Data annotation and AI content evaluation, backed by a full-stack engineering background.
               </p>
               
               {/* Social links with hover effects */}
@@ -105,16 +106,16 @@ export const Footer: React.FC<FooterProps> = ({ onNavLinkClick }) => {
                   target="_blank" 
                   rel="noopener noreferrer" 
                   className="lifted pill group relative p-3 w-11 h-11 flex items-center justify-center"
-                  aria-label="Visit Eliud's Twitter profile"
+                  aria-label="Visit Eliud's X profile"
                 >
                   <motion.span
                     whileHover={{ scale: 1.2, rotate: 10 }}
                     whileTap={{ scale: 0.9, rotate: -10 }}
                     transition={{ type: 'spring', stiffness: 300 }}
                   >
-                    <FaTwitter className="h-5 w-5 text-[var(--color-text-muted)] dark:text-gray-400 group-hover:text-[var(--color-accent-end)] transition-colors" />
+                    <FaXTwitter className="h-5 w-5 text-[var(--color-text-muted)] dark:text-gray-400 group-hover:text-[var(--color-accent-end)] transition-colors" />
                   </motion.span>
-                  <span className="absolute -top-8 left-1/2 transform -translate-x-1/2 px-2 py-1 bg-[var(--color-bg-surface)] dark:bg-gray-800 text-[var(--color-text)] dark:text-white rounded opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap shadow-md">Twitter</span>
+                  <span className="absolute -top-8 left-1/2 transform -translate-x-1/2 px-2 py-1 bg-[var(--color-bg-surface)] dark:bg-gray-800 text-[var(--color-text)] dark:text-white rounded opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap shadow-md">X</span>
                 </a>
                 <a 
                   href="mailto:eliudmichira7@gmail.com" 
@@ -190,14 +191,14 @@ export const Footer: React.FC<FooterProps> = ({ onNavLinkClick }) => {
               <div className="sm:col-span-2">
                 <h3 className="text-[var(--color-text)] dark:text-white font-semibold mb-4 text-sm uppercase tracking-wider">Get in Touch</h3>
                 <p className="text-[var(--color-text)] dark:text-gray-400 text-sm mb-4">
-                  Available for freelance projects and collaborations. Let's create something amazing together.
+                  Open to annotation, evaluation, and QA roles — and engineering projects when they're a good fit.
                 </p>
                 <a 
                   href="#Contact"
                   onClick={(e) => handleInternalLinkClick(e, 'Contact')}
                   className="inline-flex items-center px-4 py-2 bg-gradient-to-r from-[var(--accent-primary)] via-[var(--accent-secondary)] to-[var(--accent-yellow)] text-[var(--color-text-on-accent)] text-sm font-medium rounded-full hover:shadow-lg hover:shadow-[var(--color-accent-mid)]/25 transform hover:scale-105 transition-all duration-300"
                 >
-                  Start a Project
+                  Get in Touch
                 </a>
               </div>
             </div>

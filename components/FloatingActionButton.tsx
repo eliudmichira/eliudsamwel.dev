@@ -104,8 +104,9 @@ export const FloatingActionButton: React.FC<FABProps> = ({ onNavigate, theme, to
     setIsOpen(false);
   };
 
+  // Desktop only: on smaller screens the header menu already covers these shortcuts
   return (
-    <div className="fixed bottom-6 left-6 sm:bottom-8 sm:left-8 z-[999]">
+    <div className="hidden lg:block fixed bottom-6 left-6 sm:bottom-8 sm:left-8 z-[999]">
       <div 
         className={`floating-menu absolute bottom-[calc(100%_+_10px)] left-1/2 transform -translate-x-1/2 flex flex-col items-center gap-3 transition-all duration-300 ease-[cubic-bezier(0.4,0,0.2,1)] ${isOpen ? 'opacity-100 visible translate-y-0' : 'opacity-0 invisible translate-y-4'}`}
       >

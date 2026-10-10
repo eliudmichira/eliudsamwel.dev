@@ -204,16 +204,16 @@ const App: React.FC = () => {
     toggleThemeInternal(); 
   };
 
-  useEffect(() => { // Preloader
-    const timer = setTimeout(() => {
+  useEffect(() => { // Preloader: hide as soon as React has painted (no forced 1.5s wait)
+    const frame = requestAnimationFrame(() => {
       const preloader = document.getElementById('preloader');
       if (preloader) {
         preloader.classList.add('loaded');
       }
       setLoading(false);
-    }, 1500);
+    });
     
-    return () => clearTimeout(timer);
+    return () => cancelAnimationFrame(frame);
   }, []);
 
   useEffect(() => { // Particles.js
@@ -276,7 +276,8 @@ const App: React.FC = () => {
     }
   };
 
-  const navLinks: NavLinkItem[] = initialNavLinksData.map(link => ({
+  // UI Showcase stays reachable at #ui-showcase (linked from Projects) but isn't a main nav item
+  const navLinks: NavLinkItem[] = initialNavLinksData.filter(link => link.pageId !== 'UIShowcase').map(link => ({
     ...link,
     current: link.pageId === activePage,
   }));

@@ -14,7 +14,8 @@ import {
   FaRocket,
   FaCubes,
   FaTh,
-  FaList
+  FaList,
+  FaArrowRight
 } from 'react-icons/fa';
 
 // Enhanced project data with more details
@@ -432,7 +433,7 @@ Intelligent property matching and recommendation engine personalised to buyer be
   },
   {
     id: 'sounsswapp',
-    title: 'Sounsswapp - Playlist Converter',
+    title: 'SoundSwapp — Playlist Converter',
     description: 'A TypeScript-based web application that seamlessly converts playlists between Spotify and YouTube with an elegant, responsive UI and advanced track matching algorithm.',
     image: '/images/projects/soundswapp hero section light mode.png',
     category: 'web',
@@ -440,7 +441,7 @@ Intelligent property matching and recommendation engine personalised to buyer be
     tags: ['React', 'TypeScript', 'SpotifyAPI', 'YouTubeAPI', 'Firebase', 'TailwindCSS', 'OAuth', 'WebDevelopment'],
     demoLink: 'https://soundsswapp.com/',
     codeLink: 'https://github.com/eliudmichira/SoundSwapp.git',
-    featured: true,
+    featured: false,
     longDescription: `
       ## Project Overview
 
@@ -848,7 +849,7 @@ export const ConversionProvider: React.FC<{ children: React.ReactNode }> = ({ ch
     tags: ['Solidity', 'Ethereum', 'React', 'Web3.js', 'JWT Auth', 'MetaMask', 'Smart Contracts'],
     demoLink: 'https://blockchainbasedvotermanagement.web.app/',
     codeLink: 'https://github.com/eliudmichira/Blockchain-Voting-System.git',
-    featured: true,
+    featured: false,
     longDescription: `
       ## Project Overview
 
@@ -1196,7 +1197,7 @@ async function connectWallet() {
     tags: ['React', 'TypeScript', 'Tailwind CSS', 'PWA', 'M-Pesa', 'Node.js', 'Express', 'Solidity', 'n8n'],
     demoLink: 'https://umojapay-554ac.web.app/',
     codeLink: '#',
-    featured: true,
+    featured: false,
     longDescription: `
 ## 🧩 Project: UmojaPay – Community-Based Digital Payment System
 
@@ -1394,7 +1395,7 @@ Custom Offline Page: Configured in the service worker to serve '/offline.html' w
     tags: ['React', 'TypeScript', 'Tailwind CSS', 'Framer Motion', 'Firebase', 'AI Integration'],
     demoLink: 'https://eliudsamwel.dev',
     codeLink: 'https://github.com/yourusername/portfolio-website',
-    featured: true,
+    featured: false,
     longDescription: `
       ## Project Overview
 
@@ -1908,7 +1909,7 @@ export const ThemeProvider: React.FC<{ children: React.ReactNode }> = ({ childre
     tags: ['React', 'TypeScript', 'Firebase', 'Tailwind CSS', 'E-commerce', 'Admin Dashboard', 'Vite', 'Framer Motion'],
     demoLink: 'https://bogani.web.app/',
     codeLink: 'https://github.com/eliudmichira/bogani-milk-website.git',
-    featured: true,
+    featured: false,
     longDescription: `
       ## Project Overview
 
@@ -2227,7 +2228,7 @@ const SalesChart = ({ salesData }) => (
     tags: ['React.js 18.3.1', 'Node.js', 'Firebase', 'Tailwind CSS', 'Framer Motion', 'IntaSend API', 'Google Gemini AI', 'EmailJS'],
     demoLink: 'https://conison-25ccd.firebaseapp.com/',
     codeLink: 'https://conison-25ccd.firebaseapp.com/',
-    featured: true,
+    featured: false,
     images: [
       '/images/projects/conison full home page.png',
       '/images/projects/conison home page.png',
@@ -2423,7 +2424,7 @@ const SalesChart = ({ salesData }) => (
     id: 'uzakitu-tracking',
     title: 'UzaKitu Order Tracking',
     description: 'Integrated real-time order updates via WebSocket to reduce support queries and improve user satisfaction. Provides real-time status updates and notifications.',
-    image: 'https://images.unsplash.com/photo-1608222351212-18fe0ec7b13b?w=600&h=400&fit=crop&crop=center',
+    image: '', // no screenshot yet: card shows a branded tile
     category: 'websocket',
     type: 'web',
     tags: ['WebSocket', 'React', 'Node.js', 'Real-time', 'Express'],
@@ -2434,7 +2435,7 @@ const SalesChart = ({ salesData }) => (
     id: 'tinypesa',
     title: 'TinyPesa Platform Enhancements',
     description: 'Contributed to mobile/web app improvements including UI optimization and bug fixing during internship at Neverest Ltd. Focused on improving the payment processing flow.',
-    image: 'https://images.unsplash.com/photo-1606107557195-0e29a4b5b4aa?w=600&h=400&fit=crop&crop=center',
+    image: '', // no screenshot yet: card shows a branded tile
     category: 'mobile',
     type: 'mobile',
     tags: ['Mobile App', 'Payments', 'UI/UX', 'Optimization', 'React Native'],
@@ -2452,7 +2453,8 @@ export const ProjectsPage: React.FC = () => {
   const [searchTerm, setSearchTerm] = useState('');
   const [isSearchFocused, setIsSearchFocused] = useState(false);
   const [viewMode, setViewMode] = useState<'grid' | 'list'>('grid');
-  const [showFilters, setShowFilters] = useState(true);
+  // Filters start collapsed below lg so phones see projects first; the Filters button opens them
+  const [showFilters, setShowFilters] = useState(() => typeof window === 'undefined' || window.innerWidth >= 1024);
 
   const heroRef = useRef<HTMLDivElement>(null);
   const containerRef = useRef<HTMLDivElement>(null);
@@ -2548,7 +2550,7 @@ export const ProjectsPage: React.FC = () => {
             animate={{ scale: 1 }}
             transition={{ duration: 0.5 }}
           >
-            <span className="bg-gradient-to-r from-[var(--primary-amber)] via-[var(--accent-yellow)] to-[var(--primary-orange)] bg-clip-text text-transparent animate-gradient-x">
+            <span className="title-gradient animate-gradient-x">
               Project Showcase
             </span>
           </motion.h1>
@@ -2559,7 +2561,7 @@ export const ProjectsPage: React.FC = () => {
             animate={{ y: 0, opacity: 1 }}
             transition={{ delay: 0.2, duration: 0.6 }}
           >
-            Explore my portfolio of web and mobile applications, showcasing expertise in React, blockchain, and fullstack development
+            Web and mobile apps, browser extensions, and blockchain systems I've built — the engineering background behind my eye for data quality.
           </motion.p>
 
           <motion.div
@@ -2655,7 +2657,7 @@ export const ProjectsPage: React.FC = () => {
                 aria-label={showFilters ? "Hide filters" : "Show filters"}
               >
                 <FaFilter className="w-4 h-4" />
-                <span className="hidden sm:inline">Filters</span>
+                <span>Filters</span>
               </motion.button>
             </div>
           </div>
@@ -2693,7 +2695,10 @@ export const ProjectsPage: React.FC = () => {
                         <div className="flex items-center gap-2">
                           <span className="text-current">{cat.icon}</span>
                           <span>{cat.label}</span>
-                          <span className="inline-block px-1.5 py-0.5 rounded-full text-xs bg-black/10 text-[var(--secondary-text)]">
+                          <span className={`inline-block px-1.5 py-0.5 rounded-full text-xs ${activeCategory === cat.key
+                            ? 'bg-black/15 text-black'
+                            : 'bg-[var(--color-bg-muted)] text-[var(--secondary-text)]'
+                            }`}>
                             {cat.count}
                           </span>
                         </div>
@@ -2797,6 +2802,21 @@ export const ProjectsPage: React.FC = () => {
             Showing <span className="text-[var(--primary-amber)] font-semibold">{visibleProjects.length}</span> of {projectsData.length} projects
           </motion.div>
         )}
+
+        {/* UI Showcase lives here instead of the main nav */}
+        <a
+          href="#ui-showcase"
+          className="card-embossed group mt-12 flex flex-col sm:flex-row sm:items-center justify-between gap-4 p-6 sm:p-8 no-underline"
+        >
+          <div>
+            <span className="emboss-meta text-[var(--accent-primary)]">Component library</span>
+            <h3 className="text-lg sm:text-xl font-bold text-[var(--primary-text)] mt-1 mb-1">Browse my UI showcase</h3>
+            <p className="text-sm text-[var(--secondary-text)]">Hero sections, cards, navigation bars, forms and modals I've built and reuse across projects.</p>
+          </div>
+          <span className="inline-flex items-center gap-2 text-sm font-semibold text-[var(--primary-amber)] whitespace-nowrap group-hover:translate-x-1 transition-transform">
+            Open showcase <FaArrowRight className="w-3 h-3" />
+          </span>
+        </a>
       </div>
 
       {/* Project Detail Modal */}

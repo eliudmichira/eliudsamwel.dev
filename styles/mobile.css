@@ -16,7 +16,7 @@
   select, 
   textarea {
     font-size: 16px !important; /* Prevents zoom on focus in iOS/Android */
-    padding: 12px !important;
+    /* No forced padding: it overrode per-input padding (e.g. pl-10 for search icons) */
   }
 
   /* Fix for Android browser viewport issues */

@@ -120,11 +120,11 @@ export const ContactForm: React.FC<ContactFormProps> = ({ onSubmit }) => {
             value={formData.message}
             onChange={handleChange}
             className={`${textareaClasses} min-h-[180px]`}
-            placeholder="Tell me about your project, what you're looking for, timeline, budget, or anything else you'd like to share..." 
+            placeholder="Tell me about the role or project — what you need, the timeline, and anything else that helps." 
             required
           />
           <p className="mt-2 text-xs text-[var(--secondary-text)]">
-            Feel free to include project details, timeline, budget, or any questions you have.
+            For roles, a link to the job post helps. For projects, include scope and timeline.
           </p>
         </div>
       </div>

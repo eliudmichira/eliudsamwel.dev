@@ -140,10 +140,10 @@ function mockAssistantReply(userInput: string): string {
   if (/\b(hi|hello|hey)\b/.test(lower)) {
     return `${chatConfig.mockResponses.greeting}\n\n${chatConfig.mockResponses.defaultResponse}`;
   }
-  if (/\b(project|portfolio|soundswapp|flick|sanarix)\b/i.test(userInput)) {
+  if (/\b(project|portfolio|soundswapp|flick|duet|homeske)\b/i.test(userInput)) {
     return `${chatConfig.mockResponses.projectInquiry}`;
   }
-  if (/\b(skill|stack|n8n|zapier|automat|tooling)\b/.test(lower)) {
+  if (/\b(skill|stack|annotat|evaluat|label|tooling)\w*/.test(lower)) {
     return `${chatConfig.mockResponses.skillsInquiry}`;
   }
   if (/\b(contact|email|reach|hire)\b/.test(lower)) {
@@ -203,7 +203,7 @@ export const FuturisticAIAssistant: React.FC = () => {
     let timeoutId: NodeJS.Timeout;
     
     try {
-      const welcomeText = `Hi — I'm ${AI_NAME}, Eliud's portfolio assistant. Ask about automation work, engineering experience, featured projects, or how to get in touch.`;
+      const welcomeText = `Hi — I'm ${AI_NAME}, Eliud's portfolio assistant. Ask about annotation and AI evaluation work, engineering experience, featured projects, or how to get in touch.`;
       
       setMessages([{
         id: 'welcome',
@@ -525,7 +525,7 @@ export const FuturisticAIAssistant: React.FC = () => {
             <div className="quick-actions">
               {[
                 { icon: <FaProjectDiagram />, label: "Projects", prompt: "What projects should I look at on this portfolio?" },
-                { icon: <FaLaptopCode />, label: "Skills", prompt: "Summarize Eliud's technical and automation skills." },
+                { icon: <FaLaptopCode />, label: "Skills", prompt: "Summarize Eliud's annotation, evaluation, and technical skills." },
                 { icon: <FaUser />, label: "About", prompt: "Give a short overview of Eliud's background." },
                 { icon: <FaBookOpen />, label: "Experience", prompt: "What is Eliud's professional experience?" }
               ].map((action, index) => (

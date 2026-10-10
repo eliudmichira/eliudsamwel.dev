@@ -35,6 +35,7 @@
   --accent-light: #FED7AA;       /* Light orange for backgrounds/hovers */
   --accent-hover: #EA580C;       /* Darker orange for interactions */
   --accent-yellow: #FCD34D;      /* Kept from previous for compatibility if used directly */
+  --accent-text: #9A3412;       /* Accent-colored text that passes 4.5:1 on light and accent-light backgrounds */
   --accent-color-red: #f57c00;   /* Kept from previous for compatibility */
   
   /* Navigation active state - darker for better contrast in light mode */
@@ -157,6 +158,7 @@ html.dark {
   --accent-light: #4A2E0F; /* Dark theme appropriate light orange for bg */
   --accent-hover: #D34C0A;  /* Dark theme appropriate hover */
   --accent-yellow: #FCD34D;
+  --accent-text: #F59E0B;  /* Accent-colored text in dark mode */
   --accent-color-red: #f57c00;
 
   /* Gradients - May need dark theme specific versions if contrast is an issue */
@@ -221,6 +223,7 @@ html.dark {
     --accent-light: #4A2E0F;
     --accent-hover: #D34C0A;
     --accent-yellow: #FCD34D;
+    --accent-text: #F59E0B;  /* Accent-colored text in dark mode */
     --accent-color-red: #f57c00;
     --glow: 0 0 30px rgba(245, 158, 11, 0.3);
     --card-glow: 0 0 50px rgba(249, 115, 22, 0.15);
@@ -267,6 +270,7 @@ html.dark {
   --accent-secondary: #F59E0B !important;
   --accent-light: #4A2E0F !important;
   --accent-hover: #D34C0A !important;
+  --accent-text: #F59E0B !important;
   --glow: 0 0 30px rgba(245, 158, 11, 0.3) !important;
   --card-glow: 0 0 50px rgba(249, 115, 22, 0.15) !important;
   
@@ -657,3 +661,29 @@ h1, .h1 { font-size: var(--text-4xl); }
 
 /* Specificity overrides if needed for certain contexts */
  
+/* The sky theme toggle (scripts/themeToggle.js) mounts itself as a fixed orb.
+   Below the lg breakpoint it covered page headings, so phones and tablets use
+   the sun/moon button in the mobile header instead. */
+@media (max-width: 1023px) {
+  #sky-theme-toggle {
+    display: none !important;
+  }
+}
+
+/* Page title gradient (Projects, Blog). The dark-mode stops include yellow, which
+   is unreadable on white, so light mode uses deeper amber/orange stops. */
+.title-gradient {
+  background-image: linear-gradient(to right, var(--primary-amber), var(--accent-yellow), var(--primary-orange));
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+html:not(.dark) .title-gradient {
+  background-image: linear-gradient(to right, #D97706, #EA580C, #C2410C);
+}
+
+/* index.html's inline :root sets --card-border to the dark value (#2a2a2a) and loads
+   after this file, so light mode needs a more specific selector to win. */
+html:not(.dark) {
+  --card-border: var(--color-border);
+}

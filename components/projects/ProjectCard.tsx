@@ -1,17 +1,10 @@
 import React, { useState, useRef, useMemo, memo, useCallback } from 'react';
-import { motion, useSpring, useTransform, useInView, AnimatePresence } from 'motion/react';
+import { motion, useSpring, useTransform, useInView } from 'motion/react';
 import { 
-  FaClock, 
   FaArrowRight, 
   FaGithub, 
-  FaExternalLinkAlt,
   FaBolt,
-  FaEye,
-  FaHeart,
-  FaChartLine,
-  FaTrophy,
-  FaFireAlt,
-  FaImage
+  FaTrophy
 } from 'react-icons/fa';
 
 interface ProjectCardComponentProps {
@@ -26,16 +19,16 @@ interface ProjectCardComponentProps {
   featured?: boolean;
   onClick: () => void;
   index: number;
-  stats?: {
-    views: number;
-    likes: number;
-    completion: number;
-  };
-  difficulty?: 'Beginner' | 'Intermediate' | 'Advanced' | 'Expert';
-  impact?: 'Low' | 'Medium' | 'High' | 'Very High';
-  dateCreated?: string;
-  priority?: 'high' | 'medium' | 'low';
 }
+
+// Initials for the branded tile shown when a project has no screenshot
+const getInitials = (title: string) =>
+  title
+    .split(/[\s—–-]+/)
+    .filter(word => /^[A-Za-z]/.test(word))
+    .slice(0, 2)
+    .map(word => word[0].toUpperCase())
+    .join('');
 
 // Memoized component for better performance
 export const ProjectCard: React.FC<ProjectCardComponentProps> = memo(({
@@ -49,18 +42,11 @@ export const ProjectCard: React.FC<ProjectCardComponentProps> = memo(({
   type,
   featured,
   onClick,
-  index = 0,
-  stats = { views: 1234, likes: 89, completion: 95 },
-  difficulty = 'Advanced',
-  impact = 'High',
-  dateCreated = '2 months ago',
-  priority = 'medium'
+  index = 0
 }) => {
   const [isHovered, setIsHovered] = useState(false);
-  const [imageLoaded, setImageLoaded] = useState(false);
-  const [imageError, setImageError] = useState(false);
-  const [showActions, setShowActions] = useState(false);
-  const [liked, setLiked] = useState(false);
+  const [imageLoaded, setImageLoaded] = useState(!image);
+  const [imageError, setImageError] = useState(!image);
   const [mousePosition, setMousePosition] = useState({ x: 0, y: 0 });
   
   const cardRef = useRef<HTMLDivElement>(null);
@@ -98,30 +84,6 @@ export const ProjectCard: React.FC<ProjectCardComponentProps> = memo(({
     }
   );
   
-  // Optimized image sources with WebP support
-  const optimizedImageSources = useMemo(() => {
-    const webpSrc = image.replace(/\.(jpg|jpeg|png)$/i, '.webp');
-    return {
-      webp: webpSrc,
-      fallback: image
-    };
-  }, [image]);
-  
-  // Memoized optimizations
-  const difficultyConfig = useMemo(() => ({
-    'Beginner': { color: '#4ECDC4', icon: '🌱', level: 1 },
-    'Intermediate': { color: '#95E1D3', icon: '🌿', level: 2 },
-    'Advanced': { color: '#F38181', icon: '🔥', level: 3 },
-    'Expert': { color: '#FF6B6B', icon: '💎', level: 4 }
-  }), []);
-  
-  const impactColors = useMemo(() => ({
-    'Low': '#6c757d',
-    'Medium': '#ffc107',
-    'High': '#28a745',
-    'Very High': '#dc3545'
-  }), []);
-  
   // Handle mouse movement for 3D effect (optimized with useCallback)
   const handleMouseMove = useCallback((e: React.MouseEvent) => {
     if (!cardRef.current || prefersReducedMotion) return;
@@ -143,7 +105,6 @@ export const ProjectCard: React.FC<ProjectCardComponentProps> = memo(({
     y.set(0);
     }
     setIsHovered(false);
-    setShowActions(false);
   }, [x, y, prefersReducedMotion]);
   
   // Truncate description with memoization
@@ -152,12 +113,6 @@ export const ProjectCard: React.FC<ProjectCardComponentProps> = memo(({
     if (description.length <= maxLength) return description;
     return description.slice(0, maxLength) + '...';
   }, [description]);
-  
-  // Handle like action (optimized)
-  const handleLike = useCallback((e: React.MouseEvent) => {
-    e.stopPropagation();
-    setLiked(!liked);
-  }, [liked]);
   
   // Handle image loading with error fallback
   const handleImageLoad = useCallback(() => {
@@ -173,10 +128,10 @@ export const ProjectCard: React.FC<ProjectCardComponentProps> = memo(({
   const handleClick = useCallback(() => {
     // Track interaction for analytics
     if (process.env.NODE_ENV === 'development') {
-      console.log(`Project card clicked: ${title}, Priority: ${priority}, Load time: ${imageLoaded ? 'Loaded' : 'Loading'}`);
+      console.log(`Project card clicked: ${title}, Load time: ${imageLoaded ? 'Loaded' : 'Loading'}`);
     }
     onClick();
-  }, [onClick, title, priority, imageLoaded]);
+  }, [onClick, title, imageLoaded]);
 
   return (
     <>
@@ -201,10 +156,7 @@ export const ProjectCard: React.FC<ProjectCardComponentProps> = memo(({
         transformPerspective: 1000
       }}
       onMouseMove={handleMouseMove}
-      onMouseEnter={() => {
-        setIsHovered(true);
-        setTimeout(() => setShowActions(true), 100);
-      }}
+      onMouseEnter={() => setIsHovered(true)}
       onMouseLeave={handleMouseLeave}
       onClick={handleClick}
       className="group relative cursor-pointer transition-shadow duration-300 shadow-sm hover:shadow-lg"
@@ -232,10 +184,9 @@ export const ProjectCard: React.FC<ProjectCardComponentProps> = memo(({
         />
         )}
         
-        {/* Top badges row */}
-        <div className="absolute top-4 left-4 right-4 z-20 flex items-center justify-between pointer-events-none">
-          {/* Featured badge with animation */}
-          {featured && (
+        {/* Top badge: Featured only, reserved for the top few projects */}
+        {featured && (
+          <div className="absolute top-4 left-4 z-20 pointer-events-none">
             <motion.div
               initial={{ rotate: prefersReducedMotion ? 0 : -15, scale: 0 }}
               animate={{ rotate: 0, scale: 1 }}
@@ -244,59 +195,13 @@ export const ProjectCard: React.FC<ProjectCardComponentProps> = memo(({
                 type: "spring" as const, 
                 stiffness: prefersReducedMotion ? 300 : 200 
               }}
-              className="pointer-events-auto"
+              className="px-3 py-1.5 bg-gradient-to-r from-yellow-400 to-orange-500 rounded-full flex items-center gap-1.5 shadow-lg"
             >
-              <div className="relative group/badge">
-                <div className="absolute inset-0 bg-gradient-to-r from-yellow-400 to-orange-500 blur-md opacity-70 group-hover/badge:opacity-100 transition-opacity" />
-                <div className="relative px-4 py-2 bg-gradient-to-r from-yellow-400 to-orange-500 rounded-full flex items-center gap-2 shadow-xl">
-                  <FaTrophy className="w-4 h-4 text-black" />
-                  <span className="text-black font-bold text-xs uppercase tracking-wider">Featured</span>
-                  <FaFireAlt className="w-4 h-4 text-black" />
-                </div>
-              </div>
+              <FaTrophy className="w-3 h-3 text-black" />
+              <span className="text-black font-bold text-xs uppercase tracking-wider">Featured</span>
             </motion.div>
-          )}
-          
-          {/* Priority indicator */}
-          {priority === 'high' && (
-            <div className="px-2 py-1 bg-red-500/20 text-red-400 text-xs rounded-full border border-red-500/30">
-              High Priority
-            </div>
-          )}
-          
-          {/* Stats badges */}
-          <motion.div 
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            transition={{ delay: prefersReducedMotion ? 0 : 0.5 }}
-            className="flex flex-col gap-2 items-end"
-          >
-            {/* Difficulty badge */}
-            <div 
-              className="px-3 py-1 rounded-full text-xs font-semibold shadow-lg backdrop-blur-sm border"
-              style={{ 
-                backgroundColor: `${difficultyConfig[difficulty].color}15`,
-                borderColor: `${difficultyConfig[difficulty].color}30`,
-                color: difficultyConfig[difficulty].color
-              }}
-            >
-              <span className="mr-1">{difficultyConfig[difficulty].icon}</span>
-              {difficulty}
-            </div>
-            
-            {/* Impact badge */}
-            <div 
-              className="px-3 py-1 rounded-full text-xs font-semibold shadow-lg backdrop-blur-sm border"
-              style={{ 
-                backgroundColor: `${impactColors[impact]}15`,
-                borderColor: `${impactColors[impact]}30`,
-                color: impactColors[impact]
-              }}
-            >
-              {impact} Impact
-            </div>
-          </motion.div>
-        </div>
+          </div>
+        )}
         
         {/* Image container with optimized loading */}
         <div className="relative h-64 overflow-hidden">
@@ -307,78 +212,37 @@ export const ProjectCard: React.FC<ProjectCardComponentProps> = memo(({
             </div>
           )}
           
-          {/* Optimized image with WebP support */}
-            {!imageError ? (
-              <picture>
-                <img
-                  ref={imageRef}
-                  src={image}
-                  alt={title}
-                  className={`w-full h-full object-cover transition-transform duration-700 ease-out`}
-                  loading={priority ? "eager" : "lazy"}
-                  decoding="async"
-                  onLoad={handleImageLoad}
-                  onError={handleImageError}
-                  style={{
-                    opacity: imageLoaded ? 1 : 0,
-                    transform: isHovered ? 'scale(1.05)' : 'scale(1)',
-                    willChange: 'transform'
-                  }}
-                />
-              </picture>
-            ) : (
-            // Error fallback
-            <div className="w-full h-full bg-gradient-to-br from-gray-700 to-gray-800 flex items-center justify-center">
-              <div className="text-gray-400 text-center">
-                <FaImage className="w-8 h-8 mx-auto mb-2" />
-                <p className="text-sm">Image unavailable</p>
-              </div>
+          {/* Screenshot, or a branded tile when there is none */}
+          {!imageError ? (
+            <img
+              ref={imageRef}
+              src={image}
+              alt={title}
+              className="w-full h-full object-cover object-top transition-transform duration-700 ease-out"
+              loading={index < 3 ? "eager" : "lazy"}
+              decoding="async"
+              onLoad={handleImageLoad}
+              onError={handleImageError}
+              style={{
+                opacity: imageLoaded ? 1 : 0,
+                transform: isHovered ? 'scale(1.05)' : 'scale(1)',
+                willChange: 'transform'
+              }}
+            />
+          ) : (
+            <div
+              className="w-full h-full flex flex-col items-center justify-center gap-3 bg-[var(--color-bg-surface)]"
+              style={{ backgroundImage: 'radial-gradient(circle at 30% 20%, rgba(255, 160, 0, 0.18), transparent 60%), radial-gradient(circle at 80% 90%, rgba(245, 124, 0, 0.14), transparent 55%)' }}
+              role="img"
+              aria-label={title}
+            >
+              <span className="text-5xl font-black tracking-tight gradient-text">{getInitials(title)}</span>
+              <span className="emboss-meta">{category}</span>
             </div>
           )}
           
           {/* Overlay gradient */}
-          <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent" />
-          
-          {/* Quick action buttons */}
-          <AnimatePresence>
-            {showActions && !prefersReducedMotion && (
-              <motion.div
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
-                exit={{ opacity: 0, y: 20 }}
-                className="absolute top-4 right-4 flex gap-2"
-              >
-                <motion.button
-                  whileHover={{ scale: 1.1 }}
-                  whileTap={{ scale: 0.95 }}
-                  onClick={handleLike}
-                  className={`p-2 rounded-full backdrop-blur-sm transition-colors ${
-                    liked 
-                      ? 'bg-red-500/80 text-white' 
-                      : 'bg-white/20 hover:bg-white/30 text-white'
-                  }`}
-                  aria-label={liked ? "Unlike project" : "Like project"}
-                >
-                  <FaHeart className="w-4 h-4" />
-                </motion.button>
-                
-                {demoLink && demoLink !== '#' && (
-                  <motion.a
-                    whileHover={{ scale: 1.1 }}
-                    whileTap={{ scale: 0.95 }}
-                    href={demoLink}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    onClick={(e) => e.stopPropagation()}
-                    className="p-2 rounded-full bg-white/20 hover:bg-white/30 text-white backdrop-blur-sm transition-colors"
-                    aria-label="View live demo"
-                  >
-                    <FaExternalLinkAlt className="w-4 h-4" />
-                  </motion.a>
-                )}
-              </motion.div>
-            )}
-          </AnimatePresence>
+          <div className="absolute inset-0 bg-gradient-to-t from-black/40 via-transparent to-transparent pointer-events-none" />
         </div>
         
         {/* Content section */}
@@ -388,13 +252,11 @@ export const ProjectCard: React.FC<ProjectCardComponentProps> = memo(({
             <span className="recessed pill px-3 py-1 emboss-meta text-[var(--accent-primary)]">
               {category}
             </span>
-            <span className="recessed pill px-3 py-1 emboss-meta">
-              {type}
-            </span>
-            <span className="emboss-meta ml-auto">
-              <FaClock className="inline w-3 h-3 mr-1" />
-              {dateCreated}
-            </span>
+            {type.toLowerCase() !== category.toLowerCase() && (
+              <span className="recessed pill px-3 py-1 emboss-meta">
+                {type}
+              </span>
+            )}
           </div>
 
           {/* Title */}
@@ -424,31 +286,14 @@ export const ProjectCard: React.FC<ProjectCardComponentProps> = memo(({
             )}
           </div>
           
-          {/* Stats and actions */}
-          <div className="flex items-center justify-between">
-            <div className="flex items-center gap-4 text-xs text-[var(--color-text-secondary)]">
-              <div className="flex items-center gap-1">
-                <FaEye className="w-3 h-3" />
-                <span>{stats.views.toLocaleString()}</span>
-              </div>
-              <div className="flex items-center gap-1">
-                <FaHeart className={`w-3 h-3 ${liked ? 'text-red-500' : ''}`} />
-                <span>{(stats.likes + (liked ? 1 : 0)).toLocaleString()}</span>
-              </div>
-              <div className="flex items-center gap-1">
-                <FaChartLine className="w-3 h-3" />
-                <span>{stats.completion}%</span>
-              </div>
-            </div>
-            
-            <motion.div 
-              whileHover={prefersReducedMotion ? {} : { x: 5 }}
-              className="flex items-center gap-1 text-[var(--primary-amber)] text-sm font-medium"
-            >
-              <span>View Details</span>
-              <FaArrowRight className="w-3 h-3" />
-            </motion.div>
-          </div>
+          {/* Details link */}
+          <motion.div 
+            whileHover={prefersReducedMotion ? {} : { x: 5 }}
+            className="inline-flex items-center gap-1 text-[var(--primary-amber)] text-sm font-medium"
+          >
+            <span>View Details</span>
+            <FaArrowRight className="w-3 h-3" />
+          </motion.div>
           
           {/* Links */}
           <div className="flex gap-2 mt-4 pt-4 border-t border-[var(--color-border)]">

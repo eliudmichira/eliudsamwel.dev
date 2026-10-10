@@ -132,7 +132,7 @@ const ModernTimeline: React.FC<ModernTimelineProps> = ({ timelineItems, constell
             My <span className="gradient-text">Journey</span>
           </h2>
           <p className="section-subtitle">
-            From async founder operations and QA to full-stack engineering, GenAI delivery, and automation at scale.
+            From full-stack engineering to data annotation, AI content evaluation, and auditing.
           </p>
           
           <div className="scroll-indicator" onClick={scrollToTimeline}>

@@ -1,7 +1,8 @@
 import React, { useEffect, useState } from 'react';
 // Use the profile image from the public directory instead
 // import profileImage from '../profile.jpg';
-import { FaGithub, FaLinkedin, FaTwitter, FaCode, FaRocket, FaBrain, FaArrowDown } from 'react-icons/fa';
+import { FaGithub, FaLinkedin, FaCode, FaRocket, FaBrain, FaArrowDown } from 'react-icons/fa';
+import { FaXTwitter } from 'react-icons/fa6';
 import { motion } from 'motion/react';
 
 interface PageHeaderSectionProps {
@@ -188,7 +189,7 @@ export const PageHeaderSection: React.FC<PageHeaderSectionProps> = ({ onNavigate
             style={{ y: yText, opacity: opacityValue }}
           >
             <motion.div variants={itemVariants}>
-              <span className="inline-block px-3 sm:px-4 py-2 mb-4 sm:mb-6 text-xs sm:text-sm font-semibold text-[var(--accent-secondary)] dark:text-[var(--accent-secondary)] bg-[var(--accent-light)] dark:bg-color-mix(in srgb, var(--accent-secondary) 10%, transparent) rounded-full border border-[var(--accent-secondary)]/50 dark:border-color-mix(in srgb, var(--accent-secondary) 20%, transparent)">
+              <span className="inline-block px-3 sm:px-4 py-2 mb-4 sm:mb-6 text-xs sm:text-sm font-semibold text-[var(--accent-text)] bg-[var(--accent-light)] dark:bg-amber-500/10 rounded-full border border-amber-500/50 dark:border-amber-500/30">
                 ✨ Nairobi, Kenya · Fully remote · AI Content Evaluation
               </span>
             </motion.div>
@@ -217,7 +218,7 @@ export const PageHeaderSection: React.FC<PageHeaderSectionProps> = ({ onNavigate
             </motion.h2>
 
             <motion.p 
-              className="text-sm sm:text-base md:text-lg text-[var(--color-text-secondary)] dark:text-[var(--secondary-text)] opacity-80 mb-6 sm:mb-8 max-w-2xl mx-auto lg:mx-0 leading-relaxed px-2 break-words overflow-wrap-anywhere hyphens-auto whitespace-normal"
+              className="text-sm sm:text-base md:text-lg text-[var(--color-text-secondary)] dark:text-[var(--secondary-text)] mb-6 sm:mb-8 max-w-2xl mx-auto lg:mx-0 leading-relaxed px-2 lg:px-0 break-words overflow-wrap-anywhere hyphens-auto whitespace-normal"
               variants={itemVariants}
             >
               {'Data annotator and AI content evaluator with a perfect 35/35 on Innodata\'s Content Understanding Video Master eval — promoted into auditing after consistently top scores. Multi-domain labeling across business, finance, healthcare, legal, and STEM. Full-stack developer background that sharpens my eye for inconsistency in data and systems.'}
@@ -231,7 +232,7 @@ export const PageHeaderSection: React.FC<PageHeaderSectionProps> = ({ onNavigate
               {[
                 { href: "https://github.com/eliudmichira", Icon: FaGithub, label: "GitHub", hoverColor: "var(--accent-secondary)" },
                 { href: "https://www.linkedin.com/in/eliud-samwel-72b8622b3", Icon: FaLinkedin, label: "LinkedIn", hoverColor: "var(--accent-primary)" },
-                { href: "https://x.com/mich_michira", Icon: FaTwitter, label: "Twitter", hoverColor: "var(--accent-yellow)" }
+                { href: "https://x.com/mich_michira", Icon: FaXTwitter, label: "X", hoverColor: "var(--accent-yellow)" }
               ].map((social) => (
                 <motion.a
                   key={social.label}
@@ -329,7 +330,7 @@ export const PageHeaderSection: React.FC<PageHeaderSectionProps> = ({ onNavigate
                 {/* Profile image - simplified to just use the public image directly */}
                 <img 
                   src="/profile.png"
-                  alt="Eliud Michira Samwel — AI Automation Engineer" 
+                  alt="Eliud Michira Samwel — Data Annotator &amp; AI Content Evaluator" 
                   className="absolute inset-0 w-full h-full object-cover rounded-full z-10 floating-profile-img"
                   loading="lazy"
                 />

@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { NavLinkItem } from '../types';
 import { ThemeToggle } from './ThemeToggle';
+import { Sun, Moon } from 'lucide-react';
 import '../styles/header.css'; // Import the new CSS file
 
 interface HeaderProps {
@@ -117,10 +118,8 @@ export const Header: React.FC<HeaderProps> = ({ navLinks, onNavLinkClick, theme,
 
       {/* Mobile Navigation Header with glassmorphism - Updated light theme background gradient */}
       <header className={`lg:hidden fixed top-0 left-0 right-0 z-[1000] px-3 sm:px-4 
-                         backdrop-blur-xl 
-                         bg-gradient-to-r from-[var(--color-bg-card)]/95 via-[var(--color-bg-surface)]/90 to-[var(--color-bg-card)]/95 
-                         dark:bg-[var(--color-bg-base)]/80
-                         border-b border-[var(--color-border)]/30 dark:border-[var(--color-border)]/30
+                         backdrop-blur-xl mobile-header-surface
+                         border-b border-[var(--color-border)]
                          transition-all duration-300 ${scrolled ? 'py-2 sm:py-3' : 'py-3 sm:py-4'}`}>
         <div className="flex justify-between items-center w-full max-w-7xl mx-auto">
           {/* Left Section: Logo - Takes 1/3 space */}
@@ -135,8 +134,16 @@ export const Header: React.FC<HeaderProps> = ({ navLinks, onNavLinkClick, theme,
             </a>
           </div>
           
-          {/* Right Section: Animated menu button - Takes 1/3 space and pushes content to end */}
-          <div className="flex-1 flex justify-end">
+          {/* Right Section: theme switch + animated menu button */}
+          <div className="flex-1 flex justify-end items-center gap-2">
+            <button
+              type="button"
+              onClick={toggleTheme}
+              className="lifted pill w-11 h-11 sm:w-12 sm:h-12 flex items-center justify-center flex-shrink-0 touch-manipulation text-[var(--color-text)]"
+              aria-label={`Switch to ${theme === 'dark' ? 'light' : 'dark'} mode`}
+            >
+              {theme === 'dark' ? <Sun className="w-5 h-5" /> : <Moon className="w-5 h-5" />}
+            </button>
             <button
               ref={menuButtonRef}
               id="mobile-menu-button"

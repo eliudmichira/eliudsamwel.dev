@@ -5,7 +5,8 @@ import { blogPosts } from '../../data/blogData';
 import { motion, useScroll, useTransform } from 'motion/react';
 import { getOptimalImageSources } from '../../src/utils/imageUtils';
 import { LikeManager } from '../../src/utils/likeUtils';
-import { FaArrowLeft, FaCalendar, FaClock, FaEye, FaShare, FaBookmark, FaHeart, FaTwitter, FaLinkedin, FaFacebook, FaLink, FaCheck, FaWhatsapp, FaEnvelope, FaTelegram } from 'react-icons/fa';
+import { FaArrowLeft, FaCalendar, FaClock, FaEye, FaShare, FaBookmark, FaHeart, FaLinkedin, FaFacebook, FaLink, FaCheck, FaWhatsapp, FaEnvelope, FaTelegram } from 'react-icons/fa';
+import { FaXTwitter } from 'react-icons/fa6';
 import { SiWhatsapp, SiTelegram } from 'react-icons/si';
 
 interface BlogPostDetailProps {
@@ -353,9 +354,9 @@ export const BlogPostDetail: React.FC<BlogPostDetailProps> = ({ post, onBack, on
                 whileTap={{ scale: 0.9 }}
                 onClick={() => handleShare('twitter')}
                 className="w-12 h-12 rounded-lg hover:bg-[var(--primary-amber)]/10 flex items-center justify-center text-[#1DA1F2] transition-all duration-200 hover:shadow-md touch-manipulation"
-                aria-label="Share on Twitter"
+                aria-label="Share on X"
               >
-                <FaTwitter className="w-6 h-6 fill-current" />
+                <FaXTwitter className="w-6 h-6 fill-current" />
               </motion.button>
               
               {/* LinkedIn */}

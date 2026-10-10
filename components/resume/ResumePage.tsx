@@ -175,13 +175,15 @@ export const ResumePage: React.FC = () => {
                   .map((skill, index) => (
                   <ResumeSkillBadge key={index} name={skill.name} level={skill.level} />
                 ))}
-                <button 
-                  onClick={() => setActiveTab('skills')} 
-                  className="px-3 py-1 rounded-full bg-[var(--secondary-bg)]/60 text-[var(--secondary-text)] text-sm hover:bg-[var(--primary-amber)]/20 hover:text-[var(--primary-amber)] transition-colors"
-                  aria-label="View all skills"
-                >
-                  +{coreCompetencies.skills.length - 12} more...
-                </button>
+                {coreCompetencies.skills.length > 12 && (
+                  <button 
+                    onClick={() => setActiveTab('skills')} 
+                    className="px-3 py-1 rounded-full bg-[var(--secondary-bg)]/60 text-[var(--secondary-text)] text-sm hover:bg-[var(--primary-amber)]/20 hover:text-[var(--primary-amber)] transition-colors"
+                    aria-label="View all skills"
+                  >
+                    +{coreCompetencies.skills.length - 12} more...
+                  </button>
+                )}
               </div>
               <div className="bg-[var(--card-bg)] rounded-lg border border-[var(--card-border)] p-4 mb-6">
                 <h3 className="text-lg font-semibold mb-4 text-[var(--primary-text)]">Skill Categories</h3>
